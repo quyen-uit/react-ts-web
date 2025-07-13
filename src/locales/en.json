@@ -1,0 +1,24 @@
+{
+  "home": {
+    "title": "Welcome to the Dashboard"
+  },
+  "product": {
+    "title": "Products",
+    "table": {
+      "name": "Name",
+      "price": "Price",
+      "actions": "Actions"
+    },
+    "form": {
+      "title": "Product Form",
+      "name": "Name",
+      "price": "Price",
+      "submit": "Submit"
+    }
+  },
+  "unauthorized": {
+    "title": "Unauthorized",
+    "message": "Sorry, you are not authorized to access this page.",
+    "go_home": "Go back home"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "home": {
+    "title": "Chào mừng đến với Bảng điều khiển"
+  },
+  "product": {
+    "title": "Sản phẩm",
+    "table": {
+      "name": "Tên",
+      "price": "Giá",
+      "actions": "Hành động"
+    },
+    "form": {
+      "title": "Biểu mẫu sản phẩm",
+      "name": "Tên",
+      "price": "Giá",
+      "submit": "Gửi"
+    }
+  },
+  "unauthorized": {
+    "title": "Không được phép",
+    "message": "Xin lỗi, bạn không được phép truy cập trang này.",
+    "go_home": "Trở về trang chủ"
+  }
+}
