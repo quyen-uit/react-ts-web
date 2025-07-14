@@ -20,5 +20,10 @@
     "title": "Unauthorized",
     "message": "Sorry, you are not authorized to access this page.",
     "go_home": "Go back home"
-  }
+  },
+  "greeting": "Mini variant drawer",
+  "profile": "Profile",
+  "settings": "Settings",
+  "toggle_theme": "Toggle Theme",
+  "language": "Language"
 }

@@ -20,5 +20,10 @@
     "title": "Không được phép",
     "message": "Xin lỗi, bạn không được phép truy cập trang này.",
     "go_home": "Trở về trang chủ"
-  }
+  },
+  "greeting": "Ngăn kéo biến thể mini",
+  "profile": "Hồ sơ",
+  "settings": "Cài đặt",
+  "toggle_theme": "Chuyển đổi chủ đề",
+  "language": "Ngôn ngữ"
 }

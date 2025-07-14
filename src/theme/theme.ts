@@ -1,6 +1,40 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, extendTheme } from '@mui/material/styles';
 
-const commonSettings = {
+const theme = createTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: '#4CAF50',
+        },
+        secondary: {
+          main: '#8BC34A',
+        },
+        background: {
+          default: '#FCFDF7',
+        },
+        text: {
+          primary: '#333333',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        primary: {
+          main: '#A5D6A7',
+        },
+        secondary: {
+          main: '#CDDC39',
+        },
+        background: {
+          default: '#1B201B',
+        },
+        text: {
+          primary: '#E8F5E9',
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: 'Roboto, sans-serif',
     h1: {
@@ -12,6 +46,9 @@ const commonSettings = {
     },
   },
   spacing: 8,
+  shape: {
+    borderRadius: 8,
+  },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -30,42 +67,6 @@ const commonSettings = {
       },
     },
   },
-};
-
-export const lightTheme = createTheme({
-  ...commonSettings,
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#4CAF50',
-    },
-    secondary: {
-      main: '#8BC34A',
-    },
-    background: {
-      default: '#FCFDF7',
-    },
-    text: {
-      primary: '#333333',
-    },
-  },
 });
 
-export const darkTheme = createTheme({
-  ...commonSettings,
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#A5D6A7',
-    },
-    secondary: {
-      main: '#CDDC39',
-    },
-    background: {
-      default: '#1B201B',
-    },
-    text: {
-      primary: '#E8F5E9',
-    },
-  },
-});
+export default theme;
