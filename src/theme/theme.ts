@@ -1,4 +1,4 @@
-import { createTheme, extendTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   colorSchemes: {
@@ -49,24 +49,7 @@ const theme = createTheme({
   shape: {
     borderRadius: 8,
   },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'none' as const,
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        },
-      },
-    },
-  },
+   
 });
 
 export default theme;

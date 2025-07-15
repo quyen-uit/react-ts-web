@@ -1,5 +1,5 @@
-import React, { Component, type ErrorInfo, type ReactNode } from 'react';
-import Fallback from './Fallback';
+import { Component, type ErrorInfo, type ReactNode } from "react";
+import Fallback from "./Fallback";
 
 interface Props {
   children: ReactNode;
@@ -19,7 +19,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    console.error("Uncaught error:", error, errorInfo);
   }
 
   public render() {

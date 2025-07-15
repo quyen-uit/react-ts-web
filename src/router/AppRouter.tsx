@@ -1,15 +1,15 @@
-import { createBrowserRouter } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
-import AdminLayout from '@/layout/AdminLayout';
-import PrivateRoute from './PrivateRoute';
+import { createBrowserRouter } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import AdminLayout from "@/layout/admin/AdminLayout";
+import PrivateRoute from "./PrivateRoute";
 
-const Dashboard = lazy(() => import('@/pages/Dashboard'));
-const Products = lazy(() => import('@/pages/Products'));
-const Unauthorized = lazy(() => import('@/pages/Unauthorized'));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const Products = lazy(() => import("@/pages/Products"));
+const Unauthorized = lazy(() => import("@/pages/Unauthorized"));
 
 const AppRoutes = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <AdminLayout />,
     children: [
       {
@@ -21,10 +21,10 @@ const AppRoutes = createBrowserRouter([
         ),
       },
       {
-        element: <PrivateRoute allowedRoles={['admin']} />,
+        element: <PrivateRoute allowedRoles={["admin"]} />,
         children: [
           {
-            path: 'products',
+            path: "products",
             element: (
               <Suspense fallback={<div>Loading...</div>}>
                 <Products />
@@ -36,7 +36,7 @@ const AppRoutes = createBrowserRouter([
     ],
   },
   {
-    path: 'unauthorized',
+    path: "unauthorized",
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <Unauthorized />
