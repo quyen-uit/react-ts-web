@@ -49,6 +49,7 @@ const theme = createTheme({
   shape: {
     borderRadius: 8,
   },
+  drawerWidth: 240,
 });
 
 export default theme;

@@ -6,11 +6,11 @@ import AdminLayout from '@/layout/admin/AdminLayout';
 
 import PrivateRoute from './PrivateRoute';
 
-const Dashboard = lazy(() => import('@/pages/Dashboard'));
-const Products = lazy(() => import('@/pages/Products'));
-const Unauthorized = lazy(() => import('@/pages/Unauthorized'));
-const Users = lazy(() => import('@/pages/Users'));
-const Settings = lazy(() => import('@/pages/Settings'));
+const Dashboard = lazy(() => import('@/pages/admin/Dashboard'));
+const Products = lazy(() => import('@/pages/admin/Products'));
+const Unauthorized = lazy(() => import('@/pages/admin/Unauthorized'));
+const Users = lazy(() => import('@/pages/admin/Users'));
+const Settings = lazy(() => import('@/pages/admin/Settings'));
 
 const AppRoutes = createBrowserRouter([
   {

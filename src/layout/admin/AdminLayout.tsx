@@ -5,8 +5,8 @@ import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { Outlet } from 'react-router-dom';
 
-import Header from './NavBar';
-import SideBar from './SideBar';
+import NavBar from './navbar/NavBar';
+import SideBar from './sidebar/SideBar';
 
 export default function AdminLayout() {
   const theme = useTheme();
@@ -31,7 +31,7 @@ export default function AdminLayout() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Header
+      <NavBar
         open={open}
         isMobile={isMobile}
         handleDrawerToggle={handleDrawerToggle}
@@ -41,7 +41,7 @@ export default function AdminLayout() {
         isMobile={isMobile}
         handleDrawerClose={handleDrawerClose}
       />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Outlet />
       </Box>

@@ -38,7 +38,9 @@ const SideBarItem = ({
 
   const isChildActive =
     childItems &&
-    childItems.some((child) => child.to && location.pathname.startsWith(child.to));
+    childItems.some(
+      (child) => child.to && location.pathname.startsWith(child.to)
+    );
 
   if (childItems) {
     return (
