@@ -11,19 +11,33 @@ const Products = lazy(() => import('@/pages/admin/Products'));
 const Unauthorized = lazy(() => import('@/pages/admin/Unauthorized'));
 const Users = lazy(() => import('@/pages/admin/Users'));
 const Settings = lazy(() => import('@/pages/admin/Settings'));
+const Login = lazy(() => import('@/pages/auth/Login'));
 
 const AppRoutes = createBrowserRouter([
+  {
+    path: '/login',
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Login />
+      </Suspense>
+    ),
+  },
   {
     path: '/',
     element: <AdminLayout />,
     children: [
       {
-        index: true,
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Dashboard />
-          </Suspense>
-        ),
+        element: <PrivateRoute allowedRoles={[]} />,
+        children: [
+          {
+            index: true,
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <Dashboard />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         element: <PrivateRoute allowedRoles={['admin']} />,

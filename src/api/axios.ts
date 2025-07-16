@@ -1,12 +1,15 @@
 import axios from 'axios';
+import { store } from '../app/store';
+import { selectCurrentToken, setAccessToken } from '../app/features/auth/authSlice';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = selectCurrentToken(store.getState());
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -25,18 +28,14 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        try {
-          const { data } = await axios.post('/auth/refresh', { refreshToken });
-          localStorage.setItem('accessToken', data.accessToken);
-          axios.defaults.headers.common['Authorization'] =
-            'Bearer ' + data.accessToken;
-          return axiosInstance(originalRequest);
-        } catch (error) {
-          console.log(error);
-          // Handle refresh token error
-        }
+      try {
+        const { data } = await axiosInstance.post('/auth/refresh');
+        store.dispatch(setAccessToken(data.accessToken));
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (error) {
+        console.log(error);
+        // Handle refresh token error
       }
     }
     return Promise.reject(error);

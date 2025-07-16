@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectCurrentUser,
+  login as loginAction,
+  logout as logoutAction,
+} from '../app/features/auth/authSlice';
 
 export const useAuth = () => {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
 
-  const login = (user: any) => {
-    setUser(user);
+  const login = (userData: any) => {
+    dispatch(loginAction(userData));
   };
 
   const logout = () => {
-    setUser(null);
+    dispatch(logoutAction());
   };
 
   return { user, login, logout };

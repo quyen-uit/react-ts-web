@@ -9,8 +9,6 @@ import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import ProfileMenu from './ProfileMenu';
 
-const drawerWidth = 240;
-
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -26,8 +24,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: theme.drawerWidth,
+    width: `calc(100% - ${theme.drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
