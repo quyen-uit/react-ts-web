@@ -1,62 +1,93 @@
-import { styled, type Theme, type CSSObject } from "@mui/material/styles";
-import MuiDrawer from "@mui/material/Drawer";
-import { List, Toolbar } from "@mui/material";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Dashboard, ShoppingCart } from "@mui/icons-material";
-import SideBarItem from "./SideBarItem";
+import {
+  Dashboard as DashboardIcon,
+  Inventory,
+  Login,
+  People,
+  Settings,
+} from '@mui/icons-material';
+import { List, Toolbar, Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import MuiDrawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import { styled, type Theme, type CSSObject } from '@mui/material/styles';
+
+import SideBarItem from './SideBarItem';
+import { type SidebarItemConfig } from './SideBarItem';
 
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
-  transition: theme.transitions.create("width", {
+  transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: "hidden",
+  overflowX: 'hidden',
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
+  transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: "hidden",
+  overflowX: 'hidden',
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
 
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
   ...(open && {
     ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
+    '& .MuiDrawer-paper': {
+      ...openedMixin(theme),
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
+    },
   }),
   ...(!open && {
     ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
+    '& .MuiDrawer-paper': {
+      ...closedMixin(theme),
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
+    },
   }),
 }));
 
-const sidebarItems = [
+const sidebarItems: SidebarItemConfig[] = [
   {
-    to: "/",
-    icon: <Dashboard />,
-    text: "Dashboard",
+    to: '/',
+    icon: <DashboardIcon />,
+    text: 'Dashboard',
   },
   {
-    to: "/products",
-    icon: <ShoppingCart />,
-    text: "Products",
+    text: 'Master Data',
+    icon: <Settings />,
+    children: [
+      {
+        to: '/products',
+        icon: <Inventory />,
+        text: 'Products',
+      },
+      {
+        to: '/users',
+        icon: <People />,
+        text: 'Users',
+      },
+    ],
+  },
+  {
+    to: '/login',
+    icon: <Login />,
+    text: 'Login',
   },
 ];
 
@@ -66,20 +97,18 @@ interface SideBarProps {
   handleDrawerClose: () => void;
 }
 
-export default function SideBar({
-  open,
-  isMobile,
-  handleDrawerClose,
-}: SideBarProps) {
+export default function SideBar({ open, isMobile, handleDrawerClose }: SideBarProps) {
   const drawerContent = (
     <>
-      <Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <IconButton onClick={handleDrawerClose} color="primary">
-          <ChevronLeftIcon />
-        </IconButton>
+      <Toolbar sx={{ justifyContent: 'center' }}>
+        <img src="/vite.svg" alt="logo" style={{ width: 40, height: 40 }} />
+        {open && (
+          <Typography variant="h6" sx={{ ml: 2 }}>
+            Mantis
+          </Typography>
+        )}
       </Toolbar>
-      <Divider />
-      <List>
+      <List sx={{ mt: 2 }}>
         {sidebarItems.map((item, index) => (
           <SideBarItem
             key={index}
@@ -87,6 +116,7 @@ export default function SideBar({
             to={item.to}
             icon={item.icon}
             text={item.text}
+            children={item.children}
           />
         ))}
       </List>
@@ -104,9 +134,9 @@ export default function SideBar({
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
               width: drawerWidth,
             },
           }}

@@ -1,13 +1,5 @@
-import { styled } from "@mui/material/styles";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MuiAppBar, {
-  type AppBarProps as MuiAppBarProps,
-} from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useState, type MouseEvent, type ChangeEvent } from 'react';
+
 import {
   Notifications,
   AccountCircle,
@@ -15,8 +7,8 @@ import {
   Person,
   WbSunny,
   NightsStay,
-} from "@mui/icons-material";
-import { useColorScheme } from "@mui/material/styles";
+} from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   Box,
   ListItemIcon,
@@ -25,9 +17,18 @@ import {
   FormControlLabel,
   Radio,
   Divider,
-} from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { useState, type MouseEvent, type ChangeEvent } from "react";
+} from '@mui/material';
+import MuiAppBar, {
+  type AppBarProps as MuiAppBarProps,
+} from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { styled, useColorScheme } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
+import { NavLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -36,20 +37,30 @@ interface NavBarProps extends MuiAppBarProps {
 }
 
 const NavBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== 'open',
 })<NavBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.common.white,
+  transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  }),
+  ...(!open && {
+    width: `calc(100% - ${theme.spacing(7)} - 1px)`,
+    marginLeft: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${theme.spacing(8)} - 1px)`,
+      marginLeft: `calc(${theme.spacing(8)} + 1px)`,
+    },
   }),
 }));
 
@@ -78,7 +89,7 @@ export default function Header({
   };
 
   const handleThemeChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setMode(event.target.value === "dark" ? "dark" : "light");
+    setMode(event.target.value === 'dark' ? 'dark' : 'light');
   };
 
   const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -93,26 +104,23 @@ export default function Header({
           onClick={handleDrawerToggle}
           edge="start"
           sx={{
-            color: "common.white",
-            marginRight: 5,
-            ...(!isMobile && open && { display: "none" }),
+            color: 'inherit',
+            marginRight: 2,
           }}
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-          {i18n.t("admin")}
-        </Typography>
+        <Box sx={{ flexGrow: 1 }} />
         <Box>
-          <IconButton sx={{ color: "common.white" }}>
+          <IconButton sx={{ color: 'common.white' }}>
             <Notifications />
           </IconButton>
           <IconButton
-            aria-controls={openProfile ? "account-menu" : undefined}
+            aria-controls={openProfile ? 'account-menu' : undefined}
             aria-haspopup="true"
-            aria-expanded={openProfile ? "true" : undefined}
+            aria-expanded={openProfile ? 'true' : undefined}
             onClick={handleMenu}
-            sx={{ color: "common.white" }}
+            sx={{ color: 'common.white' }}
           >
             <AccountCircle />
           </IconButton>
@@ -126,43 +134,43 @@ export default function Header({
               paper: {
                 elevation: 0,
                 sx: {
-                  overflow: "visible",
-                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                   mt: 1.5,
-                  "&::before": {
+                  '&::before': {
                     content: '""',
-                    display: "block",
-                    position: "absolute",
+                    display: 'block',
+                    position: 'absolute',
                     top: 0,
                     right: 14,
                     width: 10,
                     height: 10,
-                    bgcolor: "background.paper",
-                    transform: "translateY(-50%) rotate(45deg)",
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
                     zIndex: 0,
                   },
                 },
               },
             }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <Person color="primary" />
               </ListItemIcon>
-              <ListItemText primary={i18n.t("profile")} />
+              <ListItemText primary={i18n.t('profile')} />
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <Settings color="primary" />
               </ListItemIcon>
-              <ListItemText primary={i18n.t("settings")} />
+              <ListItemText primary={i18n.t('settings')} />
             </MenuItem>
             <Divider />
             <Box sx={{ pl: 2, pr: 2 }}>
               <Typography variant="caption">
-                {i18n.t("toggle_theme")}
+                {i18n.t('toggle_theme')}
               </Typography>
               <RadioGroup
                 row
@@ -185,7 +193,7 @@ export default function Header({
             </Box>
             <Divider />
             <Box sx={{ pl: 2, pr: 2 }}>
-              <Typography variant="caption">{i18n.t("language")}</Typography>
+              <Typography variant="caption">{i18n.t('language')}</Typography>
               <RadioGroup
                 row
                 aria-label="language"

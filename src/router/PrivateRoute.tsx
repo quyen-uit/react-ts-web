@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
+
 import { selectCurrentRoles } from '@/app/features/auth/authSlice';
 
 interface PrivateRouteProps {

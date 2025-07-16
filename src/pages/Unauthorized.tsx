@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const Unauthorized = () => {
   const { t, i18n } = useTranslation();
@@ -28,10 +28,16 @@ const Unauthorized = () => {
               VI
             </Button>
           </div>
-          <Typography variant="h1" className="font-extrabold text-9xl text-gray-600">
+          <Typography
+            variant="h1"
+            className="font-extrabold text-9xl text-gray-600"
+          >
             403
           </Typography>
-          <Typography variant="h2" className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <Typography
+            variant="h2"
+            className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+          >
             {t('unauthorized.title')}
           </Typography>
           <Typography className="mt-6 text-base leading-7 text-gray-600">

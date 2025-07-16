@@ -1,14 +1,16 @@
-import * as React from "react";
-import { useTheme } from "@mui/material/styles";
-import { Toolbar, useMediaQuery } from "@mui/material";
-import Box from "@mui/material/Box";
-import { Outlet } from "react-router-dom";
-import SideBar from "./SideBar";
-import Header from "./NavBar";
+import * as React from 'react';
+
+import { Toolbar, useMediaQuery } from '@mui/material';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import { Outlet } from 'react-router-dom';
+
+import Header from './NavBar';
+import SideBar from './SideBar';
 
 export default function AdminLayout() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [open, setOpen] = React.useState(!isMobile);
 
   React.useEffect(() => {
@@ -28,7 +30,7 @@ export default function AdminLayout() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: 'flex' }}>
       <Header
         open={open}
         isMobile={isMobile}

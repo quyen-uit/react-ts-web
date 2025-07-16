@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import {
   Button,
   Table,
@@ -10,6 +9,7 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const Products = () => {
   const { t } = useTranslation();

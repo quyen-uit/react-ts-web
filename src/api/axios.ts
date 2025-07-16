@@ -30,9 +30,11 @@ axiosInstance.interceptors.response.use(
         try {
           const { data } = await axios.post('/auth/refresh', { refreshToken });
           localStorage.setItem('accessToken', data.accessToken);
-          axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.accessToken;
+          axios.defaults.headers.common['Authorization'] =
+            'Bearer ' + data.accessToken;
           return axiosInstance(originalRequest);
         } catch (error) {
+          console.log(error);
           // Handle refresh token error
         }
       }

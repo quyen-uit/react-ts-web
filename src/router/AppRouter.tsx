@@ -1,15 +1,20 @@
-import { createBrowserRouter } from "react-router-dom";
-import { Suspense, lazy } from "react";
-import AdminLayout from "@/layout/admin/AdminLayout";
-import PrivateRoute from "./PrivateRoute";
+import { Suspense, lazy } from 'react';
 
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
-const Products = lazy(() => import("@/pages/Products"));
-const Unauthorized = lazy(() => import("@/pages/Unauthorized"));
+import { createBrowserRouter } from 'react-router-dom';
+
+import AdminLayout from '@/layout/admin/AdminLayout';
+
+import PrivateRoute from './PrivateRoute';
+
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Products = lazy(() => import('@/pages/Products'));
+const Unauthorized = lazy(() => import('@/pages/Unauthorized'));
+const Users = lazy(() => import('@/pages/Users'));
+const Settings = lazy(() => import('@/pages/Settings'));
 
 const AppRoutes = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <AdminLayout />,
     children: [
       {
@@ -21,13 +26,29 @@ const AppRoutes = createBrowserRouter([
         ),
       },
       {
-        element: <PrivateRoute allowedRoles={["admin"]} />,
+        element: <PrivateRoute allowedRoles={['admin']} />,
         children: [
           {
-            path: "products",
+            path: 'products',
             element: (
               <Suspense fallback={<div>Loading...</div>}>
                 <Products />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'users',
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <Users />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'settings',
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <Settings />
               </Suspense>
             ),
           },
@@ -36,7 +57,7 @@ const AppRoutes = createBrowserRouter([
     ],
   },
   {
-    path: "unauthorized",
+    path: 'unauthorized',
     element: (
       <Suspense fallback={<div>Loading...</div>}>
         <Unauthorized />
