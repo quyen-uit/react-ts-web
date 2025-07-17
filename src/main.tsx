@@ -9,7 +9,7 @@ import AppRoutes from '@/router/AppRouter';
 import '@/index.css';
 import '@/locales/i18n';
 
-import { store } from './app/store';
+import { store } from './store/store';
 import theme from './theme/theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

@@ -14,7 +14,7 @@ import {
   useGetProductsQuery,
   useAddProductMutation,
   useDeleteProductMutation,
-} from '@/app/features/products/productSlice';
+} from '@/features/products/productSlice';
 import { useState } from 'react';
 
 const Products = () => {

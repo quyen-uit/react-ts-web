@@ -5,49 +5,46 @@ const theme = createTheme({
     light: {
       palette: {
         primary: {
-          main: '#4CAF50',
+          main: '#5E936C',
         },
         secondary: {
-          main: '#8BC34A',
+          main: '#93DA97',
         },
         background: {
-          default: '#FCFDF7',
+          default: '#ffffff',
         },
         text: {
-          primary: '#333333',
+          primary: '#000000',
+          secondary: '#5E936C'
+        },
+        active: {
+          light: '#DEE9E1',
+          main: '#BED3C4',
+          dark: '#5E936C',
         },
       },
     },
     dark: {
       palette: {
         primary: {
-          main: '#A5D6A7',
+          main: '#5E936C',
         },
         secondary: {
-          main: '#CDDC39',
+          main: '#CFFFD7',
         },
         background: {
-          default: '#1B201B',
+          default: '#1E2A22',
         },
         text: {
-          primary: '#E8F5E9',
+          primary: '#E8FFD7',
+        },
+        active: {
+          light: '#548461',
+          main: '#385840',
+          dark: '#E8FFD7',
         },
       },
     },
-  },
-  typography: {
-    fontFamily: 'Roboto, sans-serif',
-    h1: {
-      fontSize: '2.5rem',
-      fontWeight: 600,
-    },
-    body1: {
-      fontSize: '1rem',
-    },
-  },
-  spacing: 8,
-  shape: {
-    borderRadius: 8,
   },
   drawerWidth: 240,
 });

@@ -16,7 +16,7 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
+  zIndex: theme.zIndex.drawer - 1,
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
   transition: theme.transitions.create(['width', 'margin'], {
@@ -32,8 +32,8 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
   ...(!open && {
-    width: `calc(100% - ${theme.spacing(7)} - 1px)`,
-    marginLeft: `calc(${theme.spacing(7)} + 1px)`,
+    width: `100%`,
+    marginLeft: 0,
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${theme.spacing(8)} - 1px)`,
       marginLeft: `calc(${theme.spacing(8)} + 1px)`,

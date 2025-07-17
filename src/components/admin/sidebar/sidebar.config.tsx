@@ -10,7 +10,7 @@ import { type SidebarItemConfig } from './SideBarItem';
 
 const sidebarItems: SidebarItemConfig[] = [
   {
-    to: '/',
+    to: '/admin',
     icon: <DashboardIcon />,
     text: 'Dashboard',
   },
@@ -19,12 +19,12 @@ const sidebarItems: SidebarItemConfig[] = [
     icon: <Settings />,
     children: [
       {
-        to: '/products',
+        to: '/admin/products',
         icon: <Inventory />,
         text: 'Products',
       },
       {
-        to: '/users',
+        to: '/admin/users',
         icon: <People />,
         text: 'Users',
       },

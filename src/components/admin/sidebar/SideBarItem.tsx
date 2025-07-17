@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
@@ -20,29 +20,38 @@ export interface SidebarItemConfig {
 
 export interface SideBarItemProps extends SidebarItemConfig {
   open: boolean;
+  level?: number;
 }
 
 const SideBarItem = ({
   open,
+  level = 0,
   to,
   icon,
   text,
   children: childItems,
 }: SideBarItemProps) => {
+  const indentation = level * 2.5 + 2;
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
-  const location = useLocation();
-
   const handleSubMenuClick = () => {
     setIsSubMenuOpen(!isSubMenuOpen);
   };
 
-  const isChildActive =
-    childItems &&
-    childItems.some(
-      (child) => child.to && location.pathname.startsWith(child.to)
-    );
-
   if (childItems) {
+    if (!open) {
+      return (
+        <List component="div" disablePadding>
+          {childItems.map((child, index) => (
+            <SideBarItem
+              level={level}
+              key={index}
+              {...child}
+              open={open}
+            />
+          ))}
+        </List>
+      );
+    }
     return (
       <>
         <ListItem disablePadding sx={{ display: 'block' }}>
@@ -51,30 +60,37 @@ const SideBarItem = ({
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
-              ...(isChildActive && {
-                bgcolor: 'action.selected',
-              }),
+              pr: 2,
+              pl: indentation,
+              '&:hover': {
+                backgroundColor: 'active.light',
+              },
             }}
           >
             <ListItemIcon
               sx={{
                 minWidth: 0,
-                mr: open ? 3 : 'auto',
                 justifyContent: 'center',
-                color: 'primary.main',
               }}
             >
               {icon}
             </ListItemIcon>
-            <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText
+              primary={text}
+              sx={{ opacity: open ? 1 : 0, ml: 2 }}
+            />
             {open && (isSubMenuOpen ? <ExpandLess /> : <ExpandMore />)}
           </ListItemButton>
         </ListItem>
         <Collapse in={open && isSubMenuOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: 4 }}>
+          <List component="div" disablePadding>
             {childItems.map((child, index) => (
-              <SideBarItem key={index} {...child} open={open} />
+              <SideBarItem
+                level={level + 1}
+                key={index}
+                {...child}
+                open={open}
+              />
             ))}
           </List>
         </Collapse>
@@ -87,26 +103,35 @@ const SideBarItem = ({
       <ListItemButton
         component={NavLink}
         to={to ?? ''}
+        end
         sx={{
           minHeight: 48,
           justifyContent: open ? 'initial' : 'center',
-          px: 2.5,
+          pr: 2,
+          pl: indentation,
           '&.active': {
-            bgcolor: 'action.selected',
+            backgroundColor: 'active.main',
+            color: 'active.dark',
+            borderRight: '4px solid',
+            borderColor: 'active.dark',
+            '& .MuiListItemIcon-root': {
+              color: 'active.dark',
+            },
+          },
+          '&:hover': {
+            backgroundColor: 'active.light',
           },
         }}
       >
         <ListItemIcon
           sx={{
             minWidth: 0,
-            mr: open ? 3 : 'auto',
             justifyContent: 'center',
-            color: 'primary.main',
           }}
         >
           {icon}
         </ListItemIcon>
-        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, ml: 2 }}/>
       </ListItemButton>
     </ListItem>
   );

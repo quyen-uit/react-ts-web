@@ -1,7 +1,6 @@
-import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
-import axiosInstance from '@/api/axios';
 import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '@/features/auth/authApiSlice';
 import {
   Avatar,
   Button,
@@ -10,7 +9,6 @@ import {
   FormControlLabel,
   Checkbox,
   Link,
-  Grid,
   Box,
   Typography,
   Container,
@@ -18,19 +16,15 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const Login = () => {
-  const { login } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginMutation] = useLoginMutation();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axiosInstance.post('/auth/login', {
-        username,
-        password,
-      });
-      login(response.data);
+      await loginMutation({ username, password }).unwrap();
       navigate('/');
     } catch (error) {
       console.error('Login failed:', error);
