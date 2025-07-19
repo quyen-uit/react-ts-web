@@ -50,13 +50,13 @@ export default function SideBar({
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
-          sx={{
+          sx={(theme) => ({
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
-              width: 240,
+              width: theme.drawerWidth,
             },
-          }}
+          })}
         >
           {drawerContent}
         </MuiDrawer>

@@ -11,10 +11,10 @@ declare module '@mui/material/styles' {
   }
 
   interface Palette {
-    active: PaletteColor;
+    sidebarAction: PaletteAction;
   }
 
   interface PaletteOptions {
-    active?: PaletteColorOptions;
+    sidebarAction?: PaletteActionOptions;
   }
 }

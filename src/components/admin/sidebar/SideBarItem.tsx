@@ -42,12 +42,7 @@ const SideBarItem = ({
       return (
         <List component="div" disablePadding>
           {childItems.map((child, index) => (
-            <SideBarItem
-              level={level}
-              key={index}
-              {...child}
-              open={open}
-            />
+            <SideBarItem level={level} key={index} {...child} open={open} />
           ))}
         </List>
       );
@@ -61,9 +56,9 @@ const SideBarItem = ({
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
               pr: 2,
-              pl: indentation,
+              pl: open ? indentation : 4,
               '&:hover': {
-                backgroundColor: 'active.light',
+                backgroundColor: 'sidebarAction.hover',
               },
             }}
           >
@@ -108,18 +103,18 @@ const SideBarItem = ({
           minHeight: 48,
           justifyContent: open ? 'initial' : 'center',
           pr: 2,
-          pl: indentation,
+          pl: open ? indentation : 4,
           '&.active': {
-            backgroundColor: 'active.main',
-            color: 'active.dark',
+            backgroundColor: 'sidebarAction.selected',
+            color: 'sidebarAction.active',
             borderRight: '4px solid',
             borderColor: 'active.dark',
             '& .MuiListItemIcon-root': {
-              color: 'active.dark',
+              color: 'sidebarAction.active',
             },
           },
           '&:hover': {
-            backgroundColor: 'active.light',
+            backgroundColor: 'sidebarAction.hover',
           },
         }}
       >
@@ -131,7 +126,7 @@ const SideBarItem = ({
         >
           {icon}
         </ListItemIcon>
-        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, ml: 2 }}/>
+        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, ml: 2 }} />
       </ListItemButton>
     </ListItem>
   );

@@ -15,12 +15,12 @@ const theme = createTheme({
         },
         text: {
           primary: '#000000',
-          secondary: '#5E936C'
+          secondary: '#5E936C',
         },
-        active: {
-          light: '#DEE9E1',
-          main: '#BED3C4',
-          dark: '#5E936C',
+        sidebarAction: {
+          hover: '#DEE9E1',
+          selected: '#BED3C4',
+          active: '#5E936C',
         },
       },
     },
@@ -38,10 +38,10 @@ const theme = createTheme({
         text: {
           primary: '#E8FFD7',
         },
-        active: {
-          light: '#548461',
-          main: '#385840',
-          dark: '#E8FFD7',
+        sidebarAction: {
+          hover: '#548461',
+          selected: '#385840',
+          active: '#E8FFD7',
         },
       },
     },
