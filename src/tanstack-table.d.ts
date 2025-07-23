@@ -2,6 +2,12 @@ import '@tanstack/react-table';
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
-    type?: 'text' | 'number' | 'date' | 'time' | 'datetime';
+    type?: 'number' | 'date' | 'time' | 'datetime' | 'option' | 'text' | 'multiple';
+    placeholder?: string;
+  }
+
+  interface TableMeta<TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    updateFilter: (columnId: string, value: any) => void;
   }
 }

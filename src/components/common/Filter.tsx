@@ -1,41 +1,47 @@
-import { TextField } from '@mui/material';
-import type { Column } from '@tanstack/react-table';
+import { Box, TextField } from '@mui/material';
+import FacetedFilter from './faceted-filter';
+import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 
 interface FilterProps {
   column: Column<any, any>;
+  table: Table<any>;
 }
 
-const Filter: React.FC<FilterProps> = ({ column }) => {
+const Filter: React.FC<FilterProps> = ({ column, table }) => {
   const columnFilterValue = column.getFilterValue();
+  const { type } = column.columnDef.meta || {};
+  const { updateFilter } = table.options.meta as any;
 
-  switch (column.columnDef.meta?.type) {
+  switch (type) {
     case 'number':
       return (
-        <div>
+        <Box sx={{ display: 'flex', gap: 1 }}>
           <TextField
             type="number"
             value={(columnFilterValue as [number, number])?.[0] ?? ''}
             onChange={(e) =>
-              column.setFilterValue((old: [number, number]) => [
+              updateFilter(column.id, [
                 e.target.value,
-                old?.[1],
+                (columnFilterValue as [number, number])?.[1],
               ])
             }
             placeholder="Min"
+            variant="standard"
           />
           <TextField
             type="number"
             value={(columnFilterValue as [number, number])?.[1] ?? ''}
             onChange={(e) =>
-              column.setFilterValue((old: [number, number]) => [
-                old?.[0],
+              updateFilter(column.id, [
+                (columnFilterValue as [number, number])?.[0],
                 e.target.value,
               ])
             }
             placeholder="Max"
+            variant="standard"
           />
-        </div>
+        </Box>
       );
     case 'date':
     case 'time':
@@ -43,33 +49,38 @@ const Filter: React.FC<FilterProps> = ({ column }) => {
       return (
         <div>
           <TextField
-            type={column.columnDef.meta.type}
+            type={type}
             value={(columnFilterValue as [string, string])?.[0] ?? ''}
             onChange={(e) =>
-              column.setFilterValue((old: [string, string]) => [
-                e.target.value,
-                old?.[1],
-              ])
+              updateFilter(column.id, [e.target.value, (columnFilterValue as [string, string])?.[1]])
             }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
           <TextField
-            type={column.columnDef.meta.type}
+            type={type}
             value={(columnFilterValue as [string, string])?.[1] ?? ''}
             onChange={(e) =>
-              column.setFilterValue((old: [string, string]) => [
-                old?.[0],
-                e.target.value,
-              ])
+              updateFilter(column.id, [(columnFilterValue as [string, string])?.[0], e.target.value])
             }
+            InputLabelProps={{
+              shrink: true
+            }}
           />
         </div>
       );
+    case 'option':
+    case 'multiple':
+      return <FacetedFilter column={column} table={table} />;
+    case 'text':
     default:
       return (
         <TextField
           value={(columnFilterValue ?? '') as string}
-          onChange={(e) => column.setFilterValue(e.target.value)}
+          onChange={(e) => updateFilter(column.id, e.target.value)}
           placeholder="Search..."
+          variant="standard"
         />
       );
   }

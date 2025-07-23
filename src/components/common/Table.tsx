@@ -22,11 +22,15 @@ import {
   FullscreenExit as FullscreenExitIcon,
   ViewColumn as ViewColumnIcon,
   FilterList as FilterListIcon,
+  Add as AddIcon,
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
@@ -38,20 +42,29 @@ import type {
 } from '@tanstack/react-table';
 import React from 'react';
 import Filter from './Filter';
+import EditableCell from './table/EditableCell';
 
 interface TableProps<T> {
   columns: ColumnDef<T>[];
   data: T[];
+  setData: React.Dispatch<React.SetStateAction<T[]>>;
+  onAdd?: () => void;
+  onDelete?: (ids: string[]) => void;
 }
 
-const Table = <T,>({ data, columns }: TableProps<T>) => {
+const Table = <T,>({
+  data,
+  columns,
+  setData,
+  onAdd,
+  onDelete,
+}: TableProps<T>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [showFilters, setShowFilters] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isFullScreen, setIsFullScreen] = React.useState(false);
 
@@ -86,6 +99,31 @@ const Table = <T,>({ data, columns }: TableProps<T>) => {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    defaultColumn: {
+      cell: EditableCell,
+    },
+    meta: {
+      updateFilter: (columnId: string, value: any) => {
+        setColumnFilters((prev) =>
+          prev.filter((f) => f.id !== columnId).concat({ id: columnId, value })
+        );
+      },
+      updateData: (rowIndex, columnId, value) => {
+        setData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
+              };
+            }
+            return row;
+          })
+        );
+      },
+    },
   });
 
   return (
@@ -140,11 +178,33 @@ const Table = <T,>({ data, columns }: TableProps<T>) => {
             {isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
           </IconButton>
         </Tooltip>
-        <Tooltip title="Toggle Filters">
-          <IconButton onClick={() => setShowFilters((prev) => !prev)}>
+        <Tooltip title="Filter">
+          <IconButton>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
+        {onAdd && (
+          <Tooltip title="Add">
+            <IconButton onClick={onAdd}>
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        {onDelete && (
+          <Tooltip title="Remove Selected">
+            <IconButton
+              onClick={() => {
+                const selectedIds = table
+                  .getSelectedRowModel()
+                  .rows.map((row) => (row.original as any).id);
+                onDelete(selectedIds);
+              }}
+              disabled={table.getSelectedRowModel().rows.length === 0}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       </Toolbar>
       <TableContainer>
         <MuiTable>
@@ -175,9 +235,9 @@ const Table = <T,>({ data, columns }: TableProps<T>) => {
                         header.getContext()
                       )}
                     </TableSortLabel>
-                    {showFilters && header.column.getCanFilter() ? (
+                    {header.column.getCanFilter() ? (
                       <div>
-                        <Filter column={header.column} />
+                        <Filter column={header.column} table={table} />
                       </div>
                     ) : null}
                   </TableCell>
