@@ -28,6 +28,11 @@ const sidebarItems: SidebarItemConfig[] = [
         icon: <People />,
         text: 'Users',
       },
+      {
+        to: '/admin/permissions',
+        icon: <People />,
+        text: 'Permissions',
+      },
     ],
   },
   {

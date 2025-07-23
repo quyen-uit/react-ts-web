@@ -7,6 +7,7 @@ const Dashboard = lazy(() => import('@/pages/admin/Dashboard'));
 const Products = lazy(() => import('@/pages/admin/Products'));
 const Users = lazy(() => import('@/pages/admin/Users'));
 const Settings = lazy(() => import('@/pages/admin/Settings'));
+const Permissions = lazy(() => import('@/pages/admin/Permissions.tsx'));
 
 const adminRoutes: RouteObject[] = [
   {
@@ -50,6 +51,14 @@ const adminRoutes: RouteObject[] = [
             element: (
               <Suspense fallback={<div>Loading...</div>}>
                 <Settings />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'permissions',
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <Permissions />
               </Suspense>
             ),
           },
