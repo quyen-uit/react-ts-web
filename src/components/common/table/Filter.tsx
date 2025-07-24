@@ -1,5 +1,5 @@
 import { Box, TextField } from '@mui/material';
-import FacetedFilter from './faceted-filter';
+import FacetedFilter from './FacetedFilter';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 
@@ -7,6 +7,20 @@ interface FilterProps {
   column: Column<any, any>;
   table: Table<any>;
 }
+
+const commonInputSx = {
+  minWidth: 120,
+  '& .MuiInputBase-root': {
+    fontSize: 14,
+  },
+};
+
+const commonSmallInputSx = {
+  minWidth: 96,
+  '& .MuiInputBase-root': {
+    fontSize: 14,
+  },
+};
 
 const Filter: React.FC<FilterProps> = ({ column, table }) => {
   const columnFilterValue = column.getFilterValue();
@@ -26,9 +40,11 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
                 (columnFilterValue as [number, number])?.[1],
               ])
             }
-            placeholder="Min"
+            placeholder="From"
             variant="standard"
+            sx={commonSmallInputSx}
           />
+          -
           <TextField
             type="number"
             value={(columnFilterValue as [number, number])?.[1] ?? ''}
@@ -38,8 +54,9 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
                 e.target.value,
               ])
             }
-            placeholder="Max"
+            placeholder="To"
             variant="standard"
+            sx={commonSmallInputSx}
           />
         </Box>
       );
@@ -47,28 +64,33 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     case 'time':
     case 'datetime':
       return (
-        <div>
+        <Box sx={{ display: 'flex', gap: 1 }}>
           <TextField
             type={type}
             value={(columnFilterValue as [string, string])?.[0] ?? ''}
             onChange={(e) =>
-              updateFilter(column.id, [e.target.value, (columnFilterValue as [string, string])?.[1]])
+              updateFilter(column.id, [
+                e.target.value,
+                (columnFilterValue as [string, string])?.[1],
+              ])
             }
-            InputLabelProps={{
-              shrink: true
-            }}
+            variant="standard"
+            sx={commonInputSx}
           />
+          -
           <TextField
             type={type}
             value={(columnFilterValue as [string, string])?.[1] ?? ''}
             onChange={(e) =>
-              updateFilter(column.id, [(columnFilterValue as [string, string])?.[0], e.target.value])
+              updateFilter(column.id, [
+                (columnFilterValue as [string, string])?.[0],
+                e.target.value,
+              ])
             }
-            InputLabelProps={{
-              shrink: true
-            }}
+            variant="standard"
+            sx={commonInputSx}
           />
-        </div>
+        </Box>
       );
     case 'option':
     case 'multiple':
@@ -81,6 +103,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
           onChange={(e) => updateFilter(column.id, e.target.value)}
           placeholder="Search..."
           variant="standard"
+          sx={commonInputSx}
         />
       );
   }

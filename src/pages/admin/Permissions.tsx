@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import Table from '../../components/common/Table';
+import Table from '../../components/common/table/Table';
 import { columns, data as initialData } from './permissions';
 import type { Permission } from './permissions';
 

@@ -16,6 +16,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Paper,
 } from '@mui/material';
 import {
   Fullscreen as FullscreenIcon,
@@ -42,7 +43,7 @@ import type {
 } from '@tanstack/react-table';
 import React from 'react';
 import Filter from './Filter';
-import EditableCell from './table/EditableCell';
+import EditableCell from './EditableCell';
 
 interface TableProps<T> {
   columns: ColumnDef<T>[];
@@ -62,8 +63,9 @@ const Table = <T,>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnFilters, setColumnFilters] =
-    React.useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isFullScreen, setIsFullScreen] = React.useState(false);
@@ -154,7 +156,7 @@ const Table = <T,>({
           placeholder="Search"
         />
         <Tooltip title="Toggle Column Visibility">
-          <IconButton onClick={handleMenuOpen}>
+          <IconButton onClick={handleMenuOpen} color="primary">
             <ViewColumnIcon />
           </IconButton>
         </Tooltip>
@@ -174,11 +176,11 @@ const Table = <T,>({
           ))}
         </Menu>
         <Tooltip title="Toggle Fullscreen">
-          <IconButton onClick={toggleFullScreen}>
+          <IconButton onClick={toggleFullScreen} color="primary">
             {isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
           </IconButton>
         </Tooltip>
-        <Tooltip title="Filter">
+        <Tooltip title="Filter" color="primary">
           <IconButton>
             <FilterListIcon />
           </IconButton>
@@ -206,64 +208,75 @@ const Table = <T,>({
           </Tooltip>
         )}
       </Toolbar>
-      <TableContainer>
-        <MuiTable>
-          <TableHead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    indeterminate={
-                      table.getIsSomeRowsSelected() &&
-                      !table.getIsAllRowsSelected()
-                    }
-                    checked={table.getIsAllRowsSelected()}
-                    onChange={table.getToggleAllRowsSelectedHandler()}
-                  />
-                </TableCell>
-                {headerGroup.headers.map((header) => (
-                  <TableCell key={header.id}>
-                    <TableSortLabel
-                      active={header.column.getIsSorted() !== false}
-                      direction={
-                        header.column.getIsSorted() === 'asc' ? 'asc' : 'desc'
+
+      <Paper
+        elevation={3}
+        sx={{
+          overflow: 'auto',
+        }}
+      >
+        <TableContainer>
+          <MuiTable>
+            <TableHead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={
+                        table.getIsSomeRowsSelected() &&
+                        !table.getIsAllRowsSelected()
                       }
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
+                      checked={table.getIsAllRowsSelected()}
+                      onChange={table.getToggleAllRowsSelectedHandler()}
+                    />
+                  </TableCell>
+                  {headerGroup.headers.map((header) => (
+                    <TableCell key={header.id} sx={{ fontWeight: 'bold' }}>
+                      <TableSortLabel
+                        active={header.column.getIsSorted() !== false}
+                        direction={
+                          header.column.getIsSorted() === 'asc' ? 'asc' : 'desc'
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </TableSortLabel>
+                      {header.column.getCanFilter() ? (
+                        <div>
+                          <Filter column={header.column} table={table} />
+                        </div>
+                      ) : null}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHead>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={row.getIsSelected()}
+                      onChange={row.getToggleSelectedHandler()}
+                    />
+                  </TableCell>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
                       {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    </TableSortLabel>
-                    {header.column.getCanFilter() ? (
-                      <div>
-                        <Filter column={header.column} table={table} />
-                      </div>
-                    ) : null}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableHead>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={row.getIsSelected()}
-                    onChange={row.getToggleSelectedHandler()}
-                  />
-                </TableCell>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </MuiTable>
-      </TableContainer>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </MuiTable>
+        </TableContainer>
+      </Paper>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

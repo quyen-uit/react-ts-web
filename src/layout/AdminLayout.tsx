@@ -41,7 +41,7 @@ export default function AdminLayout() {
         isMobile={isMobile}
         handleDrawerClose={handleDrawerClose}
       />
-      <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Box sx={{ flexGrow: 1, p: 2, overflow: 'hidden' }}>
         <Toolbar />
         <Outlet />
       </Box>
