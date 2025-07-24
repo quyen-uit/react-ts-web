@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLoginMutation } from '@/features/auth/authApiSlice';
 import {
   Avatar,
   Button,
@@ -14,6 +13,7 @@ import {
   Container,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useLoginMutation } from '@/services/api/authApi';
 
 const Login = () => {
   const navigate = useNavigate();

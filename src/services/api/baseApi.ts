@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { login, selectCurrentToken } from '@/features/auth/authSlice';
+import { login, selectCurrentToken } from '@/store/slices/authSlice';
 import type { RootState } from '@/store/store';
 import { Mutex } from 'async-mutex';
 

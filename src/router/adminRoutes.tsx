@@ -3,9 +3,9 @@ import type { RouteObject } from 'react-router-dom';
 import AdminLayout from '@/layout/AdminLayout';
 import PrivateRoute from './PrivateRoute';
 
-const Dashboard = lazy(() => import('@/pages/admin/Dashboard'));
-const Products = lazy(() => import('@/pages/admin/Products'));
-const Users = lazy(() => import('@/pages/admin/Users'));
+const Dashboard = lazy(() => import('@/pages/admin/Dashboard/Dashboard'));
+// const Products = lazy(() => import('@/pages/admin/Products'));
+const Users = lazy(() => import('@/pages/admin/Users/UsersPage'));
 const Settings = lazy(() => import('@/pages/admin/Settings'));
 const Permissions = lazy(() => import('@/pages/admin/Permissions.tsx'));
 
@@ -30,14 +30,14 @@ const adminRoutes: RouteObject[] = [
       {
         element: <PrivateRoute allowedRoles={['admin']} />,
         children: [
-          {
-            path: 'products',
-            element: (
-              <Suspense fallback={<div>Loading...</div>}>
-                <Products />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: 'products',
+          //   element: (
+          //     <Suspense fallback={<div>Loading...</div>}>
+          //       <Products />
+          //     </Suspense>
+          //   ),
+          // },
           {
             path: 'users',
             element: (
