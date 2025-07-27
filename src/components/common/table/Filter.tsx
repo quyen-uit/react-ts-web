@@ -4,7 +4,11 @@ import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 import { shouldForwardProp } from '@mui/system';
 import dayjs, { Dayjs } from 'dayjs';
-import CustomDateTimePicker from '../input/CustomDateTimePicker';
+import {
+  CustomDatePicker,
+  CustomDateTimePicker,
+  CustomTimePicker,
+} from '../input';
 
 interface FilterProps {
   column: Column<any, any>;
@@ -31,7 +35,12 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
   const columnFilterValue = column.getFilterValue();
   const { type } = column.columnDef.meta || {};
   const { updateFilter } = table.options.meta as any;
-  const [dateTime, setDateTime] = React.useState<Dayjs | null>(dayjs());
+  const [from, setFrom] = React.useState<string | null>(
+    (columnFilterValue as [string, string])?.[0] ?? null
+  );
+  const [to, setTo] = React.useState<string | null>(
+    (columnFilterValue as [string, string])?.[1] ?? null
+  );
 
   switch (type) {
     case 'number':
@@ -65,36 +74,134 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
         </Box>
       );
     case 'date':
-    case 'time':
-    case 'datetime':
       return (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <CustomDateTimePicker
-            value={dateTime}
-            onChange={setDateTime}
+          <CustomDatePicker
+            value={from}
+            onChange={(value) => setFrom(value?.toISOString() ?? null)}
+            onAccept={(value) =>
+              updateFilter(column.id, [value?.toISOString(), to])
+            }
             slotProps={{
               textField: {
-                variant: 'standard', // or 'filled', 'standard'
-                label: '',
+                variant: 'standard',
+                placeholder: 'From',
                 sx: {
+                  width: 160,
                   '& .MuiInputAdornment-root': {
                     ml: 0,
                   },
                 },
               },
             }}
-          ></CustomDateTimePicker>
+          />
           -
-          <FilterTextField
-            type={type}
-            value={(columnFilterValue as [string, string])?.[1] ?? ''}
-            onChange={(e) =>
-              updateFilter(column.id, [
-                (columnFilterValue as [string, string])?.[0],
-                e.target.value,
-              ])
+          <CustomDatePicker
+            value={to}
+            onChange={(value) => setTo(value?.toISOString() ?? null)}
+            onAccept={(value) =>
+              updateFilter(column.id, [from, value?.toISOString()])
             }
-            variant="standard"
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                placeholder: 'To',
+                sx: {
+                  width: 160,
+                  '& .MuiInputAdornment-root': {
+                    ml: 0,
+                  },
+                },
+              },
+            }}
+          />
+        </Box>
+      );
+    case 'time':
+      return (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <CustomTimePicker
+            value={from}
+            onChange={(value) => setFrom(value?.toISOString() ?? null)}
+            onAccept={(value) =>
+              updateFilter(column.id, [value?.toISOString(), to])
+            }
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                placeholder: 'From',
+                sx: {
+                  width: 96,
+                  '& .MuiInputAdornment-root': {
+                    ml: 0,
+                  },
+                },
+              },
+            }}
+          />
+          -
+          <CustomTimePicker
+            value={to}
+            onChange={(value) => setTo(value?.toISOString() ?? null)}
+            onAccept={(value) =>
+              updateFilter(column.id, [from, value?.toISOString()])
+            }
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                placeholder: 'To',
+                sx: {
+                  width: 96,
+                  '& .MuiInputAdornment-root': {
+                    ml: 0,
+                  },
+                },
+              },
+            }}
+          />
+        </Box>
+      );
+    case 'datetime':
+      return (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <CustomDateTimePicker
+            value={from}
+            onChange={(value) => setFrom(value?.toISOString() ?? null)}
+            onAccept={(value) =>
+              updateFilter(column.id, [value?.toISOString(), to])
+            }
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                placeholder: 'From',
+                sx: {
+                  width: 200,
+                  '& .MuiInputAdornment-root': {
+                    ml: 0,
+                  },
+                },
+              },
+            }}
+          />
+          -
+          <CustomDateTimePicker
+            value={to}
+            onChange={(value) => setTo(value?.toISOString() ?? null)}
+            onAccept={(value) =>
+              updateFilter(column.id, [from, value?.toISOString()])
+            }
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                placeholder: 'To',
+                sx: {
+                  width: 200,
+                  '& .MuiInputAdornment-root': {
+                    ml: 0,
+                  },
+                },
+              },
+            }}
           />
         </Box>
       );
