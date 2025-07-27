@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from '@/components/common/table';
+import Table from '@/components/common/table/Table';
 import { type ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 
