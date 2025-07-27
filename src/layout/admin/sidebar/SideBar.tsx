@@ -34,6 +34,7 @@ export default function SideBar({
             icon={item.icon}
             text={item.text}
             children={item.children}
+            isMobile={isMobile}
           />
         ))}
       </List>

@@ -1,12 +1,11 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import Table from '../../components/common/table/Table';
 import { columns, data as initialData } from './permissions';
 import type { Permission } from './permissions';
 
 const Permissions: React.FC = () => {
-  const [data, setData] = React.useState<Permission[]>(initialData);
-  const [isTableVisible, setTableVisible] = useState(true);
+  const [data, setData] = useState<Permission[]>(initialData);
 
   const handleAdd = () => {
     const newRow: Permission = {
@@ -30,20 +29,13 @@ const Permissions: React.FC = () => {
 
   return (
     <Box>
-      <Button onClick={() => setTableVisible(!isTableVisible)} sx={{ mb: 2 }}>
-        {isTableVisible ? 'Hide Table' : 'Show Table'}
-      </Button>
-      {isTableVisible ? (
-        <Table
-          data={data}
-          columns={columns}
-          setData={setData}
-          onAdd={handleAdd}
-          onDelete={handleDelete}
-        />
-      ) : (
-        <Typography>Table is hidden</Typography>
-      )}
+      <Table
+        data={data}
+        columns={columns}
+        setData={setData}
+        onAdd={handleAdd}
+        onDelete={handleDelete}
+      />
     </Box>
   );
 };

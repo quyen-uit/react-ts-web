@@ -36,6 +36,22 @@ const sidebarItems: SidebarItemConfig[] = [
     ],
   },
   {
+    text: 'Test',
+    icon: <Settings />,
+    children: [
+      {
+        to: '/admin/products',
+        icon: <Inventory />,
+        text: ' Test',
+      },
+      {
+        to: '/admin/users',
+        icon: <People />,
+        text: 'Test',
+      },
+    ],
+  },
+  {
     to: '/login',
     icon: <Login />,
     text: 'Login',

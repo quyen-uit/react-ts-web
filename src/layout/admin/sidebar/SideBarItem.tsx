@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
@@ -16,6 +16,7 @@ export interface SidebarItemConfig {
   icon: React.ReactElement;
   text: string;
   children?: SidebarItemConfig[];
+  isMobile?: boolean;
 }
 
 export interface SideBarItemProps extends SidebarItemConfig {
@@ -29,16 +30,25 @@ const SideBarItem = ({
   to,
   icon,
   text,
+  isMobile,
   children: childItems,
 }: SideBarItemProps) => {
   const indentation = level * 2.5 + 2;
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const isMobileOpen = open || isMobile;
+
+  const { pathname } = useLocation();
+
+  const isChildActive =
+    childItems &&
+    childItems.some((child) => child.to && pathname.startsWith(child.to));
+
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(!!isChildActive);
   const handleSubMenuClick = () => {
     setIsSubMenuOpen(!isSubMenuOpen);
   };
 
   if (childItems) {
-    if (!open) {
+    if (!open && !isMobile) {
       return (
         <List component="div" disablePadding>
           {childItems.map((child, index) => (
@@ -57,6 +67,7 @@ const SideBarItem = ({
               justifyContent: open ? 'initial' : 'center',
               pr: 2,
               pl: open ? indentation : 4,
+              color: isChildActive ? 'primary.main' : 'inherit',
               '&:hover': {
                 backgroundColor: 'sidebarAction.hover',
               },
@@ -66,13 +77,14 @@ const SideBarItem = ({
               sx={{
                 minWidth: 0,
                 justifyContent: 'center',
+                color: isChildActive ? 'primary.main' : 'inherit',
               }}
             >
               {icon}
             </ListItemIcon>
             <ListItemText
               primary={text}
-              sx={{ opacity: open ? 1 : 0, ml: 2 }}
+              sx={{ opacity: isMobileOpen ? 1 : 0, ml: 2 }}
             />
             {open && (isSubMenuOpen ? <ExpandLess /> : <ExpandMore />)}
           </ListItemButton>
@@ -126,7 +138,10 @@ const SideBarItem = ({
         >
           {icon}
         </ListItemIcon>
-        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0, ml: 2 }} />
+        <ListItemText
+          primary={text}
+          sx={{ opacity: isMobileOpen ? 1 : 0, ml: 2 }}
+        />
       </ListItemButton>
     </ListItem>
   );

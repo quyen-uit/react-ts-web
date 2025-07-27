@@ -103,9 +103,6 @@ const Table = <T,>({
     getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    defaultColumn: {
-      cell: EditableCell,
-    },
     meta: {
       updateFilter: (columnId: string, value: any) => {
         setColumnFilters((prev) =>

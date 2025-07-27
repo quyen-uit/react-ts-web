@@ -1,51 +1,56 @@
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, styled } from '@mui/material';
 import FacetedFilter from './FacetedFilter';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
+import { shouldForwardProp } from '@mui/system';
+import dayjs, { Dayjs } from 'dayjs';
+import CustomDateTimePicker from '../input/CustomDateTimePicker';
 
 interface FilterProps {
   column: Column<any, any>;
   table: Table<any>;
 }
 
-const commonInputSx = {
-  minWidth: 120,
-  '& .MuiInputBase-root': {
-    fontSize: 14,
-  },
-};
+const FilterTextField = styled(TextField, { shouldForwardProp })(({
+  theme,
+  type,
+}) => {
+  let width = 120;
+  if (type === 'time') width = 64;
+  else if (['number', 'date'].includes(type ?? '')) width = 100;
 
-const commonSmallInputSx = {
-  minWidth: 96,
-  '& .MuiInputBase-root': {
-    fontSize: 14,
-  },
-};
+  return {
+    width,
+    '& .MuiInputBase-root': {
+      fontSize: theme.typography.fontSize,
+    },
+  };
+});
 
 const Filter: React.FC<FilterProps> = ({ column, table }) => {
   const columnFilterValue = column.getFilterValue();
   const { type } = column.columnDef.meta || {};
   const { updateFilter } = table.options.meta as any;
+  const [dateTime, setDateTime] = React.useState<Dayjs | null>(dayjs());
 
   switch (type) {
     case 'number':
       return (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <TextField
+          <FilterTextField
             type="number"
             value={(columnFilterValue as [number, number])?.[0] ?? ''}
-            onChange={(e) =>
+            onChange={(value) =>
               updateFilter(column.id, [
-                e.target.value,
+                value,
                 (columnFilterValue as [number, number])?.[1],
               ])
             }
             placeholder="From"
             variant="standard"
-            sx={commonSmallInputSx}
           />
           -
-          <TextField
+          <FilterTextField
             type="number"
             value={(columnFilterValue as [number, number])?.[1] ?? ''}
             onChange={(e) =>
@@ -56,7 +61,6 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             }
             placeholder="To"
             variant="standard"
-            sx={commonSmallInputSx}
           />
         </Box>
       );
@@ -65,20 +69,23 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     case 'datetime':
       return (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <TextField
-            type={type}
-            value={(columnFilterValue as [string, string])?.[0] ?? ''}
-            onChange={(e) =>
-              updateFilter(column.id, [
-                e.target.value,
-                (columnFilterValue as [string, string])?.[1],
-              ])
-            }
-            variant="standard"
-            sx={commonInputSx}
-          />
+          <CustomDateTimePicker
+            value={dateTime}
+            onChange={setDateTime}
+            slotProps={{
+              textField: {
+                variant: 'standard', // or 'filled', 'standard'
+                label: '',
+                sx: {
+                  '& .MuiInputAdornment-root': {
+                    ml: 0,
+                  },
+                },
+              },
+            }}
+          ></CustomDateTimePicker>
           -
-          <TextField
+          <FilterTextField
             type={type}
             value={(columnFilterValue as [string, string])?.[1] ?? ''}
             onChange={(e) =>
@@ -88,7 +95,6 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               ])
             }
             variant="standard"
-            sx={commonInputSx}
           />
         </Box>
       );
@@ -98,12 +104,11 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     case 'text':
     default:
       return (
-        <TextField
+        <FilterTextField
           value={(columnFilterValue ?? '') as string}
           onChange={(e) => updateFilter(column.id, e.target.value)}
           placeholder="Search..."
           variant="standard"
-          sx={commonInputSx}
         />
       );
   }
