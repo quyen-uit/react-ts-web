@@ -1,6 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-
-import Fallback from './Fallback';
+import Fallback from '../Fallback/Fallback';
 
 interface Props {
   children: ReactNode;

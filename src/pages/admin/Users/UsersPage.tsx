@@ -1,7 +1,7 @@
 import React from 'react';
-import Table from '@/components/common/table/Table';
 import { type ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { FilterTable } from '@/components/ui/table';
 
 interface User {
   id: number;
@@ -73,7 +73,13 @@ const Users: React.FC = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Users</h1>
-      <Table columns={columns} data={data} />
+      <FilterTable
+        columns={columns}
+        data={data}
+        setData={function (value: React.SetStateAction<User[]>): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
     </div>
   );
 };

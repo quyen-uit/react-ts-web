@@ -3,13 +3,9 @@ import type { RouteObject } from 'react-router-dom';
 import AdminLayout from '@/layout/AdminLayout';
 import PrivateRoute from './PrivateRoute';
 
-const Dashboard = lazy(() => import('@/pages/admin/Dashboard/Dashboard'));
-// const Products = lazy(() => import('@/pages/admin/Products'));
-const Users = lazy(() => import('@/pages/admin/Users/UsersPage'));
-const Settings = lazy(() => import('@/pages/admin/Settings'));
-const Permissions = lazy(() => import('@/pages/admin/Permissions.tsx'));
+import { Dashboard, UsersPage, Settings, Permissions } from '@/pages/admin';
 
-const adminRoutes: RouteObject[] = [
+const AdminRoutes: RouteObject[] = [
   {
     path: '/admin',
     element: <AdminLayout />,
@@ -42,7 +38,7 @@ const adminRoutes: RouteObject[] = [
             path: 'users',
             element: (
               <Suspense fallback={<div>Loading...</div>}>
-                <Users />
+                <UsersPage />
               </Suspense>
             ),
           },
@@ -68,4 +64,4 @@ const adminRoutes: RouteObject[] = [
   },
 ];
 
-export default adminRoutes;
+export default AdminRoutes;

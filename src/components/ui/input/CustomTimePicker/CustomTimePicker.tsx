@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useMediaQuery, useTheme } from '@mui/material';
 import {
-  DatePicker,
-  type DatePickerSlots,
-} from '@mui/x-date-pickers/DatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+  useMediaQuery,
+  useTheme,
+  type SxProps,
+  type Theme,
+} from '@mui/material';
+import {
+  TimePicker,
+  type TimePickerSlots,
+} from '@mui/x-date-pickers/TimePicker';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { type Dayjs } from 'dayjs';
@@ -15,42 +20,33 @@ import 'dayjs/locale/en';
 import { useTranslation } from 'react-i18next';
 
 // Using a simplified interface with `any` for slotProps to bypass a persistent TypeScript error.
-interface CustomDatePickerProps {
+interface CustomTimePickerProps {
   value: Dayjs | string | null;
   onChange: (newValue: Dayjs | null) => void;
   onAccept?: (newValue: Dayjs | null) => void;
-  label?: string;
   variant?: 'auto' | 'mobile' | 'desktop';
   disabled?: boolean;
   readOnly?: boolean;
-  error?: boolean;
-  helperText?: string;
-  minDate?: Dayjs;
-  maxDate?: Dayjs;
+  minTime?: Dayjs;
+  maxTime?: Dayjs;
   format?: string;
-  fullWidth?: boolean;
-  required?: boolean;
-  placeholder?: string;
-  sx?: any;
-  disableFuture?: boolean;
-  disablePast?: boolean;
-  slots?: DatePickerSlots;
+  sx?: SxProps<Theme>;
+  ampm?: boolean;
+  slots?: TimePickerSlots;
   slotProps?: any; // Using `any` as a last resort to solve the typing issue.
-  shouldDisableDate?: (date: Dayjs) => boolean;
+  shouldDisableTime?: (
+    timeValue: Dayjs,
+    clockType: 'hours' | 'minutes' | 'seconds'
+  ) => boolean;
 }
 
-const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
+const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   value: propValue,
   onChange,
   onAccept,
-  label,
   variant,
-  error,
-  helperText,
-  required,
-  fullWidth,
-  placeholder,
-  sx,
+  ampm = false,
+  slots,
   ...rest
 }) => {
   const [value, setValue] = useState<Dayjs | null>(null);
@@ -91,30 +87,22 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     value,
     onChange: handleChange,
     onAccept: handleAccept,
-    ...rest,
-    slotProps: {
-      ...rest.slotProps,
-      textField: {
-        label,
-        error,
-        helperText,
-        required,
-        fullWidth,
-        placeholder,
-        sx,
-        ...rest.slotProps?.textField,
-      },
+    ampm,
+    slots: {
+      ...slots,
+      toolbar: () => null,
     },
+    ...rest,
   };
 
   const renderPicker = () => {
     switch (pickerVariant) {
       case 'mobile':
-        return <MobileDatePicker {...commonProps} />;
+        return <MobileTimePicker {...commonProps} />;
       case 'desktop':
-        return <DesktopDatePicker {...commonProps} />;
+        return <DesktopTimePicker {...commonProps} />;
       default:
-        return <DatePicker {...commonProps} />;
+        return <TimePicker {...commonProps} />;
     }
   };
 
@@ -128,4 +116,4 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   );
 };
 
-export default CustomDatePicker;
+export default CustomTimePicker;

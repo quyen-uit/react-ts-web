@@ -6,7 +6,7 @@ import {
   Settings,
 } from '@mui/icons-material';
 
-import { type SidebarItemConfig } from './SideBarItem';
+import { type SidebarItemConfig } from '../SideBarItem/SideBarItem';
 
 const sidebarItems: SidebarItemConfig[] = [
   {

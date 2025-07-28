@@ -1,8 +1,8 @@
 import { List, Toolbar, Typography, Drawer as MuiDrawer } from '@mui/material';
 
-import SideBarItem from './SideBarItem';
-import { Drawer } from './SideBar.styles';
-import sidebarItems from './sidebar.config.tsx';
+import { Drawer } from '../SideBar/SideBar.styles.ts';
+import sidebarItems from '../SideBar/sidebar.config.tsx';
+import SideBarItem from '../SideBarItem/SideBarItem.tsx';
 
 interface SideBarProps {
   open: boolean;
@@ -35,6 +35,7 @@ export default function SideBar({
             text={item.text}
             children={item.children}
             isMobile={isMobile}
+            handleDrawerClose={handleDrawerClose}
           />
         ))}
       </List>

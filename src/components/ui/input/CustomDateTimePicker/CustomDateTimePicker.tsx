@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useMediaQuery, useTheme } from '@mui/material';
+import {
+  useMediaQuery,
+  useTheme,
+  type SxProps,
+  type Theme,
+} from '@mui/material';
 import {
   DateTimePicker,
+  type DateTimePickerSlotProps,
   type DateTimePickerSlots,
 } from '@mui/x-date-pickers/DateTimePicker';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
@@ -19,24 +25,18 @@ interface CustomDateTimePickerProps {
   value: Dayjs | string | null;
   onChange: (newValue: Dayjs | null) => void;
   onAccept?: (newValue: Dayjs | null) => void;
-  label?: string;
   variant?: 'auto' | 'mobile' | 'desktop';
   disabled?: boolean;
   readOnly?: boolean;
-  error?: boolean;
-  helperText?: string;
   minDate?: Dayjs;
   maxDate?: Dayjs;
   format?: string;
-  fullWidth?: boolean;
-  required?: boolean;
-  placeholder?: string;
-  sx?: any;
+  sx?: SxProps<Theme>;
   disableFuture?: boolean;
   disablePast?: boolean;
   ampm?: boolean;
   slots?: DateTimePickerSlots;
-  slotProps?: any; // Using `any` as a last resort to solve the typing issue.
+  slotProps?: DateTimePickerSlotProps<true>;
   shouldDisableDate?: (date: Dayjs) => boolean;
   shouldDisableTime?: (
     timeValue: Dayjs,
@@ -48,14 +48,8 @@ const CustomDateTimePicker: React.FC<CustomDateTimePickerProps> = ({
   value: propValue,
   onChange,
   onAccept,
-  label,
   variant,
-  error,
-  helperText,
-  required,
-  fullWidth,
-  placeholder,
-  sx,
+  slots,
   ampm = false,
   ...rest
 }) => {
@@ -98,20 +92,11 @@ const CustomDateTimePicker: React.FC<CustomDateTimePickerProps> = ({
     onChange: handleChange,
     onAccept: handleAccept,
     ampm,
-    ...rest,
-    slotProps: {
-      ...rest.slotProps,
-      textField: {
-        label,
-        error,
-        helperText,
-        required,
-        fullWidth,
-        placeholder,
-        sx,
-        ...rest.slotProps?.textField,
-      },
+    slots: {
+      ...slots,
+      toolbar: () => null,
     },
+    ...rest,
   };
 
   const renderPicker = () => {

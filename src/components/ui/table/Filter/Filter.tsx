@@ -1,40 +1,26 @@
-import { Box, TextField, styled } from '@mui/material';
-import FacetedFilter from './FacetedFilter';
+import { Box, TextField, useTheme } from '@mui/material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
-import { shouldForwardProp } from '@mui/system';
-import dayjs, { Dayjs } from 'dayjs';
 import {
   CustomDatePicker,
   CustomDateTimePicker,
   CustomTimePicker,
-} from '../input';
+} from '../../input';
+import FacetedFilter from '../FacetedFilter/FacetedFilter';
 
 interface FilterProps {
   column: Column<any, any>;
   table: Table<any>;
 }
 
-const FilterTextField = styled(TextField, { shouldForwardProp })(({
-  theme,
-  type,
-}) => {
-  let width = 120;
-  if (type === 'time') width = 64;
-  else if (['number', 'date'].includes(type ?? '')) width = 100;
-
-  return {
-    width,
-    '& .MuiInputBase-root': {
-      fontSize: theme.typography.fontSize,
-    },
-  };
-});
-
 const Filter: React.FC<FilterProps> = ({ column, table }) => {
+  const theme = useTheme();
+  const fontSize = theme.typography.fontSize;
+
   const columnFilterValue = column.getFilterValue();
   const { type } = column.columnDef.meta || {};
   const { updateFilter } = table.options.meta as any;
+
   const [from, setFrom] = React.useState<string | null>(
     (columnFilterValue as [string, string])?.[0] ?? null
   );
@@ -42,11 +28,18 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     (columnFilterValue as [string, string])?.[1] ?? null
   );
 
+  const getSxTextFieldPicker = (width: number) => ({
+    width: width,
+    '& .MuiPickersInputBase-root': {
+      fontSize: fontSize,
+    },
+  });
+
   switch (type) {
     case 'number':
       return (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <FilterTextField
+          <TextField
             type="number"
             value={(columnFilterValue as [number, number])?.[0] ?? ''}
             onChange={(value) =>
@@ -57,9 +50,15 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             }
             placeholder="From"
             variant="standard"
+            sx={{
+              width: 64,
+              '& .MuiInputBase-root': {
+                fontSize: fontSize,
+              },
+            }}
           />
           -
-          <FilterTextField
+          <TextField
             type="number"
             value={(columnFilterValue as [number, number])?.[1] ?? ''}
             onChange={(e) =>
@@ -70,6 +69,12 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             }
             placeholder="To"
             variant="standard"
+            sx={{
+              width: 64,
+              '& .MuiInputBase-root': {
+                fontSize: fontSize,
+              },
+            }}
           />
         </Box>
       );
@@ -86,12 +91,10 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               textField: {
                 variant: 'standard',
                 placeholder: 'From',
-                sx: {
-                  width: 160,
-                  '& .MuiInputAdornment-root': {
-                    ml: 0,
-                  },
-                },
+                sx: getSxTextFieldPicker(160),
+              },
+              field: {
+                clearable: true,
               },
             }}
           />
@@ -106,12 +109,10 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               textField: {
                 variant: 'standard',
                 placeholder: 'To',
-                sx: {
-                  width: 160,
-                  '& .MuiInputAdornment-root': {
-                    ml: 0,
-                  },
-                },
+                sx: getSxTextFieldPicker(160),
+              },
+              field: {
+                clearable: true,
               },
             }}
           />
@@ -130,11 +131,10 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               textField: {
                 variant: 'standard',
                 placeholder: 'From',
-                sx: {
-                  width: 96,
-                  '& .MuiInputAdornment-root': {
-                    ml: 0,
-                  },
+                sx: getSxTextFieldPicker(96),
+
+                field: {
+                  clearable: true,
                 },
               },
             }}
@@ -150,12 +150,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               textField: {
                 variant: 'standard',
                 placeholder: 'To',
-                sx: {
-                  width: 96,
-                  '& .MuiInputAdornment-root': {
-                    ml: 0,
-                  },
-                },
+                sx: getSxTextFieldPicker(96),
               },
             }}
           />
@@ -174,12 +169,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               textField: {
                 variant: 'standard',
                 placeholder: 'From',
-                sx: {
-                  width: 200,
-                  '& .MuiInputAdornment-root': {
-                    ml: 0,
-                  },
-                },
+                sx: getSxTextFieldPicker(200),
               },
             }}
           />
@@ -194,12 +184,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
               textField: {
                 variant: 'standard',
                 placeholder: 'To',
-                sx: {
-                  width: 200,
-                  '& .MuiInputAdornment-root': {
-                    ml: 0,
-                  },
-                },
+                sx: getSxTextFieldPicker(200),
               },
             }}
           />
@@ -211,7 +196,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     case 'text':
     default:
       return (
-        <FilterTextField
+        <TextField
           value={(columnFilterValue ?? '') as string}
           onChange={(e) => updateFilter(column.id, e.target.value)}
           placeholder="Search..."

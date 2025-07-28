@@ -1,9 +1,8 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import Table from '../../components/common/table/Table';
-import { columns, data as initialData } from './permissions';
-import type { Permission } from './permissions';
-
+import { columns, data as initialData } from './permissions.data';
+import type { Permission } from './permissions.data';
+import { FilterTable } from '@/components/ui/table';
 const Permissions: React.FC = () => {
   const [data, setData] = useState<Permission[]>(initialData);
 
@@ -29,7 +28,7 @@ const Permissions: React.FC = () => {
 
   return (
     <Box>
-      <Table
+      <FilterTable
         data={data}
         columns={columns}
         setData={setData}

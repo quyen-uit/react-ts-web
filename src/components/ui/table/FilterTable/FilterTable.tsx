@@ -42,8 +42,7 @@ import type {
   SortingState,
 } from '@tanstack/react-table';
 import React from 'react';
-import Filter from './Filter';
-import EditableCell from './EditableCell';
+import Filter from '../Filter/Filter';
 
 interface TableProps<T> {
   columns: ColumnDef<T>[];

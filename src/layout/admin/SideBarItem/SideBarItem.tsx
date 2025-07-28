@@ -17,6 +17,7 @@ export interface SidebarItemConfig {
   text: string;
   children?: SidebarItemConfig[];
   isMobile?: boolean;
+  handleDrawerClose?: () => void;
 }
 
 export interface SideBarItemProps extends SidebarItemConfig {
@@ -32,6 +33,7 @@ const SideBarItem = ({
   text,
   isMobile,
   children: childItems,
+  handleDrawerClose,
 }: SideBarItemProps) => {
   const indentation = level * 2.5 + 2;
   const isMobileOpen = open || isMobile;
@@ -48,7 +50,7 @@ const SideBarItem = ({
   };
 
   if (childItems) {
-    if (!open && !isMobile) {
+    if (!isMobileOpen) {
       return (
         <List component="div" disablePadding>
           {childItems.map((child, index) => (
@@ -97,6 +99,7 @@ const SideBarItem = ({
                 key={index}
                 {...child}
                 open={open}
+                handleDrawerClose={handleDrawerClose}
               />
             ))}
           </List>
@@ -108,6 +111,7 @@ const SideBarItem = ({
   return (
     <ListItem disablePadding sx={{ display: 'block' }}>
       <ListItemButton
+        onClick={handleDrawerClose}
         component={NavLink}
         to={to ?? ''}
         end

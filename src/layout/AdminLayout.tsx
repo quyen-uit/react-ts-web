@@ -5,8 +5,8 @@ import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { Outlet } from 'react-router-dom';
 
-import NavBar from '@/layout/admin/navbar/NavBar';
-import SideBar from '@/layout/admin/sidebar/SideBar';
+import { NavBar } from '@/layout/admin';
+import { SideBar } from '@/layout/admin';
 
 export default function AdminLayout() {
   const theme = useTheme();
