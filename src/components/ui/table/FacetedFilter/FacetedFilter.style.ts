@@ -1,12 +1,22 @@
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-export const SelectWrapper = styled(Box)(({ theme }) => ({
-  minWidth: 120,
-  fontSize: theme.typography.fontSize,
+export const SelectWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
   '& .MuiSelect-select': {
-    fontSize: theme.typography.fontSize,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+    paddingBottom: '3px',
+    '& .MuiTypography-root': {
+      fontSize: theme.typography.fontSize,
+    },
   },
-  '& .MuiTypography-root': {
-    fontSize: theme.typography.fontSize,
+  '& .MuiIconButton-root': {
+    visibility: 'hidden',
+  },
+  '&:hover .MuiIconButton-root': {
+    visibility: 'visible',
   },
 }));

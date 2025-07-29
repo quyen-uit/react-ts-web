@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { columns, data as initialData } from './permissions.data';
 import type { Permission } from './permissions.data';
 import { FilterTable } from '@/components/ui/table';
+import { t } from 'i18next';
 const Permissions: React.FC = () => {
   const [data, setData] = useState<Permission[]>(initialData);
 
@@ -34,6 +35,7 @@ const Permissions: React.FC = () => {
         setData={setData}
         onAdd={handleAdd}
         onDelete={handleDelete}
+        title={t('Permission')}
       />
     </Box>
   );

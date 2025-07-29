@@ -2,11 +2,11 @@ import { useTheme } from '@mui/material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 import {
+  ClearableTextField,
   CustomDatePicker,
   CustomDateTimePicker,
   CustomTimePicker,
 } from '../../input';
-import FacetedFilter from '../FacetedFilter/FacetedFilter';
 import {
   datePickerSlotProps,
   dateTimePickerSlotProps,
@@ -15,6 +15,8 @@ import {
   StyledTextField,
   timePickerSlotProps,
 } from './Filter.styles';
+import { SingleSelectFilter } from '../FacetedFilter/SingleSelectFilter';
+import { MultipleSelectFilter } from '../FacetedFilter/MultipleSelectFilter';
 
 interface FilterProps {
   column: Column<any, any>;
@@ -131,12 +133,13 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
         </FilterContainer>
       );
     case 'option':
+      return <SingleSelectFilter column={column} table={table} />;
     case 'multiple':
-      return <FacetedFilter column={column} table={table} />;
+      return <MultipleSelectFilter column={column} table={table} />;
     case 'text':
     default:
       return (
-        <StyledTextField
+        <ClearableTextField
           value={(columnFilterValue ?? '') as string}
           onChange={(e) => updateFilter(column.id, e.target.value)}
           placeholder="Search..."

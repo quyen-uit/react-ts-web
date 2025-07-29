@@ -42,11 +42,13 @@ import type {
   SortingState,
 } from '@tanstack/react-table';
 import React from 'react';
+import { TableWrapper } from './FilterTable.style';
 import Filter from '../Filter/Filter';
 
 interface TableProps<T> {
   columns: ColumnDef<T>[];
   data: T[];
+  title: string;
   setData: React.Dispatch<React.SetStateAction<T[]>>;
   onAdd?: () => void;
   onDelete?: (ids: string[]) => void;
@@ -58,6 +60,7 @@ const Table = <T,>({
   setData,
   onAdd,
   onDelete,
+  title,
 }: TableProps<T>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -125,25 +128,15 @@ const Table = <T,>({
   });
 
   return (
-    <Box
-      sx={
-        isFullScreen
-          ? {
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: '100vh',
-              backgroundColor: 'background.paper',
-              zIndex: 1300,
-              overflow: 'auto',
-            }
-          : {}
-      }
-    >
+    <TableWrapper>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flex: '1 1 100%' }}>
-          Permissions
+        <Typography
+          variant="h5"
+          fontWeight={700}
+          component="div"
+          sx={{ flex: '1 1 100%' }}
+        >
+          {title}
         </Typography>
         <TextField
           value={globalFilter ?? ''}
@@ -282,7 +275,7 @@ const Table = <T,>({
         onPageChange={(_, page) => table.setPageIndex(page)}
         onRowsPerPageChange={(e) => table.setPageSize(Number(e.target.value))}
       />
-    </Box>
+    </TableWrapper>
   );
 };
 

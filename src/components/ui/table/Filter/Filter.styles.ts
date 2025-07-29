@@ -49,12 +49,13 @@ export const dateTimePickerSlotProps = {
   },
 };
 
-export const FilterContainer = styled(Box)(({ theme }) => ({
+export const FilterContainer = styled(Box)(() => ({
   display: 'flex',
-  gap: theme.spacing(1),
+  gap: 4,
 }));
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: 120,
   '& .MuiInputBase-root': {
     fontSize: theme.typography.fontSize,
   },
