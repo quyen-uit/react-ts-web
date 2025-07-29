@@ -58,7 +58,9 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
                   key={value}
                   label={value}
                   size="small"
+                  onMouseDown={(e) => e.stopPropagation()} //  Prevent Select opening
                   onDelete={(e) => {
+                    e.stopPropagation(); //   Important
                     e.preventDefault();
                     handleRemoveChip(value);
                   }}
