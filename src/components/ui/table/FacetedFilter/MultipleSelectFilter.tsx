@@ -1,20 +1,10 @@
-import {
-  Box,
-  Checkbox,
-  Chip,
-  IconButton,
-  ListSubheader,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
-import ClearAllIcon from '@mui/icons-material/ClearAll';
+import { Checkbox, Chip, MenuItem, Select, Typography } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Close } from '@mui/icons-material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 import { SelectWrapper } from './FacetedFilter.style';
+import { ClearIconButton } from '@/styles';
 
 interface MultipleSelectFilterProps {
   column: Column<any, any>;
@@ -31,16 +21,10 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
 
   const allValues = Array.from(facetedValues.keys());
   const selectedValues = (column.getFilterValue() as string[]) ?? [];
-  const allSelected = selectedValues.length === allValues.length;
 
   const handleRemoveChip = (valueToRemove: string) => {
     const newValues = selectedValues.filter((v) => v !== valueToRemove);
     updateFilter(column.id, newValues);
-  };
-
-  const handleToggleAll = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    updateFilter(column.id, allSelected ? [] : allValues);
   };
 
   return (
@@ -51,10 +35,21 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
         onChange={(e) => updateFilter(column.id, e.target.value)}
         displayEmpty
         variant="standard"
+        endAdornment={
+          <ClearIconButton
+            visible={!!selectedValues.length}
+            onClick={() => updateFilter(column.id, undefined)}
+            marginRight={16}
+          >
+            <Close />
+          </ClearIconButton>
+        }
         renderValue={(selected) => {
           const values = selected as string[];
           if (values.length === 0) {
-            return <Typography>{placeholder}</Typography>;
+            return (
+              <Typography color="text.secondary">{placeholder}</Typography>
+            );
           }
           return (
             <>
@@ -64,7 +59,7 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
                   label={value}
                   size="small"
                   onDelete={(e) => {
-                    e.stopPropagation();
+                    e.preventDefault();
                     handleRemoveChip(value);
                   }}
                   deleteIcon={<CancelIcon />}
@@ -74,22 +69,6 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
           );
         }}
       >
-        <ListSubheader disableSticky>
-          <Box>
-            <IconButton
-              size="small"
-              onClick={handleToggleAll}
-              title={allSelected ? 'Clear All' : 'Select All'}
-            >
-              {allSelected ? (
-                <ClearAllIcon fontSize="small" />
-              ) : (
-                <SelectAllIcon fontSize="small" />
-              )}
-            </IconButton>
-          </Box>
-        </ListSubheader>
-
         {allValues.map((value: any) => (
           <MenuItem
             key={value}
@@ -101,11 +80,6 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
           </MenuItem>
         ))}
       </Select>
-      {selectedValues.length > 0 && (
-        <IconButton onClick={() => updateFilter(column.id, [])} size="small">
-          <Close />
-        </IconButton>
-      )}
     </SelectWrapper>
   );
 };

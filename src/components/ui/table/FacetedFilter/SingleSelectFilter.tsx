@@ -4,6 +4,7 @@ import type { Column, Table } from '@tanstack/react-table';
 import { t } from 'i18next';
 import React from 'react';
 import { SelectWrapper } from './FacetedFilter.style';
+import { ClearIconButton } from '@/styles';
 
 interface SingleSelectFilterProps {
   column: Column<any, any>;
@@ -28,19 +29,20 @@ export const SingleSelectFilter: React.FC<SingleSelectFilterProps> = ({
         variant="standard"
         renderValue={(selected) => {
           if (!selected) {
-            return <Typography>{placeholder}</Typography>;
+            return (
+              <Typography color="text.secondary">{placeholder}</Typography>
+            );
           }
           return selected;
         }}
         endAdornment={
-          filterValue ? (
-            <IconButton
-              sx={{ p: 1, mr: 4 }}
-              onClick={() => updateFilter(column.id, undefined)}
-            >
-              <Close sx={{ fontSize: 18 }} />
-            </IconButton>
-          ) : null
+          <ClearIconButton
+            visible={!!filterValue}
+            onClick={() => updateFilter(column.id, undefined)}
+            marginRight={16}
+          >
+            <Close />
+          </ClearIconButton>
         }
       >
         <MenuItem value="">{t('All')}</MenuItem>

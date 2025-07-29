@@ -90,6 +90,7 @@ export const columns: ColumnDef<Permission>[] = [
     meta: {
       type: 'option',
       placeholder: 'Filter by City',
+
     },
   },
   {

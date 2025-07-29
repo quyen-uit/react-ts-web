@@ -13,10 +13,6 @@ const theme = createTheme({
         background: {
           default: '#ffffff',
         },
-        text: {
-          primary: '#000000',
-          secondary: '#5E936C',
-        },
         sidebarAction: {
           hover: '#DEE9E1',
           selected: '#BED3C4',

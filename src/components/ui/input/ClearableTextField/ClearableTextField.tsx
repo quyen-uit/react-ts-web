@@ -3,6 +3,7 @@ import { IconButton, InputAdornment, TextField } from '@mui/material';
 import type { TextFieldProps } from '@mui/material';
 import { forwardRef, useCallback, useState } from 'react';
 import type { ChangeEvent } from 'react';
+import { ClearIconButton } from '@/styles';
 
 const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
   (props, ref) => {
@@ -42,9 +43,9 @@ const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
             endAdornment: (
               <InputAdornment position="end">
                 {value && (
-                  <IconButton onClick={handleClear} edge="end">
+                  <ClearIconButton onClick={handleClear} visible={!!value}>
                     <Close />
-                  </IconButton>
+                  </ClearIconButton>
                 )}
               </InputAdornment>
             ),

@@ -23,7 +23,6 @@ export const SubMenuButton = styled(ListItemButton, {
   shouldForwardProp: (prop) =>
     prop !== 'open' && prop !== 'level' && prop !== 'isChildActive',
 })<SubMenuButtonProps>(({ theme, open, level = 0, isChildActive }) => ({
-  minHeight: 48,
   justifyContent: open ? 'initial' : 'center',
   paddingRight: theme.spacing(2),
   paddingLeft: open ? theme.spacing(level * 2.5 + 2) : theme.spacing(4),
@@ -36,7 +35,6 @@ export const SubMenuButton = styled(ListItemButton, {
 export const NavItemButton = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== 'open' && prop !== 'level',
 })<NavItemButtonProps>(({ theme, open, level = 0 }) => ({
-  minHeight: 48,
   justifyContent: open ? 'initial' : 'center',
   paddingRight: theme.spacing(2),
   paddingLeft: open ? theme.spacing(level * 2.5 + 2) : theme.spacing(4),
@@ -59,7 +57,7 @@ export const StyledListItemIcon = styled(ListItemIcon, {
 })<{ isChildActive?: boolean }>(({ theme, isChildActive }) => ({
   minWidth: 0,
   justifyContent: 'center',
-  color: isChildActive ? theme.palette.primary.main : 'inherit',
+  color: isChildActive ? theme.palette.primary.main : theme.palette.grey[600],
 }));
 
 export const StyledListItemText = styled(ListItemText, {
@@ -67,4 +65,7 @@ export const StyledListItemText = styled(ListItemText, {
 })<{ open?: boolean }>(({ theme, open }) => ({
   opacity: open ? 1 : 0,
   marginLeft: theme.spacing(2),
+  '& .MuiTypography-root': {
+    fontSize: theme.typography.fontSize
+  }
 }));

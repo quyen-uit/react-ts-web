@@ -9,6 +9,8 @@ export const SelectWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: 4,
     paddingBottom: '3px',
+    paddingRight: '8px !important',
+    fontSize: theme.typography.fontSize,
     '& .MuiTypography-root': {
       fontSize: theme.typography.fontSize,
     },

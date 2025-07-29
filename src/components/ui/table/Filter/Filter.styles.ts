@@ -1,4 +1,5 @@
 import { Box, TextField, styled } from '@mui/material';
+import { ClearableTextField } from '../../input';
 
 export const datePickerSlotProps = {
   textField: {
@@ -54,8 +55,8 @@ export const FilterContainer = styled(Box)(() => ({
   gap: 4,
 }));
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
-  width: 120,
+export const StyledTextField = styled(ClearableTextField)(({ theme }) => ({
+  width: 140,
   '& .MuiInputBase-root': {
     fontSize: theme.typography.fontSize,
   },

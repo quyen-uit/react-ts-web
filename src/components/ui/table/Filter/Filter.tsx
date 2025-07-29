@@ -139,7 +139,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     case 'text':
     default:
       return (
-        <ClearableTextField
+        <StyledTextField
           value={(columnFilterValue ?? '') as string}
           onChange={(e) => updateFilter(column.id, e.target.value)}
           placeholder="Search..."
