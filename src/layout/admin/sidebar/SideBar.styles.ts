@@ -46,3 +46,14 @@ export const Drawer = styled(MuiDrawer, {
     },
   }),
 }));
+
+export const MobileDrawer = styled(MuiDrawer)(({ theme }) => ({
+  display: 'block',
+  [theme.breakpoints.up('sm')]: {
+    display: 'none',
+  },
+  '& .MuiDrawer-paper': {
+    boxSizing: 'border-box',
+    width: theme.drawerWidth,
+  },
+}));

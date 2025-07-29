@@ -5,21 +5,10 @@ import {
   MenuItem,
   Select,
   Typography,
-  styled,
 } from '@mui/material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
-
-const SelectWrapper = styled(Box)(({ theme }) => ({
-  minWidth: 120,
-  fontSize: theme.typography.fontSize,
-  '& .MuiSelect-select': {
-    fontSize: theme.typography.fontSize,
-  },
-  '& .MuiTypography-root': {
-    fontSize: theme.typography.fontSize,
-  },
-}));
+import { SelectWrapper } from './FacetedFilter.style';
 
 interface FacetedFilterProps {
   column: Column<any, any>;

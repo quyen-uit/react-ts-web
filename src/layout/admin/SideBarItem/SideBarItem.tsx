@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Collapse, List, ListItem } from '@mui/material';
+
 import {
-  Collapse,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+  NavItemButton,
+  StyledListItemIcon,
+  StyledListItemText,
+  SubMenuButton,
+} from './SideBarItem.styles';
 
 export interface SidebarItemConfig {
   to?: string;
@@ -35,7 +35,6 @@ const SideBarItem = ({
   children: childItems,
   handleDrawerClose,
 }: SideBarItemProps) => {
-  const indentation = level * 2.5 + 2;
   const isMobileOpen = open || isMobile;
 
   const { pathname } = useLocation();
@@ -62,34 +61,18 @@ const SideBarItem = ({
     return (
       <>
         <ListItem disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
+          <SubMenuButton
             onClick={handleSubMenuClick}
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              pr: 2,
-              pl: open ? indentation : 4,
-              color: isChildActive ? 'primary.main' : 'inherit',
-              '&:hover': {
-                backgroundColor: 'sidebarAction.hover',
-              },
-            }}
+            open={open}
+            level={level}
+            isChildActive={isChildActive}
           >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                justifyContent: 'center',
-                color: isChildActive ? 'primary.main' : 'inherit',
-              }}
-            >
+            <StyledListItemIcon isChildActive={isChildActive}>
               {icon}
-            </ListItemIcon>
-            <ListItemText
-              primary={text}
-              sx={{ opacity: isMobileOpen ? 1 : 0, ml: 2 }}
-            />
+            </StyledListItemIcon>
+            <StyledListItemText primary={text} open={isMobileOpen} />
             {open && (isSubMenuOpen ? <ExpandLess /> : <ExpandMore />)}
-          </ListItemButton>
+          </SubMenuButton>
         </ListItem>
         <Collapse in={open && isSubMenuOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
@@ -110,43 +93,17 @@ const SideBarItem = ({
 
   return (
     <ListItem disablePadding sx={{ display: 'block' }}>
-      <ListItemButton
+      <NavItemButton
         onClick={handleDrawerClose}
         component={NavLink}
         to={to ?? ''}
         end
-        sx={{
-          minHeight: 48,
-          justifyContent: open ? 'initial' : 'center',
-          pr: 2,
-          pl: open ? indentation : 4,
-          '&.active': {
-            backgroundColor: 'sidebarAction.selected',
-            color: 'sidebarAction.active',
-            borderRight: '4px solid',
-            borderColor: 'active.dark',
-            '& .MuiListItemIcon-root': {
-              color: 'sidebarAction.active',
-            },
-          },
-          '&:hover': {
-            backgroundColor: 'sidebarAction.hover',
-          },
-        }}
+        open={open}
+        level={level}
       >
-        <ListItemIcon
-          sx={{
-            minWidth: 0,
-            justifyContent: 'center',
-          }}
-        >
-          {icon}
-        </ListItemIcon>
-        <ListItemText
-          primary={text}
-          sx={{ opacity: isMobileOpen ? 1 : 0, ml: 2 }}
-        />
-      </ListItemButton>
+        <StyledListItemIcon>{icon}</StyledListItemIcon>
+        <StyledListItemText primary={text} open={isMobileOpen} />
+      </NavItemButton>
     </ListItem>
   );
 };

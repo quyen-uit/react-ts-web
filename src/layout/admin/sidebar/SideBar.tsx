@@ -1,6 +1,6 @@
-import { List, Toolbar, Typography, Drawer as MuiDrawer } from '@mui/material';
+import { List, Toolbar, Typography } from '@mui/material';
 
-import { Drawer } from '../SideBar/SideBar.styles.ts';
+import { Drawer, MobileDrawer } from '../SideBar/SideBar.styles.ts';
 import sidebarItems from '../SideBar/sidebar.config.tsx';
 import SideBarItem from '../SideBarItem/SideBarItem.tsx';
 
@@ -45,23 +45,16 @@ export default function SideBar({
   return (
     <>
       {isMobile ? (
-        <MuiDrawer
+        <MobileDrawer
           variant="temporary"
           open={open}
           onClose={handleDrawerClose}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
-          sx={(theme) => ({
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: theme.drawerWidth,
-            },
-          })}
         >
           {drawerContent}
-        </MuiDrawer>
+        </MobileDrawer>
       ) : (
         <Drawer variant="permanent" open={open}>
           {drawerContent}
