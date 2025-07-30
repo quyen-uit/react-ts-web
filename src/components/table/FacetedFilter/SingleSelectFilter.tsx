@@ -1,9 +1,6 @@
-import { MenuItem, Select, Typography } from '@mui/material';
 import type { Column, Table } from '@tanstack/react-table';
-import { t } from 'i18next';
 import React from 'react';
-import { SelectWrapper } from './FacetedFilter.style';
-import { ClearIconButton } from '../../icon';
+import { SingleSelect } from '../../input/SingleSelect/SingleSelect';
 
 interface SingleSelectFilterProps {
   column: Column<any, any>;
@@ -19,40 +16,18 @@ export const SingleSelectFilter: React.FC<SingleSelectFilterProps> = ({
   const { placeholder } = column.columnDef.meta as any;
   const filterValue = column.getFilterValue();
 
+  const options = Array.from(facetedValues.keys()).map((value: any) => ({
+    value,
+    label: value,
+    count: facetedValues.get(value),
+  }));
+
   return (
-    <SelectWrapper>
-      <Select
-        value={(filterValue ?? '') as string}
-        onChange={(e) => updateFilter(column.id, e.target.value)}
-        displayEmpty
-        variant="standard"
-        renderValue={(selected) => {
-          if (!selected) {
-            return (
-              <Typography color="text.secondary">{placeholder}</Typography>
-            );
-          }
-          return selected;
-        }}
-        endAdornment={
-          <ClearIconButton
-            visible={!!filterValue}
-            onClick={() => updateFilter(column.id, undefined)}
-            marginRight={2.5}
-          />
-        }
-      >
-        <MenuItem value="">{t('All')}</MenuItem>
-        {Array.from(facetedValues.keys()).map((value: any) => (
-          <MenuItem
-            key={value}
-            value={value}
-            sx={(theme) => ({ fontSize: theme.typography.fontSize })}
-          >
-            {value} ({facetedValues.get(value)})
-          </MenuItem>
-        ))}
-      </Select>
-    </SelectWrapper>
+    <SingleSelect
+      value={filterValue}
+      onChange={(value) => updateFilter(column.id, value)}
+      options={options}
+      placeholder={placeholder}
+    />
   );
 };

@@ -51,7 +51,7 @@ const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
         onMouseOut={handleUnclearable}
         onMouseOver={handleClearable}
         onKeyUp={handleClearable}
-        onKeyDown={handleUnclearable}
+    
         slotProps={{
           input: {
             endAdornment: (

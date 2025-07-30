@@ -138,7 +138,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
     case 'boolean':
       return (
         <TernaryCheckbox
-          sx={{ ml: -1 }}
+          sx={{ ml: -1, mb: -1.5 }}
           color="default"
           onValueChange={(value) => updateFilter(column.id, value)}
         />

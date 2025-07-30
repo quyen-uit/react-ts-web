@@ -1,10 +1,6 @@
-import { Checkbox, Chip, MenuItem, Select, Typography } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { Close } from '@mui/icons-material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
-import { SelectWrapper } from './FacetedFilter.style';
-import { ClearIconButton } from '../../icon';
+import { MultipleSelect } from '../../input/MultipleSelect/MultipleSelect';
 
 interface MultipleSelectFilterProps {
   column: Column<any, any>;
@@ -19,67 +15,20 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
   const { updateFilter } = table.options.meta as any;
   const { placeholder } = column.columnDef.meta as any;
 
-  const allValues = Array.from(facetedValues.keys());
   const selectedValues = (column.getFilterValue() as string[]) ?? [];
 
-  const handleRemoveChip = (valueToRemove: string) => {
-    const newValues = selectedValues.filter((v) => v !== valueToRemove);
-    updateFilter(column.id, newValues);
-  };
+  const options = Array.from(facetedValues.keys()).map((value: any) => ({
+    value,
+    label: value,
+    count: facetedValues.get(value),
+  }));
 
   return (
-    <SelectWrapper>
-      <Select
-        multiple
-        value={selectedValues}
-        onChange={(e) => updateFilter(column.id, e.target.value)}
-        displayEmpty
-        variant="standard"
-        endAdornment={
-          <ClearIconButton
-            visible={!!selectedValues.length}
-            onClick={() => updateFilter(column.id, undefined)}
-            marginRight={2.5}
-          />
-        }
-        renderValue={(selected) => {
-          const values = selected as string[];
-          if (values.length === 0) {
-            return (
-              <Typography color="text.secondary">{placeholder}</Typography>
-            );
-          }
-          return (
-            <>
-              {values.map((value) => (
-                <Chip
-                  key={value}
-                  label={value}
-                  size="small"
-                  onMouseDown={(e) => e.stopPropagation()} //  Prevent Select opening
-                  onDelete={(e) => {
-                    e.stopPropagation(); //   Important
-                    e.preventDefault();
-                    handleRemoveChip(value);
-                  }}
-                  deleteIcon={<CancelIcon />}
-                />
-              ))}
-            </>
-          );
-        }}
-      >
-        {allValues.map((value: any) => (
-          <MenuItem
-            key={value}
-            value={value}
-            sx={(theme) => ({ fontSize: theme.typography.fontSize })}
-          >
-            <Checkbox checked={selectedValues.includes(value)} />
-            {value} ({facetedValues.get(value)})
-          </MenuItem>
-        ))}
-      </Select>
-    </SelectWrapper>
+    <MultipleSelect
+      selectedValues={selectedValues}
+      onChange={(values) => updateFilter(column.id, values)}
+      options={options}
+      placeholder={placeholder}
+    />
   );
 };

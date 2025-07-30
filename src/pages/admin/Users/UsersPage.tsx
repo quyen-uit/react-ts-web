@@ -1,7 +1,8 @@
 import React from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
-import { FilterTable } from '@/components/ui/table';
+import { FilterTable } from '@/components/table';
+import EditableCell from '@/components/table/EditableCell/EditableCell';
 
 interface User {
   id: number;
@@ -19,6 +20,7 @@ const Users: React.FC = () => {
         meta: {
           type: 'number',
         },
+        cell: EditableCell,
       },
       {
         accessorKey: 'name',
@@ -26,6 +28,7 @@ const Users: React.FC = () => {
         meta: {
           type: 'text',
         },
+        cell: EditableCell,
       },
       {
         accessorKey: 'email',
@@ -33,6 +36,7 @@ const Users: React.FC = () => {
         meta: {
           type: 'text',
         },
+        cell: EditableCell,
       },
       {
         accessorKey: 'createdAt',
@@ -46,29 +50,26 @@ const Users: React.FC = () => {
     []
   );
 
-  const data = React.useMemo<User[]>(
-    () => [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        createdAt: '2023-01-15T10:00:00Z',
-      },
-      {
-        id: 2,
-        name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        createdAt: '2023-02-20T14:30:00Z',
-      },
-      {
-        id: 3,
-        name: 'Sam Wilson',
-        email: 'sam.wilson@example.com',
-        createdAt: '2023-03-10T08:45:00Z',
-      },
-    ],
-    []
-  );
+  const [data, setData] = React.useState<User[]>([
+    {
+      id: 1,
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      createdAt: '2023-01-15T10:00:00Z',
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      createdAt: '2023-02-20T14:30:00Z',
+    },
+    {
+      id: 3,
+      name: 'Sam Wilson',
+      email: 'sam.wilson@example.com',
+      createdAt: '2023-03-10T08:45:00Z',
+    },
+  ]);
 
   return (
     <div>
@@ -76,9 +77,8 @@ const Users: React.FC = () => {
       <FilterTable
         columns={columns}
         data={data}
-        setData={function (value: React.SetStateAction<User[]>): void {
-          throw new Error('Function not implemented.');
-        }}
+        setData={setData}
+        title="Users"
       />
     </div>
   );

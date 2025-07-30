@@ -1,4 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
+import EditableCell from '@/components/table/EditableCell/EditableCell';
 
 export type Permission = {
   id: number;
@@ -81,8 +82,9 @@ export const columns: ColumnDef<Permission>[] = [
     accessorKey: 'age',
     header: 'Age',
     meta: {
-      type: 'number',
+      type: 'boolean',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'city',
@@ -91,6 +93,7 @@ export const columns: ColumnDef<Permission>[] = [
       type: 'option',
       placeholder: 'Filter by City',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'state',
@@ -99,6 +102,7 @@ export const columns: ColumnDef<Permission>[] = [
       type: 'multiple',
       placeholder: 'Filter by State',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'startDate',
@@ -106,6 +110,7 @@ export const columns: ColumnDef<Permission>[] = [
     meta: {
       type: 'date',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'startTime',
@@ -113,6 +118,7 @@ export const columns: ColumnDef<Permission>[] = [
     meta: {
       type: 'time',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'createdAt',
@@ -120,6 +126,7 @@ export const columns: ColumnDef<Permission>[] = [
     meta: {
       type: 'datetime',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'notes',
@@ -127,6 +134,7 @@ export const columns: ColumnDef<Permission>[] = [
     meta: {
       type: 'text',
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'tags',
@@ -143,5 +151,6 @@ export const columns: ColumnDef<Permission>[] = [
     meta: {
       type: 'text',
     },
+    cell: EditableCell,
   },
 ];

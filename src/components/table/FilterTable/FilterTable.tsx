@@ -25,6 +25,8 @@ import {
   FilterList as FilterListIcon,
   Add as AddIcon,
   Delete as DeleteIcon,
+  Save as SaveIcon,
+  Edit as EditIcon,
 } from '@mui/icons-material';
 import {
   flexRender,
@@ -44,6 +46,7 @@ import type {
 import React from 'react';
 import { TableWrapper } from './FilterTable.style';
 import Filter from '../Filter/Filter';
+import { showConfirmAlert } from '../../alert/common/ConfirmAlert';
 
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -54,6 +57,7 @@ interface TableProps<T> {
   setData: React.Dispatch<React.SetStateAction<T[]>>;
   onAdd?: () => void;
   onDelete?: (ids: string[]) => void;
+  onEdit?: (row: T) => void;
 }
 
 const FilterTable = <T,>({
@@ -62,6 +66,7 @@ const FilterTable = <T,>({
   setData,
   onAdd,
   onDelete,
+  onEdit,
   title,
 }: TableProps<T>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -74,6 +79,37 @@ const FilterTable = <T,>({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isFullScreen, setIsFullScreen] = React.useState(false);
   const [isFilter, setisFilter] = React.useState(true);
+  const [editedRow, setEditedRow] = React.useState<number | null>(null);
+  const [isAlertOpen, setIsAlertOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (editedRow !== null && !isAlertOpen) {
+        const tableRow = document.querySelector(
+          `[data-row-index="${editedRow}"]`
+        );
+        if (tableRow && !tableRow.contains(event.target as Node)) {
+          setIsAlertOpen(true);
+          showConfirmAlert({
+            title: 'Exit Edit Mode?',
+            text: 'Are you sure you want to exit without saving?',
+            onConfirm: () => {
+              setEditedRow(null);
+              setIsAlertOpen(false);
+            },
+            onCancel: () => {
+              setIsAlertOpen(false);
+            },
+          });
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [editedRow, isAlertOpen]);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -144,7 +180,13 @@ const FilterTable = <T,>({
           sx={{ flex: '1 1 100%' }}
         >
           {title}
+          {isFilter && (
+            <IconButton aria-label="search">
+              <SearchIcon color="primary" />
+            </IconButton>
+          )}
         </Typography>
+
         <TextField
           value={globalFilter ?? ''}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -216,7 +258,7 @@ const FilterTable = <T,>({
             <TableHead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" sx={{ justifyContent: 'end' }}>
                     <Checkbox
                       indeterminate={
                         table.getIsSomeRowsSelected() &&
@@ -225,11 +267,6 @@ const FilterTable = <T,>({
                       checked={table.getIsAllRowsSelected()}
                       onChange={table.getToggleAllRowsSelectedHandler()}
                     />
-                    {isFilter && (
-                      <IconButton aria-label="search">
-                        <SearchIcon />
-                      </IconButton>
-                    )}
                   </TableCell>
                   {headerGroup.headers.map((header) => (
                     <TableCell key={header.id} sx={{ fontWeight: 'bold' }}>
@@ -256,20 +293,48 @@ const FilterTable = <T,>({
               ))}
             </TableHead>
             <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+              {table.getRowModel().rows.map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  data-row-index={index}
+                  onDoubleClick={() => setEditedRow(index)}
+                  sx={{
+                    cursor: 'pointer',
+                    ':hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                    },
+                  }}
+                >
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={row.getIsSelected()}
-                      onChange={row.getToggleSelectedHandler()}
-                    />
+                    {editedRow === index ? (
+                      <IconButton onClick={() => setEditedRow(null)}>
+                        <SaveIcon />
+                      </IconButton>
+                    ) : (
+                      <Checkbox
+                        checked={row.getIsSelected()}
+                        onChange={row.getToggleSelectedHandler()}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {onEdit && (
+                      <IconButton onClick={() => onEdit(row.original)}>
+                        <EditIcon />
+                      </IconButton>
+                    )}
                   </TableCell>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {editedRow === index
+                        ? flexRender(cell.column.columnDef.cell, {
+                            ...cell.getContext(),
+                            isEditing: true,
+                          })
+                        : flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
                     </TableCell>
                   ))}
                 </TableRow>

@@ -5,7 +5,7 @@ interface TernaryCheckboxProps extends CheckboxProps {
   onValueChange?: (value: boolean | null) => void;
 }
 
-const CyclingCheckbox: React.FC<TernaryCheckboxProps> = ({
+const TernaryCheckbox: React.FC<TernaryCheckboxProps> = ({
   onValueChange,
   ...props
 }) => {
@@ -36,4 +36,4 @@ const CyclingCheckbox: React.FC<TernaryCheckboxProps> = ({
   );
 };
 
-export default CyclingCheckbox;
+export default TernaryCheckbox;
