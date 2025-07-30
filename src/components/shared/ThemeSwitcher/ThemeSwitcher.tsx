@@ -1,5 +1,11 @@
 import { useColorScheme } from '@mui/material/styles';
-import { RadioGroup, FormControlLabel, Radio, Box, Typography } from '@mui/material';
+import {
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Box,
+  Typography,
+} from '@mui/material';
 import { WbSunny, NightsStay } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { type ChangeEvent } from 'react';

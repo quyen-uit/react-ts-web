@@ -85,7 +85,13 @@ const Login = () => {
           >
             Sign In
           </Button>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
             <Link href="#" variant="body2">
               Forgot password?
             </Link>

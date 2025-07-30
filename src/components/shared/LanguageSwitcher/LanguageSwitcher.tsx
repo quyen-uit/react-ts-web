@@ -1,4 +1,10 @@
-import { RadioGroup, FormControlLabel, Radio, Box, Typography } from '@mui/material';
+import {
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Box,
+  Typography,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { type ChangeEvent } from 'react';
 

@@ -2,7 +2,15 @@ import '@tanstack/react-table';
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
-    type?: 'number' | 'date' | 'time' | 'datetime' | 'option' | 'text' | 'multiple';
+    type?:
+      | 'number'
+      | 'date'
+      | 'time'
+      | 'datetime'
+      | 'option'
+      | 'text'
+      | 'multiple'
+      | 'boolean';
     placeholder?: string;
   }
 

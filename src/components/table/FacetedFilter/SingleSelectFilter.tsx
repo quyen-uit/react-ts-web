@@ -1,10 +1,9 @@
-import { Close } from '@mui/icons-material';
-import { IconButton, MenuItem, Select, Typography } from '@mui/material';
+import { MenuItem, Select, Typography } from '@mui/material';
 import type { Column, Table } from '@tanstack/react-table';
 import { t } from 'i18next';
 import React from 'react';
 import { SelectWrapper } from './FacetedFilter.style';
-import { ClearIconButton } from '@/styles';
+import { ClearIconButton } from '../../icon';
 
 interface SingleSelectFilterProps {
   column: Column<any, any>;
@@ -39,10 +38,8 @@ export const SingleSelectFilter: React.FC<SingleSelectFilterProps> = ({
           <ClearIconButton
             visible={!!filterValue}
             onClick={() => updateFilter(column.id, undefined)}
-            marginRight={16}
-          >
-            <Close />
-          </ClearIconButton>
+            marginRight={2.5}
+          />
         }
       >
         <MenuItem value="">{t('All')}</MenuItem>

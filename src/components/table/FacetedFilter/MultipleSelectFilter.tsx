@@ -4,7 +4,7 @@ import { Close } from '@mui/icons-material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 import { SelectWrapper } from './FacetedFilter.style';
-import { ClearIconButton } from '@/styles';
+import { ClearIconButton } from '../../icon';
 
 interface MultipleSelectFilterProps {
   column: Column<any, any>;
@@ -39,10 +39,8 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
           <ClearIconButton
             visible={!!selectedValues.length}
             onClick={() => updateFilter(column.id, undefined)}
-            marginRight={16}
-          >
-            <Close />
-          </ClearIconButton>
+            marginRight={2.5}
+          />
         }
         renderValue={(selected) => {
           const values = selected as string[];

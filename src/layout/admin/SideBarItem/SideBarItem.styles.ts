@@ -66,6 +66,6 @@ export const StyledListItemText = styled(ListItemText, {
   opacity: open ? 1 : 0,
   marginLeft: theme.spacing(2),
   '& .MuiTypography-root': {
-    fontSize: theme.typography.fontSize
-  }
+    fontSize: theme.typography.fontSize,
+  },
 }));

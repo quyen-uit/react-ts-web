@@ -1,11 +1,10 @@
-import { useTheme } from '@mui/material';
 import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
 import {
-  ClearableTextField,
   CustomDatePicker,
   CustomDateTimePicker,
   CustomTimePicker,
+  TernaryCheckbox,
 } from '../../input';
 import {
   datePickerSlotProps,
@@ -136,6 +135,14 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
       return <SingleSelectFilter column={column} table={table} />;
     case 'multiple':
       return <MultipleSelectFilter column={column} table={table} />;
+    case 'boolean':
+      return (
+        <TernaryCheckbox
+          sx={{ ml: -1 }}
+          color="default"
+          onValueChange={(value) => updateFilter(column.id, value)}
+        />
+      );
     case 'text':
     default:
       return (

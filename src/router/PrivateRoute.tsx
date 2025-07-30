@@ -1,14 +1,16 @@
-import { selectCurrentRoles, selectCurrentUser } from '@/store/slices/authSlice';
+import {
+  selectCurrentRoles,
+  selectCurrentUser,
+} from '@/store/slices/authSlice';
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
-
 
 interface PrivateRouteProps {
   allowedRoles: string[];
 }
 
 const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
-  return <Outlet />
+  return <Outlet />;
   const user = useSelector(selectCurrentUser);
   const userRoles = useSelector(selectCurrentRoles);
 

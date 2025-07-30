@@ -20,21 +20,14 @@ export const timePickerSlotProps = {
   textField: {
     variant: 'standard' as const,
     sx: {
-      width: 96,
+      width: 120,
       '& .MuiPickersInputBase-root': {
         fontSize: (theme: any) => theme.typography.fontSize,
       },
     },
   },
-};
-
-export const dateTimePickerTextFieldStyles = {
-  variant: 'standard' as const,
-  sx: {
-    width: 200,
-    '& .MuiPickersInputBase-root': {
-      fontSize: (theme: any) => theme.typography.fontSize,
-    },
+  field: {
+    clearable: true,
   },
 };
 
@@ -42,11 +35,14 @@ export const dateTimePickerSlotProps = {
   textField: {
     variant: 'standard' as const,
     sx: {
-      width: 200,
+      width: 220,
       '& .MuiPickersInputBase-root': {
         fontSize: (theme: any) => theme.typography.fontSize,
       },
     },
+  },
+  field: {
+    clearable: true,
   },
 };
 
@@ -63,5 +59,5 @@ export const StyledTextField = styled(ClearableTextField)(({ theme }) => ({
 }));
 
 export const NumberTextField = styled(StyledTextField)({
-  width: 64,
+  width: 100,
 });

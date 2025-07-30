@@ -43,6 +43,37 @@ const theme = createTheme({
     },
   },
   drawerWidth: 240,
+
+  components: {
+    MuiToolbar: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          [theme.breakpoints.up('xs')]: {
+            minHeight: '48px',
+          },
+          [theme.breakpoints.up('sm')]: {
+            minHeight: '56px',
+          },
+        }),
+      },
+    },
+
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& input[type=number]::-webkit-outer-spin-button': {
+            display: 'none',
+          },
+          '& input[type=number]::-webkit-inner-spin-button': {
+            display: 'none',
+          },
+          '& input[type=number]': {
+            MozAppearance: 'textfield',
+          },
+        },
+      },
+    },
+  },
 });
 
 export default theme;

@@ -1,14 +1,14 @@
-import { Close } from '@mui/icons-material';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { ClearIconButton } from '@/components/icon';
+import { InputAdornment, TextField } from '@mui/material';
 import type { TextFieldProps } from '@mui/material';
 import { forwardRef, useCallback, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { ClearIconButton } from '@/styles';
 
 const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
   (props, ref) => {
     const { value: initialValue, onChange, ...rest } = props;
     const [value, setValue] = useState(initialValue || '');
+    const [clearable, setClearable] = useState(false);
 
     const handleClear = useCallback(() => {
       setValue('');
@@ -32,21 +32,31 @@ const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
       [onChange]
     );
 
+    const handleClearable = useCallback(() => {
+      if (value) {
+        setClearable(true);
+      }
+    }, [value]);
+
+    const handleUnclearable = useCallback(() => {
+      setClearable(false);
+    }, [value]);
+
     return (
       <TextField
         {...rest}
         ref={ref}
         value={value}
         onChange={handleChange}
+        onMouseOut={handleUnclearable}
+        onMouseOver={handleClearable}
+        onKeyUp={handleClearable}
+        onKeyDown={handleUnclearable}
         slotProps={{
           input: {
             endAdornment: (
               <InputAdornment position="end">
-                {value && (
-                  <ClearIconButton onClick={handleClear} visible={!!value}>
-                    <Close />
-                  </ClearIconButton>
-                )}
+                <ClearIconButton onClick={handleClear} visible={clearable} />
               </InputAdornment>
             ),
           },

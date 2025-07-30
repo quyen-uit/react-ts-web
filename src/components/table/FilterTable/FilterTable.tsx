@@ -45,6 +45,8 @@ import React from 'react';
 import { TableWrapper } from './FilterTable.style';
 import Filter from '../Filter/Filter';
 
+import SearchIcon from '@mui/icons-material/Search';
+
 interface TableProps<T> {
   columns: ColumnDef<T>[];
   data: T[];
@@ -54,7 +56,7 @@ interface TableProps<T> {
   onDelete?: (ids: string[]) => void;
 }
 
-const Table = <T,>({
+const FilterTable = <T,>({
   data,
   columns,
   setData,
@@ -71,6 +73,7 @@ const Table = <T,>({
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isFullScreen, setIsFullScreen] = React.useState(false);
+  const [isFilter, setisFilter] = React.useState(true);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -82,6 +85,10 @@ const Table = <T,>({
 
   const toggleFullScreen = () => {
     setIsFullScreen((prev) => !prev);
+  };
+
+  const toggleFilter = () => {
+    setisFilter((prev) => !prev);
   };
 
   const table = useReactTable({
@@ -170,7 +177,7 @@ const Table = <T,>({
           </IconButton>
         </Tooltip>
         <Tooltip title="Filter" color="primary">
-          <IconButton>
+          <IconButton onClick={toggleFilter}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -218,6 +225,11 @@ const Table = <T,>({
                       checked={table.getIsAllRowsSelected()}
                       onChange={table.getToggleAllRowsSelectedHandler()}
                     />
+                    {isFilter && (
+                      <IconButton aria-label="search">
+                        <SearchIcon />
+                      </IconButton>
+                    )}
                   </TableCell>
                   {headerGroup.headers.map((header) => (
                     <TableCell key={header.id} sx={{ fontWeight: 'bold' }}>
@@ -233,7 +245,7 @@ const Table = <T,>({
                           header.getContext()
                         )}
                       </TableSortLabel>
-                      {header.column.getCanFilter() ? (
+                      {isFilter && header.column.getCanFilter() ? (
                         <div>
                           <Filter column={header.column} table={table} />
                         </div>
@@ -279,4 +291,4 @@ const Table = <T,>({
   );
 };
 
-export default Table;
+export default FilterTable;

@@ -9,7 +9,7 @@ interface EditableCellProps<T> {
   table: any;
 }
 
-const EditableCell = <T, >({
+const EditableCell = <T,>({
   getValue,
   row,
   column,
