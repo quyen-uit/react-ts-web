@@ -15,6 +15,8 @@ interface MultipleSelectProps {
   onChange: (values: string[]) => void;
   options: Option[];
   placeholder?: string;
+  variant?: 'standard' | 'outlined' | 'filled';
+  color?: string;
 }
 
 export const MultipleSelect: React.FC<MultipleSelectProps> = ({
@@ -22,6 +24,8 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
   onChange,
   options,
   placeholder,
+  variant = 'standard',
+  color = 'text.secondary',
 }) => {
   const handleRemoveChip = (valueToRemove: string) => {
     const newValues = selectedValues.filter((v) => v !== valueToRemove);
@@ -35,7 +39,8 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
         value={selectedValues}
         onChange={(e) => onChange(e.target.value as string[])}
         displayEmpty
-        variant="standard"
+        variant={variant}
+        sx={{ color }}
         endAdornment={
           <ClearIconButton
             visible={!!selectedValues.length}
@@ -46,9 +51,7 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
         renderValue={(selected) => {
           const values = selected as string[];
           if (values.length === 0) {
-            return (
-              <Typography color="text.secondary">{placeholder}</Typography>
-            );
+            return <Typography color={color}>{placeholder}</Typography>;
           }
           return (
             <>

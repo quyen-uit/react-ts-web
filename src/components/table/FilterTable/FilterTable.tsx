@@ -171,7 +171,7 @@ const FilterTable = <T,>({
   });
 
   return (
-    <TableWrapper>
+    <TableWrapper isFullScreen={isFullScreen}>
       <Toolbar>
         <Typography
           variant="h5"
