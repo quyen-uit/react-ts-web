@@ -20,7 +20,7 @@ interface MultipleSelectProps {
 }
 
 export const MultipleSelect: React.FC<MultipleSelectProps> = ({
-  selectedValues,
+  selectedValues = [],
   onChange,
   options,
   placeholder,
@@ -36,7 +36,7 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
     <SelectWrapper>
       <Select
         multiple
-        value={selectedValues}
+        value={Array.isArray(selectedValues) ? selectedValues : []}
         onChange={(e) => onChange(e.target.value as string[])}
         displayEmpty
         variant={variant}
@@ -50,7 +50,7 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
         }
         renderValue={(selected) => {
           const values = selected as string[];
-          if (values.length === 0) {
+          if (!values || values.length === 0) {
             return <Typography color={color}>{placeholder}</Typography>;
           }
           return (
@@ -79,7 +79,12 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
             value={option.value}
             sx={(theme) => ({ fontSize: theme.typography.fontSize })}
           >
-            <Checkbox checked={selectedValues.includes(option.value)} />
+          <Checkbox
+            checked={
+              Array.isArray(selectedValues) &&
+              selectedValues.includes(option.value)
+            }
+          />
             {option.label} {option.count && `(${option.count})`}
           </MenuItem>
         ))}

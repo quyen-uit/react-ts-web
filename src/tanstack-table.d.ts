@@ -12,6 +12,10 @@ declare module '@tanstack/react-table' {
       | 'multiple'
       | 'boolean';
     placeholder?: string;
+    options?: {
+      value: any;
+      label: string;
+    }[];
   }
 
   interface TableMeta<TData extends RowData> {

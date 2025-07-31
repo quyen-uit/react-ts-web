@@ -3,3 +3,5 @@ export { default as CustomDateTimePicker } from './CustomDateTimePicker/CustomDa
 export { default as CustomTimePicker } from './CustomTimePicker/CustomTimePicker';
 export { default as TernaryCheckbox } from './TernaryCheckbox/TernaryCheckbox';
 export { default as ClearableTextField } from './ClearableTextField/ClearableTextField';
+export * from './SingleSelect/SingleSelect';
+export * from './MultipleSelect/MultipleSelect';
