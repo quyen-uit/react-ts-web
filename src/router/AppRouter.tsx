@@ -1,10 +1,14 @@
 import { Suspense, lazy } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import AdminRoutes from './AdminRoutes';
 import ClientRoutes from './ClientRoutes';
 import { Login, Unauthorized } from '@/pages/auth';
 
 const AppRoutes = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to="/login" replace />,
+  },
   {
     path: '/login',
     element: (

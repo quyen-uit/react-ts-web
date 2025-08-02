@@ -5,7 +5,7 @@ export const datePickerSlotProps = {
   textField: {
     variant: 'standard' as const,
     sx: {
-      width: 160,
+      width: '100%',
       '& .MuiPickersInputBase-root': {
         fontSize: (theme: any) => theme.typography.fontSize,
       },
@@ -20,7 +20,7 @@ export const timePickerSlotProps = {
   textField: {
     variant: 'standard' as const,
     sx: {
-      width: 120,
+      width: '100%',
       '& .MuiPickersInputBase-root': {
         fontSize: (theme: any) => theme.typography.fontSize,
       },
@@ -35,7 +35,7 @@ export const dateTimePickerSlotProps = {
   textField: {
     variant: 'standard' as const,
     sx: {
-      width: 220,
+      width: '100%',
       '& .MuiPickersInputBase-root': {
         fontSize: (theme: any) => theme.typography.fontSize,
       },
@@ -52,12 +52,10 @@ export const FilterContainer = styled(Box)(() => ({
 }));
 
 export const StyledTextField = styled(ClearableTextField)(({ theme }) => ({
-  width: 140,
+  width: '100%',
   '& .MuiInputBase-root': {
     fontSize: theme.typography.fontSize,
   },
 }));
 
-export const NumberTextField = styled(StyledTextField)({
-  width: 100,
-});
+export const NumberTextField = styled(StyledTextField)({});
