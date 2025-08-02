@@ -1,9 +1,14 @@
-import { Suspense, lazy } from 'react';
-import type { RouteObject } from 'react-router-dom';
-import AdminLayout from '@/layout/AdminLayout';
-import PrivateRoute from './PrivateRoute';
+import { lazy } from 'react';
 
-import { Dashboard, UsersPage, Settings, Permissions } from '@/pages/admin';
+import AdminLayout from '@/layout/AdminLayout';
+import Suspense from '@/components/shared/Suspense/Suspense';
+import PrivateRoute from './PrivateRoute';
+import type { RouteObject } from 'react-router-dom';
+
+const Dashboard = lazy(() => import('@/pages/admin/Dashboard/Dashboard'));
+const UsersPage = lazy(() => import('@/pages/admin/Users/UsersPage'));
+const Settings = lazy(() => import('@/pages/admin/Settings'));
+const Permissions = lazy(() => import('@/pages/admin/Permissions'));
 
 const AdminRoutes: RouteObject[] = [
   {
@@ -16,7 +21,7 @@ const AdminRoutes: RouteObject[] = [
           {
             index: true,
             element: (
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <Dashboard />
               </Suspense>
             ),
@@ -29,7 +34,7 @@ const AdminRoutes: RouteObject[] = [
           // {
           //   path: 'products',
           //   element: (
-          //     <Suspense fallback={<div>Loading...</div>}>
+          //     <Suspense>
           //       <Products />
           //     </Suspense>
           //   ),
@@ -37,7 +42,7 @@ const AdminRoutes: RouteObject[] = [
           {
             path: 'users',
             element: (
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <UsersPage />
               </Suspense>
             ),
@@ -45,7 +50,7 @@ const AdminRoutes: RouteObject[] = [
           {
             path: 'settings',
             element: (
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <Settings />
               </Suspense>
             ),
@@ -53,7 +58,7 @@ const AdminRoutes: RouteObject[] = [
           {
             path: 'permissions',
             element: (
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <Permissions />
               </Suspense>
             ),

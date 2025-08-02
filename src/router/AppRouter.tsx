@@ -1,8 +1,10 @@
 import { Suspense, lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import AdminRoutes from './AdminRoutes';
+import AdminRoutes from './adminRoutes';
 import ClientRoutes from './ClientRoutes';
-import { Login, Unauthorized } from '@/pages/auth';
+
+const Login = lazy(() => import('@/pages/auth/Login'));
+const Unauthorized = lazy(() => import('@/pages/auth/Unauthorized'));
 
 const AppRoutes = createBrowserRouter([
   {
