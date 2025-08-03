@@ -4,6 +4,7 @@ import { Toolbar, useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import { Outlet } from 'react-router-dom';
+
 import { SideBar, NavBar } from '@/layout/admin';
 
 export default function AdminLayout() {

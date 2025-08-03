@@ -1,13 +1,16 @@
-import { Box, IconButton, Button } from '@mui/material';
-import { Edit, Delete, Visibility, Sync } from '@mui/icons-material';
 import React, { useState } from 'react';
+
+import { Visibility, Sync } from '@mui/icons-material';
+import { Box, IconButton, Button } from '@mui/material';
+import { type Row } from '@tanstack/react-table';
+import { t } from 'i18next';
+
 import { showConfirmAlert } from '@/components/alert';
+import { FilterTable } from '@/components/table';
+
+import PermissionForm from './Permissions/PermissionForm/PermissionForm';
 import { columns, data as initialData } from './permissions.data';
 import type { Permission } from './permissions.data';
-import { FilterTable } from '@/components/table';
-import { t } from 'i18next';
-import PermissionForm from './Permissions/PermissionForm/PermissionForm';
-import { type Row } from '@tanstack/react-table';
 
 const Permissions: React.FC = () => {
   const [data, setData] = useState<Permission[]>(initialData);

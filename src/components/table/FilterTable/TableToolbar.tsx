@@ -1,14 +1,5 @@
-import {
-  Toolbar,
-  Typography,
-  TextField,
-  Tooltip,
-  IconButton,
-  Menu,
-  MenuItem,
-  Checkbox,
-  Button,
-} from '@mui/material';
+import { useState } from 'react';
+
 import {
   ViewColumn as ViewColumnIcon,
   FilterList as FilterListIcon,
@@ -21,8 +12,18 @@ import {
   DensityLarge as DensityLargeIcon,
 } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
+import {
+  Toolbar,
+  Typography,
+  TextField,
+  Tooltip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Checkbox,
+} from '@mui/material';
 import type { Table } from '@tanstack/react-table';
-import { useState } from 'react';
+
 import { ToolbarTitle } from './FilterTable.style';
 
 export interface ExtraAction {
@@ -159,7 +160,7 @@ export const TableToolbar = <T,>({
             onClick={() => {
               const selectedIds = table
                 .getSelectedRowModel()
-                .rows.map((row) => (row.original as any).id);
+                .rows.map((row) => (row.original as { id: string }).id);
               onDelete(selectedIds);
             }}
             disabled={table.getSelectedRowModel().rows.length === 0}

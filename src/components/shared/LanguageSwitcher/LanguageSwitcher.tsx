@@ -1,3 +1,5 @@
+import { type ChangeEvent } from 'react';
+
 import {
   RadioGroup,
   FormControlLabel,
@@ -6,7 +8,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { type ChangeEvent } from 'react';
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();

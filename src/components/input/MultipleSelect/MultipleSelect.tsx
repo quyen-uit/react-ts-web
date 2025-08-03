@@ -1,11 +1,13 @@
-import { Checkbox, Chip, MenuItem, Select, Typography } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
 import React from 'react';
-import { SelectWrapper } from '../../table/FacetedFilter/FacetedFilter.style';
+
+import CancelIcon from '@mui/icons-material/Cancel';
+import { Checkbox, Chip, MenuItem, Select, Typography } from '@mui/material';
+
 import { ClearIconButton } from '../../icon';
+import { SelectWrapper } from '../../table/FacetedFilter/FacetedFilter.style';
 
 interface Option {
-  value: any;
+  value: string;
   label: string;
   count?: number;
 }
@@ -79,12 +81,12 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
             value={option.value}
             sx={(theme) => ({ fontSize: theme.typography.fontSize })}
           >
-          <Checkbox
-            checked={
-              Array.isArray(selectedValues) &&
-              selectedValues.includes(option.value)
-            }
-          />
+            <Checkbox
+              checked={
+                Array.isArray(selectedValues) &&
+                selectedValues.includes(option.value)
+              }
+            />
             {option.label} {option.count && `(${option.count})`}
           </MenuItem>
         ))}

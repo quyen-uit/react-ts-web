@@ -1,112 +1,156 @@
-// import {
-//   Button,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableHead,
-//   TableRow,
-//   Paper,
-//   TextField,
-// } from '@mui/material';
-// import { useTranslation } from 'react-i18next';
-// import {
-//   useGetProductsQuery,
-//   useAddProductMutation,
-//   useDeleteProductMutation,
-// } from '@/features/products/productSlice';
-// import { useState } from 'react';
+import { useState } from 'react';
 
-// const Products = () => {
-//   const { t } = useTranslation();
-//   const {
-//     data: products,
-//     isLoading,
-//     isError,
-//     error,
-//   } = useGetProductsQuery();
-//   const [addProduct] = useAddProductMutation();
-//   const [deleteProduct] = useDeleteProductMutation();
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Box,
+  Typography,
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
-//   const [newProduct, setNewProduct] = useState({ name: '', price: '' });
+import {
+  useAddProductMutation,
+  useDeleteProductMutation,
+} from '@/features/products/productApiSlice';
+import { useProducts } from '@/hooks/shared/useProducts';
 
-//   const handleAddProduct = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     await addProduct(newProduct);
-//     setNewProduct({ name: '', price: '' });
-//   };
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+}
 
-//   if (isLoading) {
-//     return <div>Loading...</div>;
-//   }
+const Products = () => {
+  const { t } = useTranslation();
+  const [searchTerm, setSearchTerm] = useState('');
+  const { products, isLoading, error, refetch } = useProducts({ searchTerm });
+  const [addProduct] = useAddProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
 
-//   if (isError) {
-//     return <div>Error: {JSON.stringify(error)}</div>;
-//   }
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    price: 0,
+    category: '',
+  });
 
-//   return (
-//     <div>
-//       <h1 className="text-2xl font-bold mb-4">{t('product.title')}</h1>
-//       <div className="mb-4">
-//         <h2 className="text-xl font-bold mb-2">{t('product.form.title')}</h2>
-//         <form onSubmit={handleAddProduct}>
-//           <TextField
-//             label={t('product.form.name')}
-//             variant="outlined"
-//             className="mb-2"
-//             value={newProduct.name}
-//             onChange={(e) =>
-//               setNewProduct({ ...newProduct, name: e.target.value })
-//             }
-//           />
-//           <TextField
-//             label={t('product.form.price')}
-//             variant="outlined"
-//             className="mb-2 ml-2"
-//             value={newProduct.price}
-//             onChange={(e) =>
-//               setNewProduct({ ...newProduct, price: e.target.value })
-//             }
-//           />
-//           <Button variant="contained" color="primary" type="submit">
-//             {t('product.form.submit')}
-//           </Button>
-//         </form>
-//       </div>
-//       <TableContainer component={Paper}>
-//         <Table>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>{t('product.table.name')}</TableCell>
-//               <TableCell>{t('product.table.price')}</TableCell>
-//               <TableCell>{t('product.table.actions')}</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {products?.map((product: any) => (
-//               <TableRow key={product.id}>
-//                 <TableCell>{product.name}</TableCell>
-//                 <TableCell>${product.price}</TableCell>
-//                 <TableCell>
-//                   <Button variant="contained" color="primary">
-//                     Edit
-//                   </Button>
-//                   <Button
-//                     variant="contained"
-//                     color="secondary"
-//                     className="ml-2"
-//                     onClick={() => deleteProduct(product.id)}
-//                   >
-//                     Delete
-//                   </Button>
-//                 </TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//     </div>
-//   );
-// };
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await addProduct(newProduct).unwrap();
+      setNewProduct({ name: '', price: 0, category: '' });
+      refetch();
+    } catch (err) {
+      console.error('Failed to add product:', err);
+    }
+  };
 
-// export default Products;
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct(id).unwrap();
+      refetch();
+    } catch (err) {
+      console.error('Failed to delete product:', err);
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {JSON.stringify(error)}</div>;
+  }
+
+  return (
+    <Box>
+      <Typography variant="h4" className="text-2xl font-bold mb-4">
+        {t('product.title')}
+      </Typography>
+      <Box className="mb-4">
+        <Typography variant="h5" className="text-xl font-bold mb-2">
+          {t('product.form.title')}
+        </Typography>
+        <form onSubmit={handleAddProduct}>
+          <TextField
+            label={t('product.form.name')}
+            variant="outlined"
+            className="mb-2 mr-2"
+            value={newProduct.name}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, name: e.target.value })
+            }
+          />
+          <TextField
+            label={t('product.form.price')}
+            variant="outlined"
+            type="number"
+            className="mb-2 mr-2"
+            value={newProduct.price}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, price: Number(e.target.value) })
+            }
+          />
+          <TextField
+            label={t('product.form.category')}
+            variant="outlined"
+            className="mb-2 mr-2"
+            value={newProduct.category}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, category: e.target.value })
+            }
+          />
+          <Button type="submit" variant="contained" color="primary">
+            {t('product.form.add')}
+          </Button>
+        </form>
+      </Box>
+      <TextField
+        label={t('product.search')}
+        variant="outlined"
+        className="mb-4"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('product.table.name')}</TableCell>
+              <TableCell>{t('product.table.price')}</TableCell>
+              <TableCell>{t('product.table.category')}</TableCell>
+              <TableCell>{t('product.table.actions')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {products.map((product: Product) => (
+              <TableRow key={product.id}>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.category}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    {t('product.table.delete')}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
+
+export default Products;

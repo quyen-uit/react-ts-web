@@ -21,7 +21,7 @@ export const showConfirmAlert = ({
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     confirmButtonText: 'Yes, proceed!',
-  }).then(result => {
+  }).then((result) => {
     if (result.isConfirmed) {
       onConfirm();
     } else {

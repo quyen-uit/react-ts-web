@@ -1,5 +1,6 @@
-import { Alert, Snackbar } from '@mui/material';
 import type { SyntheticEvent } from 'react';
+
+import { Alert, Snackbar } from '@mui/material';
 
 interface ErrorSnackbarProps {
   message: string;

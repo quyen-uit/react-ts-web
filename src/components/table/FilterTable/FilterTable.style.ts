@@ -1,5 +1,5 @@
-import { styled, type CSSProperties, type Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import { styled, type CSSProperties, type Theme } from '@mui/material/styles';
 import type { Column } from '@tanstack/react-table';
 
 interface TableWrapperProps {

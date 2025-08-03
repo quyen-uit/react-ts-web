@@ -1,15 +1,16 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import type { RootState } from '@/store/store';
+import type { User } from '@/types/api';
 
 interface AuthState {
-  user: any;
+  user?: User;
   accessToken: string | null;
   roles: string[];
 }
 
 const initialState: AuthState = {
-  user: null,
+  user: undefined,
   accessToken: null,
   roles: [],
 };
@@ -24,7 +25,7 @@ const authSlice = createSlice({
       state.roles = action.payload.roles;
     },
     logout: (state) => {
-      state.user = null;
+      state.user = undefined;
       state.accessToken = null;
       state.roles = [];
     },

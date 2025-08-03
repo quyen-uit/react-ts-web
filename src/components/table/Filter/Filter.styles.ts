@@ -1,4 +1,5 @@
-import { Box, TextField, styled } from '@mui/material';
+import { Box, styled, type Theme } from '@mui/material';
+
 import { ClearableTextField } from '../../input';
 
 export const datePickerSlotProps = {
@@ -7,7 +8,7 @@ export const datePickerSlotProps = {
     sx: {
       width: '100%',
       '& .MuiPickersInputBase-root': {
-        fontSize: (theme: any) => theme.typography.fontSize,
+        fontSize: (theme: Theme) => theme.typography.fontSize,
       },
     },
   },
@@ -22,7 +23,7 @@ export const timePickerSlotProps = {
     sx: {
       width: '100%',
       '& .MuiPickersInputBase-root': {
-        fontSize: (theme: any) => theme.typography.fontSize,
+        fontSize: (theme: Theme) => theme.typography.fontSize,
       },
     },
   },
@@ -37,7 +38,7 @@ export const dateTimePickerSlotProps = {
     sx: {
       width: '100%',
       '& .MuiPickersInputBase-root': {
-        fontSize: (theme: any) => theme.typography.fontSize,
+        fontSize: (theme: Theme) => theme.typography.fontSize,
       },
     },
   },

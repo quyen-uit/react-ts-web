@@ -1,14 +1,16 @@
+import { useEffect, useState } from 'react';
+
+import { Checkbox, TextField } from '@mui/material';
+import type { CellContext } from '@tanstack/react-table';
+
 import {
   CustomDatePicker,
   CustomDateTimePicker,
   CustomTimePicker,
   MultipleSelect,
   SingleSelect,
+  type Option,
 } from '@/components/input';
-import { Checkbox, TextField } from '@mui/material';
-import type { CellContext } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
-
 
 const EditableCell = <T,>({
   getValue,
@@ -16,6 +18,7 @@ const EditableCell = <T,>({
   column,
   table,
   isEditing,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: CellContext<T, any> & { isEditing?: boolean }) => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
@@ -80,11 +83,11 @@ const EditableCell = <T,>({
         return (
           <SingleSelect
             value={value}
-            onChange={(newValue: any) => {
+            onChange={(newValue) => {
               setValue(newValue);
               updateData?.(row.index, column.id, newValue);
             }}
-            options={options ?? []}
+            options={options as Option[]}
           />
         );
       case 'multiple':
@@ -95,7 +98,7 @@ const EditableCell = <T,>({
               setValue(newValue);
               updateData?.(row.index, column.id, newValue);
             }}
-            options={options ?? []}
+            options={options as Option[]}
           />
         );
       default:

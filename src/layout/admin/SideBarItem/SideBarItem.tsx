@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
 
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse, List, ListItem } from '@mui/material';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import {
   NavItemButton,
@@ -20,9 +20,10 @@ export interface SidebarItemConfig {
   handleDrawerClose?: () => void;
 }
 
-export interface SideBarItemProps extends SidebarItemConfig {
+export interface SideBarItemProps extends Omit<SidebarItemConfig, 'children'> {
   open: boolean;
   level?: number;
+  subItems?: SidebarItemConfig[];
 }
 
 const SideBarItem = ({
@@ -32,7 +33,7 @@ const SideBarItem = ({
   icon,
   text,
   isMobile,
-  children: childItems,
+  subItems: childItems,
   handleDrawerClose,
 }: SideBarItemProps) => {
   const isMobileOpen = open || isMobile;
@@ -52,9 +53,18 @@ const SideBarItem = ({
     if (!isMobileOpen) {
       return (
         <List component="div" disablePadding>
-          {childItems.map((child, index) => (
-            <SideBarItem level={level} key={index} {...child} open={open} />
-          ))}
+          {childItems.map((child, index) => {
+            const { children, ...rest } = child;
+            return (
+              <SideBarItem
+                level={level}
+                key={index}
+                {...rest}
+                subItems={children}
+                open={open}
+              />
+            );
+          })}
         </List>
       );
     }
@@ -76,15 +86,19 @@ const SideBarItem = ({
         </ListItem>
         <Collapse in={open && isSubMenuOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {childItems.map((child, index) => (
-              <SideBarItem
-                level={level + 1}
-                key={index}
-                {...child}
-                open={open}
-                handleDrawerClose={handleDrawerClose}
-              />
-            ))}
+            {childItems.map((child, index) => {
+              const { children, ...rest } = child;
+              return (
+                <SideBarItem
+                  level={level + 1}
+                  key={index}
+                  {...rest}
+                  subItems={children}
+                  open={open}
+                  handleDrawerClose={handleDrawerClose}
+                />
+              );
+            })}
           </List>
         </Collapse>
       </>

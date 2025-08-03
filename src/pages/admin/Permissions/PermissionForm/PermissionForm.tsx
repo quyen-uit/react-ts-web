@@ -1,7 +1,6 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import {
   Dialog,
   DialogTitle,
@@ -13,6 +12,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+
 import type { Permission } from '../../permissions.data';
 
 const permissionSchema = z.object({
@@ -89,8 +91,16 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullScreen={fullScreen} maxWidth="sm" fullWidth>
-      <DialogTitle>{permission ? 'Edit Permission' : 'Add Permission'}</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullScreen={fullScreen}
+      maxWidth="sm"
+      fullWidth
+    >
+      <DialogTitle>
+        {permission ? 'Edit Permission' : 'Add Permission'}
+      </DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 1 }}>
           <Controller

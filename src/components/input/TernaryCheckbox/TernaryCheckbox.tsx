@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import Checkbox, { type CheckboxProps } from '@mui/material/Checkbox';
 
 interface TernaryCheckboxProps extends CheckboxProps {

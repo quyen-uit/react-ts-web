@@ -1,11 +1,7 @@
-import type { Column, Table } from '@tanstack/react-table';
 import React from 'react';
-import {
-  CustomDatePicker,
-  CustomDateTimePicker,
-  CustomTimePicker,
-  TernaryCheckbox,
-} from '../../input';
+
+import type { Column, Table } from '@tanstack/react-table';
+
 import {
   datePickerSlotProps,
   dateTimePickerSlotProps,
@@ -14,18 +10,27 @@ import {
   StyledTextField,
   timePickerSlotProps,
 } from './Filter.styles';
-import { SingleSelectFilter } from '../FacetedFilter/SingleSelectFilter';
+import {
+  CustomDatePicker,
+  CustomDateTimePicker,
+  CustomTimePicker,
+  TernaryCheckbox,
+} from '../../input';
 import { MultipleSelectFilter } from '../FacetedFilter/MultipleSelectFilter';
+import { SingleSelectFilter } from '../FacetedFilter/SingleSelectFilter';
 
-interface FilterProps {
-  column: Column<any, any>;
-  table: Table<any>;
+export interface FilterProps<TData extends object, TValue> {
+  column: Column<TData, TValue>;
+  table: Table<TData>;
 }
 
-const Filter: React.FC<FilterProps> = ({ column, table }) => {
+function Filter<TData extends object, TValue>({
+  column,
+  table,
+}: FilterProps<TData, TValue>) {
   const columnFilterValue = column.getFilterValue();
   const { type } = column.columnDef.meta || {};
-  const { updateFilter } = table.options.meta as any;
+  const { updateFilter } = table.options.meta || {};
 
   const [from, setFrom] = React.useState<string | null>(
     (columnFilterValue as [string, string])?.[0] ?? null
@@ -42,7 +47,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             type="number"
             value={(columnFilterValue as [number, number])?.[0] ?? ''}
             onChange={(value) =>
-              updateFilter(column.id, [
+              updateFilter?.(column.id, [
                 value,
                 (columnFilterValue as [number, number])?.[1],
               ])
@@ -55,7 +60,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             type="number"
             value={(columnFilterValue as [number, number])?.[1] ?? ''}
             onChange={(e) =>
-              updateFilter(column.id, [
+              updateFilter?.(column.id, [
                 (columnFilterValue as [number, number])?.[0],
                 e.target.value,
               ])
@@ -72,7 +77,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             value={from}
             onChange={(value) => setFrom(value?.toISOString() ?? null)}
             onAccept={(value) =>
-              updateFilter(column.id, [value?.toISOString(), to])
+              updateFilter?.(column.id, [value?.toISOString(), to])
             }
             slotProps={datePickerSlotProps}
           />
@@ -81,7 +86,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             value={to}
             onChange={(value) => setTo(value?.toISOString() ?? null)}
             onAccept={(value) =>
-              updateFilter(column.id, [from, value?.toISOString()])
+              updateFilter?.(column.id, [from, value?.toISOString()])
             }
             slotProps={datePickerSlotProps}
           />
@@ -94,7 +99,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             value={from}
             onChange={(value) => setFrom(value?.toISOString() ?? null)}
             onAccept={(value) =>
-              updateFilter(column.id, [value?.toISOString(), to])
+              updateFilter?.(column.id, [value?.toISOString(), to])
             }
             slotProps={timePickerSlotProps}
           />
@@ -103,7 +108,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             value={to}
             onChange={(value) => setTo(value?.toISOString() ?? null)}
             onAccept={(value) =>
-              updateFilter(column.id, [from, value?.toISOString()])
+              updateFilter?.(column.id, [from, value?.toISOString()])
             }
             slotProps={timePickerSlotProps}
           />
@@ -116,7 +121,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             value={from}
             onChange={(value) => setFrom(value?.toISOString() ?? null)}
             onAccept={(value) =>
-              updateFilter(column.id, [value?.toISOString(), to])
+              updateFilter?.(column.id, [value?.toISOString(), to])
             }
             slotProps={dateTimePickerSlotProps}
           />
@@ -125,7 +130,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
             value={to}
             onChange={(value) => setTo(value?.toISOString() ?? null)}
             onAccept={(value) =>
-              updateFilter(column.id, [from, value?.toISOString()])
+              updateFilter?.(column.id, [from, value?.toISOString()])
             }
             slotProps={dateTimePickerSlotProps}
           />
@@ -140,7 +145,7 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
         <TernaryCheckbox
           sx={{ ml: -1, mb: -1.5 }}
           color="default"
-          onValueChange={(value) => updateFilter(column.id, value)}
+          onValueChange={(value) => updateFilter?.(column.id, value)}
         />
       );
     case 'text':
@@ -148,12 +153,12 @@ const Filter: React.FC<FilterProps> = ({ column, table }) => {
       return (
         <StyledTextField
           value={(columnFilterValue ?? '') as string}
-          onChange={(e) => updateFilter(column.id, e.target.value)}
+          onChange={(e) => updateFilter?.(column.id, e.target.value)}
           placeholder="Search..."
           variant="standard"
         />
       );
   }
-};
+}
 
 export default Filter;

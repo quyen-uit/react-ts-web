@@ -1,23 +1,27 @@
-import type { Column, Table } from '@tanstack/react-table';
-import React from 'react';
+import type {
+  Column,
+  ColumnMeta,
+  Table,
+  TableMeta,
+} from '@tanstack/react-table';
+
 import { MultipleSelect } from '../../input/MultipleSelect/MultipleSelect';
 
-interface MultipleSelectFilterProps {
-  column: Column<any, any>;
-  table: Table<any>;
+export interface SingleSelectFilterProps<TData extends object, TValue> {
+  column: Column<TData, TValue>;
+  table: Table<TData>;
 }
-
-export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
+export function MultipleSelectFilter<TData extends object, TValue>({
   column,
   table,
-}) => {
+}: SingleSelectFilterProps<TData, TValue>) {
   const facetedValues = column.getFacetedUniqueValues();
-  const { updateFilter } = table.options.meta as any;
-  const { placeholder } = column.columnDef.meta as any;
+  const { updateFilter } = table.options.meta as TableMeta<TData>;
+  const { placeholder } = column.columnDef.meta as ColumnMeta<TData, TValue>;
 
   const selectedValues = (column.getFilterValue() as string[]) ?? [];
 
-  const options = Array.from(facetedValues.keys()).map((value: any) => ({
+  const options = Array.from(facetedValues.keys()).map((value) => ({
     value,
     label: value,
     count: facetedValues.get(value),
@@ -31,4 +35,4 @@ export const MultipleSelectFilter: React.FC<MultipleSelectFilterProps> = ({
       placeholder={placeholder}
     />
   );
-};
+}

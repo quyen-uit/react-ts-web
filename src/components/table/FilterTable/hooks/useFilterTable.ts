@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -12,7 +14,7 @@ import {
   type ColumnSizingState,
   type ColumnPinningState,
 } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+
 import { showConfirmAlert } from '../../../alert/common/ConfirmAlert';
 
 interface UseFilterTableProps<T> {
@@ -104,12 +106,12 @@ export const useFilterTable = <T>({
     enableRowSelection: allowRowSelection,
     enableColumnResizing: allowResize,
     meta: {
-      updateFilter: (columnId: string, value: any) => {
+      updateFilter: (columnId: string, value: unknown) => {
         setColumnFilters((prev) =>
           prev.filter((f) => f.id !== columnId).concat({ id: columnId, value })
         );
       },
-      updateData: (rowIndex, columnId, value) => {
+      updateData: (rowIndex: number, columnId: string, value: unknown) => {
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {

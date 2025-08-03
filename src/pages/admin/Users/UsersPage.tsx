@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { type ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+
 import { FilterTable } from '@/components/table';
 import EditableCell from '@/components/table/EditableCell/EditableCell';
 

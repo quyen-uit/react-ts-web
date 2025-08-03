@@ -1,7 +1,7 @@
 import { List, Toolbar, Typography } from '@mui/material';
 
-import { Drawer, MobileDrawer } from '../SideBar/SideBar.styles.ts';
 import sidebarItems from '../SideBar/sidebar.config.tsx';
+import { Drawer, MobileDrawer } from '../SideBar/SideBar.styles.ts';
 import SideBarItem from '../SideBarItem/SideBarItem.tsx';
 
 interface SideBarProps {
@@ -33,7 +33,7 @@ export default function SideBar({
             to={item.to}
             icon={item.icon}
             text={item.text}
-            children={item.children}
+            subItems={item.children}
             isMobile={isMobile}
             handleDrawerClose={handleDrawerClose}
           />

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
+
 import {
   useMediaQuery,
   useTheme,
   type SxProps,
   type Theme,
 } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DatePicker,
   type DatePickerSlotProps,
   type DatePickerSlots,
 } from '@mui/x-date-pickers/DatePicker';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { type Dayjs } from 'dayjs';
-
 import 'dayjs/locale/vi';
 import 'dayjs/locale/en';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 // Using a simplified interface with `any` for slotProps to bypass a persistent TypeScript error.

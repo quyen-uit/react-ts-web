@@ -1,22 +1,27 @@
-import type { Column, Table } from '@tanstack/react-table';
-import React from 'react';
+import type {
+  Column,
+  ColumnMeta,
+  Table,
+  TableMeta,
+} from '@tanstack/react-table';
+
 import { SingleSelect } from '../../input/SingleSelect/SingleSelect';
 
-interface SingleSelectFilterProps {
-  column: Column<any, any>;
-  table: Table<any>;
+export interface SingleSelectFilterProps<TData extends object, TValue> {
+  column: Column<TData, TValue>;
+  table: Table<TData>;
 }
 
-export const SingleSelectFilter: React.FC<SingleSelectFilterProps> = ({
+export function SingleSelectFilter<TData extends object, TValue>({
   column,
   table,
-}) => {
+}: SingleSelectFilterProps<TData, TValue>) {
   const facetedValues = column.getFacetedUniqueValues();
-  const { updateFilter } = table.options.meta as any;
-  const { placeholder } = column.columnDef.meta as any;
+  const { updateFilter } = table.options.meta as TableMeta<TData>;
+  const { placeholder } = column.columnDef.meta as ColumnMeta<TData, TValue>;
   const filterValue = column.getFilterValue();
 
-  const options = Array.from(facetedValues.keys()).map((value: any) => ({
+  const options = Array.from(facetedValues.keys()).map((value) => ({
     value,
     label: value,
     count: facetedValues.get(value),
@@ -24,10 +29,10 @@ export const SingleSelectFilter: React.FC<SingleSelectFilterProps> = ({
 
   return (
     <SingleSelect
-      value={filterValue}
+      value={(filterValue as string) ?? ''}
       onChange={(value) => updateFilter(column.id, value)}
       options={options}
       placeholder={placeholder}
     />
   );
-};
+}

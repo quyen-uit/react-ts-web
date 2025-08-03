@@ -1,4 +1,6 @@
-import { useColorScheme } from '@mui/material/styles';
+import { type ChangeEvent } from 'react';
+
+import { WbSunny, NightsStay } from '@mui/icons-material';
 import {
   RadioGroup,
   FormControlLabel,
@@ -6,9 +8,8 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { WbSunny, NightsStay } from '@mui/icons-material';
+import { useColorScheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { type ChangeEvent } from 'react';
 
 export default function ThemeSwitcher() {
   const { mode, setMode } = useColorScheme();

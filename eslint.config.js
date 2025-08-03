@@ -5,6 +5,7 @@ import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginJsxA11y from 'eslint-plugin-jsx-a11y';
 import pluginImport from 'eslint-plugin-import';
 import prettierConfig from 'eslint-config-prettier';
+import pluginReactCompiler from 'eslint-plugin-react-compiler';
 
 export default tseslint.config(
   // Global ignores
@@ -32,6 +33,7 @@ export default tseslint.config(
       'react-hooks': pluginReactHooks,
       'jsx-a11y': pluginJsxA11y,
       import: pluginImport,
+      'react-compiler': pluginReactCompiler,
     },
     rules: {
       // Recommended rules for React
@@ -43,8 +45,17 @@ export default tseslint.config(
       // Recommended rules for imports
       ...pluginImport.configs.recommended.rules,
 
+      // React Compiler rules
+      'react-compiler/react-compiler': 'error',
+
       // Custom rules
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'react/react-in-jsx-scope': 'off', // Not needed with the new JSX transform
       'react/prop-types': 'off', // Not needed when using TypeScript

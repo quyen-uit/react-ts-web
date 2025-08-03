@@ -5,7 +5,9 @@ interface SuspenseProps {
 }
 
 const Suspense = ({ children }: SuspenseProps) => {
-  return <ReactSuspense fallback={<div>Loading...</div>}>{children}</ReactSuspense>;
+  return (
+    <ReactSuspense fallback={<div>Loading...</div>}>{children}</ReactSuspense>
+  );
 };
 
 export default Suspense;

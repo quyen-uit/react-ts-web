@@ -1,14 +1,17 @@
 import { lazy } from 'react';
 
-import AdminLayout from '@/layout/AdminLayout';
-import Suspense from '@/components/shared/Suspense/Suspense';
-import PrivateRoute from './PrivateRoute';
 import type { RouteObject } from 'react-router-dom';
+
+import Suspense from '@/components/shared/Suspense/Suspense';
+import AdminLayout from '@/layout/AdminLayout';
+
+import PrivateRoute from './PrivateRoute';
 
 const Dashboard = lazy(() => import('@/pages/admin/Dashboard/Dashboard'));
 const UsersPage = lazy(() => import('@/pages/admin/Users/UsersPage'));
 const Settings = lazy(() => import('@/pages/admin/Settings'));
 const Permissions = lazy(() => import('@/pages/admin/Permissions'));
+const Products = lazy(() => import('@/pages/admin/Products'));
 
 const AdminRoutes: RouteObject[] = [
   {
@@ -31,14 +34,14 @@ const AdminRoutes: RouteObject[] = [
       {
         element: <PrivateRoute allowedRoles={['admin']} />,
         children: [
-          // {
-          //   path: 'products',
-          //   element: (
-          //     <Suspense>
-          //       <Products />
-          //     </Suspense>
-          //   ),
-          // },
+          {
+            path: 'products',
+            element: (
+              <Suspense>
+                <Products />
+              </Suspense>
+            ),
+          },
           {
             path: 'users',
             element: (

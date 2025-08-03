@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Close } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 interface ClearIconButtonProps {

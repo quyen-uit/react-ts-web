@@ -1,7 +1,14 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  createApi,
+  fetchBaseQuery,
+  type BaseQueryFn,
+  type FetchArgs,
+  type FetchBaseQueryError,
+} from '@reduxjs/toolkit/query/react';
+import { Mutex } from 'async-mutex';
+
 import { login, selectCurrentToken } from '@/store/slices/authSlice';
 import type { RootState } from '@/store/store';
-import { Mutex } from 'async-mutex';
 
 const mutex = new Mutex();
 
@@ -15,12 +22,6 @@ const baseQuery = fetchBaseQuery({
     return headers;
   },
 });
-
-import type {
-  BaseQueryFn,
-  FetchArgs,
-  FetchBaseQueryError,
-} from '@reduxjs/toolkit/query';
 
 const customFetchBase: BaseQueryFn<
   string | FetchArgs,
@@ -39,7 +40,7 @@ const customFetchBase: BaseQueryFn<
           extraOptions
         );
         if (refreshResult.data) {
-          api.dispatch(login(refreshResult.data as any));
+          api.dispatch(login(refreshResult.data as unknown));
           result = await baseQuery(args, api, extraOptions);
         } else {
           api.dispatch({ type: 'auth/logout' });
@@ -59,5 +60,5 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: customFetchBase,
   tagTypes: ['Product', 'User'],
-  endpoints: (builder) => ({}),
+  endpoints: (_builder) => ({}),
 });

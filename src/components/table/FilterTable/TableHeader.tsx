@@ -1,3 +1,6 @@
+import { useState } from 'react';
+
+import { PushPin as PushPinIcon } from '@mui/icons-material';
 import {
   Box,
   TableCell,
@@ -7,14 +10,13 @@ import {
   IconButton,
   useTheme,
 } from '@mui/material';
-import { PushPin as PushPinIcon } from '@mui/icons-material';
 import { flexRender, type Table } from '@tanstack/react-table';
-import Filter from '../Filter/Filter';
-import { useState } from 'react';
-import { getColumnPinningStyles, HeaderBox } from './FilterTable.style';
 
-interface TableHeaderProps<T> {
-  table: Table<T>;
+import { getColumnPinningStyles } from './FilterTable.style';
+import Filter from '../Filter/Filter';
+
+interface TableHeaderProps<TData extends object> {
+  table: Table<TData>;
   allowSorting?: boolean;
   allowPinning?: boolean;
   allowFiltering?: boolean;
@@ -22,14 +24,14 @@ interface TableHeaderProps<T> {
   density: 'compact' | 'standard' | 'comfortable';
 }
 
-export const TableHeader = <T,>({
+export const TableHeader = <TData extends object>({
   table,
   allowSorting,
   allowPinning,
   allowFiltering,
   isFilter,
   density,
-}: TableHeaderProps<T>) => {
+}: TableHeaderProps<TData>) => {
   const theme = useTheme();
   const [hoveredColumnId, setHoveredColumnId] = useState<string | null>(null);
 

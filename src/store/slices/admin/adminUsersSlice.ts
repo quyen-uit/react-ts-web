@@ -17,7 +17,7 @@ export const productSlice = apiSlice.injectEndpoints({
     }),
     getProduct: builder.query<any, string>({
       query: (id) => ({ url: `/products/${id}`, method: 'get' }),
-      providesTags: (result, error, id) => [{ type: 'Product', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Product', id }],
     }),
     addProduct: builder.mutation<any, any>({
       query: (product) => ({
@@ -33,11 +33,11 @@ export const productSlice = apiSlice.injectEndpoints({
         method: 'put',
         data: product,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Product', id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Product', id }],
     }),
     deleteProduct: builder.mutation<any, string>({
       query: (id) => ({ url: `/products/${id}`, method: 'delete' }),
-      invalidatesTags: (result, error, id) => [{ type: 'Product', id }],
+      invalidatesTags: (_result, _error, id) => [{ type: 'Product', id }],
     }),
   }),
 });

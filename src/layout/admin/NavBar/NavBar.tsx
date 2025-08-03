@@ -3,6 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
+
 import AppBar from './NavBar.style';
 import ProfileMenu from '../ProfileMenu/ProfileMenu';
 

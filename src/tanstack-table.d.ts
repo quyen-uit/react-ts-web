@@ -1,7 +1,7 @@
 import '@tanstack/react-table';
 
 declare module '@tanstack/react-table' {
-  interface ColumnMeta<TData, TValue> {
+  interface ColumnMeta<> {
     type?:
       | 'number'
       | 'date'
@@ -13,14 +13,14 @@ declare module '@tanstack/react-table' {
       | 'boolean';
     placeholder?: string;
     options?: {
-      value: any;
+      value: unknown;
       label: string;
     }[];
   }
 
-  interface TableMeta<TData extends RowData> {
+  interface TableMeta<> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-    updateFilter: (columnId: string, value: any) => void;
+    updateFilter: (columnId: string, value: unknown) => void;
     isEditing?: boolean;
   }
 }

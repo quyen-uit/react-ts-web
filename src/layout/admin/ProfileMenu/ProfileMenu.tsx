@@ -1,4 +1,5 @@
 import { useState, type MouseEvent } from 'react';
+
 import { AccountCircle, Settings, Person } from '@mui/icons-material';
 import {
   ListItemIcon,
@@ -9,8 +10,9 @@ import {
   MenuItem,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import ThemeSwitcher from '@/components/shared/ThemeSwitcher/ThemeSwitcher';
+
 import LanguageSwitcher from '@/components/shared/LanguageSwitcher/LanguageSwitcher';
+import ThemeSwitcher from '@/components/shared/ThemeSwitcher/ThemeSwitcher';
 
 export default function ProfileMenu() {
   const { t } = useTranslation();

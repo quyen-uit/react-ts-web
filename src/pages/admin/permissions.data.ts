@@ -1,4 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
+
 import EditableCell from '@/components/table/EditableCell/EditableCell';
 
 export type Permission = {

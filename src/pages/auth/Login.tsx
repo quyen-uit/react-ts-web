@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Avatar,
   Button,
@@ -12,7 +13,8 @@ import {
   Typography,
   Container,
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useNavigate } from 'react-router-dom';
+
 import { useLoginMutation } from '@/services/api/authApi';
 
 const Login = () => {
@@ -57,6 +59,7 @@ const Login = () => {
             label="Username"
             name="username"
             autoComplete="username"
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             value={username}
             onChange={(e) => setUsername(e.target.value)}

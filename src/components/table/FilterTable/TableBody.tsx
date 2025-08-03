@@ -1,3 +1,6 @@
+import React from 'react';
+
+import { Save as SaveIcon, Edit as EditIcon } from '@mui/icons-material';
 import {
   TableBody as MuiTableBody,
   TableCell,
@@ -5,9 +8,8 @@ import {
   IconButton,
   useTheme,
 } from '@mui/material';
-import { Save as SaveIcon, Edit as EditIcon } from '@mui/icons-material';
-import { flexRender, type Table, type Column } from '@tanstack/react-table';
-import React, { type CSSProperties } from 'react';
+import { flexRender, type Table } from '@tanstack/react-table';
+
 import { getColumnPinningStyles } from './FilterTable.style';
 
 interface TableBodyProps<T> {

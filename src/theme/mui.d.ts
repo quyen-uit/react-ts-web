@@ -1,7 +1,5 @@
 import '@mui/material/styles';
 
-import { PaletteColor, PaletteColorOptions } from '@mui/material/styles';
-
 interface PaletteAction {
   hover: string;
   selected: string;
