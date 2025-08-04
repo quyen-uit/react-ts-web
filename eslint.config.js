@@ -5,7 +5,6 @@ import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginJsxA11y from 'eslint-plugin-jsx-a11y';
 import pluginImport from 'eslint-plugin-import';
 import prettierConfig from 'eslint-config-prettier';
-import pluginReactCompiler from 'eslint-plugin-react-compiler';
 
 export default tseslint.config(
   // Global ignores
@@ -33,7 +32,6 @@ export default tseslint.config(
       'react-hooks': pluginReactHooks,
       'jsx-a11y': pluginJsxA11y,
       import: pluginImport,
-      'react-compiler': pluginReactCompiler,
     },
     rules: {
       // Recommended rules for React
@@ -46,7 +44,7 @@ export default tseslint.config(
       ...pluginImport.configs.recommended.rules,
 
       // React Compiler rules
-      'react-compiler/react-compiler': 'error',
+      'react-hooks/react-compiler': 'error',
 
       // Custom rules
       '@typescript-eslint/no-unused-vars': [
