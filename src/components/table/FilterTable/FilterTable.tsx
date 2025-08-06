@@ -61,43 +61,27 @@ const FilterTable = <T extends { id: string | number }>({
   const [isFilter, setisFilter] = useState(true);
   const [density, setDensity] = useState(1);
 
-  // Column size calculation function
-  const getMinSizeForColumn = (type: string) => {
-    switch (type) {
-      case 'date':
-        return 192;
-      case 'time':
-        return 150;
-      case 'datetime':
-        return 240;
-      default:
-        return 100;
-    }
-  };
-
-  const getSizeForColumn = (type: string) => {
-    switch (type) {
-      case 'boolean':
-        return 150;
-      case 'date':
-        return 360;
-      case 'time':
-        return 280;
-      case 'datetime':
-        return 440;
-      default:
-        return 200;
-    }
+  // Column size calculation
+  const columnSizes: Record<string, { minSize: number; size: number }> = {
+    date: { minSize: 192, size: 360 },
+    time: { minSize: 150, size: 280 },
+    datetime: { minSize: 240, size: 440 },
+    boolean: { minSize: 100, size: 150 },
+    text: { minSize: 100, size: 200 },
   };
 
   const columnsWithDefaults = useMemo<ColumnDef<T>[]>(
     () =>
-      columns.map((col: ColumnDef<T>) => ({
-        minSize: getMinSizeForColumn(col.meta?.type || 'text'),
-        size: getSizeForColumn(col.meta?.type || 'text'),
-        maxSize: 500,
-        ...col,
-      })),
+      columns.map((col: ColumnDef<T>) => {
+        const type = col.meta?.type || 'text';
+        const { minSize, size } = columnSizes[type] ?? columnSizes.text;
+        return {
+          minSize,
+          size,
+          maxSize: 500,
+          ...col,
+        };
+      }),
     [columns]
   );
 

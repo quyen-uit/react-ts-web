@@ -1,4 +1,4 @@
-export { default as NavBar } from './NavBar/NavBar';
-export { default as ProfileMenu } from './ProfileMenu/ProfileMenu';
-export { default as SideBar } from './SideBar/SideBar';
-export { default as SideBarItem } from './SideBarItem/SideBarItem';
+export { default as NavBar } from '../admin/NavBar/NavBar';
+export { default as ProfileMenu } from '../admin/ProfileMenu/ProfileMenu';
+export { default as SideBar } from '../admin/SideBar/SideBar';
+export { default as SideBarItem } from '../admin/SideBarItem/SideBarItem';

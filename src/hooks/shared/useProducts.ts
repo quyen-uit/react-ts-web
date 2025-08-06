@@ -1,5 +1,5 @@
-import { useGetProductsQuery } from '@/features/products/productApiSlice';
 import { useDebounce } from '@/hooks/shared/useDebounce';
+import { useGetProductsQuery } from '@/store/slices/products/productApiSlice';
 
 interface UseProductsProps {
   searchTerm?: string;

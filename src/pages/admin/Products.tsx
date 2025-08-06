@@ -15,11 +15,11 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
+import { useProducts } from '@/hooks/shared/useProducts';
 import {
   useAddProductMutation,
   useDeleteProductMutation,
-} from '@/features/products/productApiSlice';
-import { useProducts } from '@/hooks/shared/useProducts';
+} from '@/store/slices/products/productApiSlice';
 
 interface Product {
   id: string;
