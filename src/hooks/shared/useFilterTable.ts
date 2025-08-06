@@ -15,7 +15,7 @@ import {
   type ColumnPinningState,
 } from '@tanstack/react-table';
 
-import { showConfirmAlert } from '../../../alert/common/ConfirmAlert';
+import { showConfirmAlert } from '@/components/alert';
 
 interface UseFilterTableProps<T> {
   data: T[];
@@ -25,7 +25,7 @@ interface UseFilterTableProps<T> {
   allowResize?: boolean;
 }
 
-export const useFilterTable = <T>({
+const useFilterTable = <T>({
   data,
   columns,
   setData,
@@ -40,11 +40,12 @@ export const useFilterTable = <T>({
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
     left: ['select'],
-    right: ['action'],
+    right: ['actions'],
   });
   const [columnOrder, setColumnOrder] = useState<string[]>([]);
   const [editedRow, setEditedRow] = useState<number | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [originalRowData, setOriginalRowData] = useState<T | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,9 +59,18 @@ export const useFilterTable = <T>({
             title: 'Exit Edit Mode?',
             text: 'Are you sure you want to exit without saving?',
             onConfirm: () => {
+              if (editedRow !== null && originalRowData) {
+                setData((prev) =>
+                  prev.map((row, index) =>
+                    index === editedRow ? originalRowData : row
+                  )
+                );
+              }
               setEditedRow(null);
+              setOriginalRowData(null);
               setIsAlertOpen(false);
             },
+
             onCancel: () => {
               setIsAlertOpen(false);
             },
@@ -73,7 +83,7 @@ export const useFilterTable = <T>({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [editedRow, isAlertOpen]);
+  }, [editedRow, isAlertOpen, originalRowData, setData]);
 
   const table = useReactTable({
     data,
@@ -139,5 +149,8 @@ export const useFilterTable = <T>({
     setEditedRow,
     columnOrder,
     columnSizing,
+    setOriginalRowData,
   };
 };
+
+export default useFilterTable;

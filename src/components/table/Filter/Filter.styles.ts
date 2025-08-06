@@ -1,6 +1,6 @@
 import { Box, styled, type Theme } from '@mui/material';
 
-import { ClearableTextField } from '../../input';
+import { ClearableTextField } from '@/components/input';
 
 export const datePickerSlotProps = {
   textField: {
@@ -50,6 +50,12 @@ export const dateTimePickerSlotProps = {
 export const FilterContainer = styled(Box)(() => ({
   display: 'flex',
   gap: 4,
+  flexWrap: 'wrap',
+
+  '& .MuiFormControl-root': {
+    flex: 1,
+    minWidth: 120,
+  },
 }));
 
 export const StyledTextField = styled(ClearableTextField)(({ theme }) => ({

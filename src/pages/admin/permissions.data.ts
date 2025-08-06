@@ -107,7 +107,7 @@ export const columns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'startDate',
-    header: 'Start Date',
+    header: 'Start DateStart DateStart DateStart DateStart DateStart Date',
     meta: {
       type: 'date',
     },

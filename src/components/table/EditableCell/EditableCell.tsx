@@ -77,6 +77,7 @@ const EditableCell = <T,>({
             checked={value}
             onChange={(e) => setValue(e.target.checked)}
             onBlur={onBlur}
+            sx={{ ml: -1 }}
           />
         );
       case 'option':

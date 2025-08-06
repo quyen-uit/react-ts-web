@@ -19,6 +19,7 @@ interface MultipleSelectProps {
   placeholder?: string;
   variant?: 'standard' | 'outlined' | 'filled';
   color?: string;
+  width?: string | number;
 }
 
 export const MultipleSelect: React.FC<MultipleSelectProps> = ({
@@ -28,6 +29,7 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
   placeholder,
   variant = 'standard',
   color = 'text.secondary',
+  width = '100%',
 }) => {
   const handleRemoveChip = (valueToRemove: string) => {
     const newValues = selectedValues.filter((v) => v !== valueToRemove);
@@ -42,7 +44,7 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
         onChange={(e) => onChange(e.target.value as string[])}
         displayEmpty
         variant={variant}
-        sx={{ color }}
+        sx={{ color, width }}
         endAdornment={
           <ClearIconButton
             visible={!!selectedValues.length}
@@ -75,21 +77,22 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
           );
         }}
       >
-        {options.map((option) => (
-          <MenuItem
-            key={option.value}
-            value={option.value}
-            sx={(theme) => ({ fontSize: theme.typography.fontSize })}
-          >
-            <Checkbox
-              checked={
-                Array.isArray(selectedValues) &&
-                selectedValues.includes(option.value)
-              }
-            />
-            {option.label} {option.count && `(${option.count})`}
-          </MenuItem>
-        ))}
+        {options &&
+          options.map((option) => (
+            <MenuItem
+              key={option.value}
+              value={option.value}
+              sx={(theme) => ({ fontSize: theme.typography.fontSize })}
+            >
+              <Checkbox
+                checked={
+                  Array.isArray(selectedValues) &&
+                  selectedValues.includes(option.value)
+                }
+              />
+              {option.label} {option.count && `(${option.count})`}
+            </MenuItem>
+          ))}
       </Select>
     </SelectWrapper>
   );

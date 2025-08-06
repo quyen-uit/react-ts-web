@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+// 'use no memo';
+import { useMemo, useState, type ReactElement } from 'react';
 
 import { Edit, Delete } from '@mui/icons-material';
 import {
@@ -12,11 +13,13 @@ import {
 } from '@mui/material';
 import { type ColumnDef, type Row } from '@tanstack/react-table';
 
+import { useFilterTable } from '@/hooks';
+
 import { TableWrapper } from './FilterTable.style';
-import { useFilterTable } from './hooks/useFilterTable';
 import { TableBody } from './TableBody';
 import { TableHeader } from './TableHeader';
 import { TableToolbar, type ExtraAction } from './TableToolbar';
+
 interface TableProps<T extends { id: string | number }> {
   columns: ColumnDef<T>[];
   data: T[];
@@ -25,7 +28,8 @@ interface TableProps<T extends { id: string | number }> {
   onAdd?: () => void;
   onDelete?: (ids: string[]) => void;
   onEdit?: (row: T) => void;
-  renderRowActions?: (row: Row<T>) => React.ReactNode;
+  renderRowActions?: (row: Row<T>) => ReactElement<typeof IconButton>[];
+  actionNumber?: number;
   allowPinning?: boolean;
   allowFiltering?: boolean;
   allowFullscreen?: boolean;
@@ -51,41 +55,62 @@ const FilterTable = <T extends { id: string | number }>({
   allowRowSelection = true,
   allowResize = true,
   extraActions,
+  actionNumber = 0,
 }: TableProps<T>) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isFilter, setisFilter] = useState(true);
-  const [density, setDensity] = useState<
-    'compact' | 'standard' | 'comfortable'
-  >('standard');
+  const [density, setDensity] = useState(1);
 
   // Column size calculation function
   const getMinSizeForColumn = (type: string) => {
     switch (type) {
-      case 'boolean':
-        return 80;
       case 'date':
-        return 180;
+        return 192;
       case 'time':
         return 150;
       case 'datetime':
-        return 220;
-      case 'option':
-        return 200;
-      case 'multiple':
-        return 250;
+        return 240;
       default:
-        return 150;
+        return 100;
     }
   };
 
-  // Column mapping with default values (auto-memoized by React 19)
-  const columnsWithDefaults = columns.map((col: ColumnDef<T>) => ({
-    minSize: getMinSizeForColumn(col.meta?.type || 'text'),
-    ...col,
-  }));
+  const getSizeForColumn = (type: string) => {
+    switch (type) {
+      case 'boolean':
+        return 150;
+      case 'date':
+        return 360;
+      case 'time':
+        return 280;
+      case 'datetime':
+        return 440;
+      default:
+        return 200;
+    }
+  };
+
+  const columnsWithDefaults = useMemo<ColumnDef<T>[]>(
+    () =>
+      columns.map((col: ColumnDef<T>) => ({
+        minSize: getMinSizeForColumn(col.meta?.type || 'text'),
+        size: getSizeForColumn(col.meta?.type || 'text'),
+        maxSize: 500,
+        ...col,
+      })),
+    [columns]
+  );
 
   // Memoize columns with row selection
   const columnsWithRowSelection = useMemo<ColumnDef<T>[]>(() => {
+    const getActionSize = () => {
+      let size = 0;
+      if (onEdit) size += 56;
+      if (onDelete) size += 56;
+      if (renderRowActions) size += 40 * actionNumber;
+      return size;
+    };
+
     const selectColumn: ColumnDef<T> = {
       id: 'select',
       header: ({ table }) => (
@@ -105,7 +130,7 @@ const FilterTable = <T extends { id: string | number }>({
       ),
       enableSorting: false,
       enableResizing: false,
-      size: 72,
+      size: 58,
     };
 
     const actionColumn: ColumnDef<T> = {
@@ -128,6 +153,7 @@ const FilterTable = <T extends { id: string | number }>({
       ),
       enableSorting: false,
       enableResizing: false,
+      size: getActionSize(),
     };
 
     const result: ColumnDef<T>[] = [selectColumn, ...columnsWithDefaults];
@@ -137,7 +163,7 @@ const FilterTable = <T extends { id: string | number }>({
     }
 
     return result;
-  }, [columnsWithDefaults, onEdit, onDelete, renderRowActions]);
+  }, [columnsWithDefaults, onEdit, onDelete, renderRowActions, actionNumber]);
 
   const {
     table,
@@ -146,6 +172,7 @@ const FilterTable = <T extends { id: string | number }>({
     editedRow,
     setEditedRow,
     columnSizing,
+    setOriginalRowData,
   } = useFilterTable({
     data,
     columns: columnsWithRowSelection,
@@ -162,9 +189,7 @@ const FilterTable = <T extends { id: string | number }>({
     setisFilter((prev) => !prev);
   };
 
-  const handleDensityChange = (
-    newDensity: 'compact' | 'standard' | 'comfortable'
-  ) => {
+  const handleDensityChange = (newDensity: number) => {
     setDensity(newDensity);
   };
 
@@ -210,8 +235,18 @@ const FilterTable = <T extends { id: string | number }>({
       >
         <TableContainer sx={{ ...columnSizeVars }}>
           <MuiTable
+            size={'small'}
             sx={{
               tableLayout: 'fixed',
+              '& .MuiTableCell-sizeSmall': {
+                '&:first-of-type': {
+                  pl: 1,
+                },
+              },
+              '& td.MuiTableCell-sizeSmall': {
+                py: density,
+                px: 2,
+              },
             }}
           >
             <TableHeader
@@ -220,14 +255,13 @@ const FilterTable = <T extends { id: string | number }>({
               allowPinning={allowPinning}
               allowFiltering={allowFiltering}
               isFilter={isFilter}
-              density={density}
             />
             <TableBody
               table={table}
               editedRow={editedRow}
               setEditedRow={setEditedRow}
               onEdit={onEdit}
-              density={density}
+              setOriginalRowData={setOriginalRowData}
             />
           </MuiTable>
         </TableContainer>

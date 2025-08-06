@@ -1,3 +1,4 @@
+'use no memo';
 import Box from '@mui/material/Box';
 import { styled, type CSSProperties, type Theme } from '@mui/material/styles';
 import type { Column } from '@tanstack/react-table';
@@ -26,6 +27,17 @@ export const getColumnPinningStyles = <T>(
   column: Column<T, unknown>
 ): CSSProperties => {
   const isPinned = column.getIsPinned();
+  if (isPinned === 'right')
+    // only actions pin to right
+    return {
+      boxShadow: '4px 0 4px -4px gray inset',
+      right: 0,
+      opacity: 1,
+      position: 'sticky',
+      zIndex: 1,
+      backgroundColor: theme.palette.background.paper,
+    };
+
   const isLastLeftPinnedColumn =
     isPinned === 'left' && column.getIsLastColumn('left');
 
@@ -49,13 +61,26 @@ export const ToolbarTitle = styled('div')(({ theme }) => ({
   flex: '1 1 100%',
 }));
 
-// Header Components
-export const HeaderBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  fontWeight: theme.typography.fontWeightBold,
-}));
+export const ResizeBox = styled(Box, {
+  shouldForwardProp: (prop) =>
+    prop !== 'isResizing' && prop !== 'isHoverHeader',
+})<{ isResizing: boolean; isHoverHeader: boolean }>(
+  ({ theme, isResizing, isHoverHeader }) => ({
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    height: '100%',
+    width: '5px',
+    cursor: 'col-resize',
+    userSelect: 'none',
+    touchAction: 'none',
+    backgroundColor: isResizing
+      ? theme.palette.primary.main
+      : isHoverHeader
+        ? theme.palette.action.hover
+        : 'transparent',
+  })
+);
 
 export const HeaderIconButton = styled('div')({
   visibility: 'hidden',

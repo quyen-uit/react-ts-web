@@ -1,3 +1,4 @@
+'use no memo';
 import React from 'react';
 
 import type { Column, Table } from '@tanstack/react-table';
@@ -81,7 +82,6 @@ function Filter<TData extends object, TValue>({
             }
             slotProps={datePickerSlotProps}
           />
-          -
           <CustomDatePicker
             value={to}
             onChange={(value) => setTo(value?.toISOString() ?? null)}
@@ -103,7 +103,6 @@ function Filter<TData extends object, TValue>({
             }
             slotProps={timePickerSlotProps}
           />
-          -
           <CustomTimePicker
             value={to}
             onChange={(value) => setTo(value?.toISOString() ?? null)}
@@ -125,7 +124,6 @@ function Filter<TData extends object, TValue>({
             }
             slotProps={dateTimePickerSlotProps}
           />
-          -
           <CustomDateTimePicker
             value={to}
             onChange={(value) => setTo(value?.toISOString() ?? null)}

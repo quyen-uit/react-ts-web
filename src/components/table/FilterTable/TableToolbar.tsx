@@ -1,3 +1,4 @@
+'use no memo';
 import { useState } from 'react';
 
 import {
@@ -21,6 +22,7 @@ import {
   Menu,
   MenuItem,
   Checkbox,
+  Divider,
 } from '@mui/material';
 import type { Table } from '@tanstack/react-table';
 
@@ -45,8 +47,8 @@ interface TableToolbarProps<T> {
   isFilter: boolean;
   toggleFilter: () => void;
   extraActions?: ExtraAction[];
-  density: 'compact' | 'standard' | 'comfortable';
-  onDensityChange: (density: 'compact' | 'standard' | 'comfortable') => void;
+  density: number;
+  onDensityChange: (density: number) => void;
 }
 
 export const TableToolbar = <T,>({
@@ -77,14 +79,8 @@ export const TableToolbar = <T,>({
   };
 
   const handleDensityToggle = () => {
-    const densities: ('compact' | 'standard' | 'comfortable')[] = [
-      'compact',
-      'standard',
-      'comfortable',
-    ];
-    const currentIndex = densities.indexOf(density);
-    const nextIndex = (currentIndex + 1) % densities.length;
-    onDensityChange(densities[nextIndex]);
+    const nextIndex = (density + 1) % 3;
+    onDensityChange(nextIndex);
   };
 
   return (
@@ -116,6 +112,14 @@ export const TableToolbar = <T,>({
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
+        <MenuItem>
+          <Checkbox
+            checked={table.getIsAllColumnsVisible()}
+            onChange={table.getToggleAllColumnsVisibilityHandler()}
+          />
+          Toggle All
+        </MenuItem>
+        <Divider />
         {table.getAllLeafColumns().map((column) => (
           <MenuItem key={column.id}>
             <Checkbox
@@ -128,9 +132,9 @@ export const TableToolbar = <T,>({
       </Menu>
       <Tooltip title="Toggle Density">
         <IconButton onClick={handleDensityToggle} color="primary">
-          {density === 'compact' && <DensitySmallIcon />}
-          {density === 'standard' && <DensityMediumIcon />}
-          {density === 'comfortable' && <DensityLargeIcon />}
+          {density === 0 && <DensitySmallIcon fontSize="small" />}
+          {density === 1 && <DensityMediumIcon fontSize="small" />}
+          {density === 2 && <DensityLargeIcon fontSize="small" />}
         </IconButton>
       </Tooltip>
       {allowFullscreen && (

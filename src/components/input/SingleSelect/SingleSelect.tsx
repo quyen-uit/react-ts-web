@@ -19,6 +19,7 @@ interface SingleSelectProps {
   placeholder?: string;
   variant?: 'standard' | 'outlined' | 'filled';
   color?: string;
+  width?: string | number;
 }
 
 export const SingleSelect: React.FC<SingleSelectProps> = ({
@@ -28,6 +29,7 @@ export const SingleSelect: React.FC<SingleSelectProps> = ({
   placeholder,
   variant = 'standard',
   color = 'text.secondary',
+  width = '100%',
 }) => {
   return (
     <SelectWrapper>
@@ -36,7 +38,7 @@ export const SingleSelect: React.FC<SingleSelectProps> = ({
         onChange={(e) => onChange(e.target.value)}
         displayEmpty
         variant={variant}
-        sx={{ color }}
+        sx={{ color, width }}
         renderValue={(selected) => {
           if (!selected) {
             return <Typography color={color}>{placeholder}</Typography>;

@@ -67,11 +67,12 @@ const Permissions: React.FC = () => {
         onDelete={handleDeleteConfirmation}
         onEdit={handleEdit}
         title={t('Permission')}
-        renderRowActions={(row: Row<Permission>) => (
-          <IconButton onClick={() => console.log(row.original)}>
+        actionNumber={1}
+        renderRowActions={(row: Row<Permission>) => [
+          <IconButton key={row.id} onClick={() => console.log(row.original)}>
             <Visibility />
-          </IconButton>
-        )}
+          </IconButton>,
+        ]}
         extraActions={[
           {
             tooltip: 'Sync',

@@ -1,11 +1,9 @@
-import React from 'react';
+'use no memo';
 
-import { Save as SaveIcon, Edit as EditIcon } from '@mui/icons-material';
 import {
   TableBody as MuiTableBody,
   TableCell,
   TableRow,
-  IconButton,
   useTheme,
 } from '@mui/material';
 import { flexRender, type Table } from '@tanstack/react-table';
@@ -16,29 +14,17 @@ interface TableBodyProps<T> {
   table: Table<T>;
   editedRow: number | null;
   setEditedRow: (index: number | null) => void;
+  setOriginalRowData: (data: T | null) => void;
   onEdit?: (row: T) => void;
-  density: 'compact' | 'standard' | 'comfortable';
 }
 
 const TableBodyComponent = <T,>({
   table,
   editedRow,
   setEditedRow,
-  onEdit,
-  density,
+  setOriginalRowData,
 }: TableBodyProps<T>) => {
   const theme = useTheme();
-  const getPadding = () => {
-    switch (density) {
-      case 'compact':
-        return '8px';
-      case 'comfortable':
-        return '24px';
-      case 'standard':
-      default:
-        return '16px';
-    }
-  };
 
   return (
     <MuiTableBody>
@@ -46,7 +32,10 @@ const TableBodyComponent = <T,>({
         <TableRow
           key={row.id}
           data-row-index={index}
-          onDoubleClick={() => setEditedRow(index)}
+          onDoubleClick={() => {
+            setOriginalRowData(row.original);
+            setEditedRow(index);
+          }}
           sx={{
             cursor: 'pointer',
             '&:hover': {
@@ -59,7 +48,6 @@ const TableBodyComponent = <T,>({
               key={cell.id}
               sx={{
                 ...getColumnPinningStyles(theme, cell.column),
-                padding: getPadding(),
               }}
             >
               {editedRow === index
@@ -70,25 +58,10 @@ const TableBodyComponent = <T,>({
                 : flexRender(cell.column.columnDef.cell, cell.getContext())}
             </TableCell>
           ))}
-          <TableCell>
-            {editedRow === index ? (
-              <IconButton onClick={() => setEditedRow(null)}>
-                <SaveIcon />
-              </IconButton>
-            ) : (
-              onEdit && (
-                <IconButton onClick={() => onEdit(row.original)}>
-                  <EditIcon />
-                </IconButton>
-              )
-            )}
-          </TableCell>
         </TableRow>
       ))}
     </MuiTableBody>
   );
 };
 
-export const TableBody = React.memo(
-  TableBodyComponent
-) as typeof TableBodyComponent;
+export const TableBody = TableBodyComponent;

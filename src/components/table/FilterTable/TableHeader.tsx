@@ -1,3 +1,5 @@
+'use no memo';
+
 import { useState } from 'react';
 
 import { PushPin as PushPinIcon } from '@mui/icons-material';
@@ -9,10 +11,11 @@ import {
   TableSortLabel,
   IconButton,
   useTheme,
+  Typography,
 } from '@mui/material';
-import { flexRender, type Table } from '@tanstack/react-table';
+import { flexRender, type Header, type Table } from '@tanstack/react-table';
 
-import { getColumnPinningStyles } from './FilterTable.style';
+import { ResizeBox, getColumnPinningStyles } from './FilterTable.style';
 import Filter from '../Filter/Filter';
 
 interface TableHeaderProps<TData extends object> {
@@ -21,7 +24,6 @@ interface TableHeaderProps<TData extends object> {
   allowPinning?: boolean;
   allowFiltering?: boolean;
   isFilter: boolean;
-  density: 'compact' | 'standard' | 'comfortable';
 }
 
 export const TableHeader = <TData extends object>({
@@ -30,27 +32,26 @@ export const TableHeader = <TData extends object>({
   allowPinning,
   allowFiltering,
   isFilter,
-  density,
 }: TableHeaderProps<TData>) => {
   const theme = useTheme();
   const [hoveredColumnId, setHoveredColumnId] = useState<string | null>(null);
+  const handleAutoResize = (header: Header<TData, unknown>) => {
+    const columnId = header.column.id;
+    const size = header.column.columnDef.size || 100;
 
-  const getPadding = () => {
-    switch (density) {
-      case 'compact':
-        return '8px';
-      case 'comfortable':
-        return '24px';
-      case 'standard':
-      default:
-        return '16px';
-    }
+    table.setColumnSizing((prev) => ({
+      ...prev,
+      [columnId]: size,
+    }));
   };
 
   return (
     <TableHead>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow key={headerGroup.id}>
+        <TableRow
+          key={headerGroup.id}
+          sx={{ verticalAlign: allowFiltering ? 'center' : 'top' }}
+        >
           {headerGroup.headers.map((header) => (
             <TableCell
               key={header.id}
@@ -59,7 +60,7 @@ export const TableHeader = <TData extends object>({
               sx={{
                 ...getColumnPinningStyles(theme, header.column),
                 width: `calc(var(--header-${header?.id}-size) * 1px)`,
-                padding: getPadding(),
+                py: 1.5,
               }}
             >
               <Box
@@ -78,10 +79,22 @@ export const TableHeader = <TData extends object>({
                     }
                     onClick={header.column.getToggleSortingHandler()}
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    <Typography
+                      noWrap={true}
+                      variant="subtitle2"
+                      fontWeight="bold"
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        width: `calc(var(--header-${header?.id}-size) * 1px - 80px )`,
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </Typography>
                   </TableSortLabel>
                 ) : (
                   flexRender(
@@ -98,8 +111,8 @@ export const TableHeader = <TData extends object>({
                     }
                     sx={{
                       visibility:
-                        hoveredColumnId === header.column.id ||
-                        header.column.getIsPinned()
+                        hoveredColumnId === header.column.id &&
+                        header.column.getIsPinned() != 'right'
                           ? 'visible'
                           : 'hidden',
                     }}
@@ -119,28 +132,21 @@ export const TableHeader = <TData extends object>({
                   <Filter column={header.column} table={table} />
                 </div>
               ) : null}
-              <Box
-                onMouseDown={header.getResizeHandler()}
-                onTouchStart={header.getResizeHandler()}
-                sx={(theme) => ({
-                  position: 'absolute',
-                  right: 0,
-                  top: 0,
-                  height: '100%',
-                  width: '5px',
-                  cursor: 'col-resize',
-                  userSelect: 'none',
-                  touchAction: 'none',
-                  backgroundColor: header.column.getIsResizing()
-                    ? theme.palette.primary.main
-                    : hoveredColumnId === header.id
-                      ? theme.palette.action.hover
-                      : 'transparent',
-                })}
-              />
+
+              {header.column.getCanResize() && (
+                <ResizeBox
+                  onMouseDown={header.getResizeHandler()}
+                  onTouchStart={header.getResizeHandler()}
+                  onDoubleClick={() => handleAutoResize(header)}
+                  isResizing={header.column.getIsResizing()}
+                  isHoverHeader={
+                    hoveredColumnId === header.id &&
+                    !header.column.getIsResizing()
+                  }
+                />
+              )}
             </TableCell>
           ))}
-          <TableCell>Actions</TableCell>
         </TableRow>
       ))}
     </TableHead>

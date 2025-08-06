@@ -53,6 +53,14 @@ const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
         onMouseOut={handleUnclearable}
         onMouseOver={handleClearable}
         onKeyUp={handleClearable}
+        sx={{
+          '& .MuiInputBase-input': {
+            // Targets the input element
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          },
+        }}
         slotProps={{
           input: {
             endAdornment: (

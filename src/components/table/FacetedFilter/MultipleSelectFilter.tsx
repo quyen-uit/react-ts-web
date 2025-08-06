@@ -1,3 +1,4 @@
+'use no memo';
 import type {
   Column,
   ColumnMeta,
@@ -5,7 +6,7 @@ import type {
   TableMeta,
 } from '@tanstack/react-table';
 
-import { MultipleSelect } from '../../input/MultipleSelect/MultipleSelect';
+import { MultipleSelect } from '@/components/input';
 
 export interface SingleSelectFilterProps<TData extends object, TValue> {
   column: Column<TData, TValue>;
