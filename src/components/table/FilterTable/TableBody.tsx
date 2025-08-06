@@ -1,5 +1,5 @@
 'use no memo';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   TableBody as MuiTableBody,
@@ -116,7 +116,8 @@ const TableBodyComponent = <T,>({
   );
 };
 
-export const TableBody = React.memo(
-  TableBodyComponent,
-  (prev, next) => prev.table.options.data === next.table.options.data
-) as typeof TableBodyComponent;
+export const TableBody = TableBodyComponent;
+// export const TableBody = React.memo(
+//   TableBodyComponent,
+//   (prev, next) => prev.table.options.data === next.table.options.data
+// ) as typeof TableBodyComponent;

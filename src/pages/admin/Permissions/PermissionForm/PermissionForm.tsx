@@ -7,28 +7,16 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
   Box,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm } from 'react-hook-form';
 
-import type { Permission } from '../../permissions.data';
+import { DynamicForm } from '@/components/form';
+import { generateZodSchema } from '@/shared/utils/schema.utils';
 
-const permissionSchema = z.object({
-  id: z.number(),
-  age: z.number().min(1, 'Age is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State is required'),
-  startDate: z.string().min(1, 'Start date is required'),
-  startTime: z.string().min(1, 'Start time is required'),
-  createdAt: z.string(),
-  notes: z.string(),
-  tags: z.array(z.string()),
-  sample: z.string(),
-});
+import { columns, type Permission } from '../../permissions.data';
 
 interface PermissionFormProps {
   open: boolean;
@@ -45,13 +33,15 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const schema = generateZodSchema(columns);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<Permission>({
-    resolver: zodResolver(permissionSchema),
+    resolver: zodResolver(schema as any),
     defaultValues: permission || {
       id: 0,
       age: 0,
@@ -103,101 +93,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
       </DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 1 }}>
-          <Controller
-            name="age"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Age"
-                type="number"
-                fullWidth
-                error={!!errors.age}
-                helperText={errors.age?.message}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="City"
-                fullWidth
-                error={!!errors.city}
-                helperText={errors.city?.message}
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="State"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state?.message}
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-          <Controller
-            name="startDate"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Start Date"
-                type="date"
-                fullWidth
-                error={!!errors.startDate}
-                helperText={errors.startDate?.message}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-          <Controller
-            name="startTime"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Start Time"
-                type="time"
-                fullWidth
-                error={!!errors.startTime}
-                helperText={errors.startTime?.message}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-          <Controller
-            name="notes"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Notes"
-                fullWidth
-                multiline
-                rows={4}
-                error={!!errors.notes}
-                helperText={errors.notes?.message}
-              />
-            )}
-          />
+          <DynamicForm columns={columns} control={control} errors={errors} />
         </Box>
       </DialogContent>
       <DialogActions>

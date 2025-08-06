@@ -11,6 +11,7 @@ declare module '@tanstack/react-table' {
       | 'text'
       | 'multiple'
       | 'boolean';
+    colSpan?: number;
     placeholder?: string;
     options?: {
       value: unknown;

@@ -134,6 +134,7 @@ export const columns: ColumnDef<Permission>[] = [
     header: 'Notes',
     meta: {
       type: 'text',
+      colSpan: 2,
     },
     cell: EditableCell,
   },
@@ -151,6 +152,7 @@ export const columns: ColumnDef<Permission>[] = [
     header: 'Sample',
     meta: {
       type: 'text',
+      colSpan: 2,
     },
     cell: EditableCell,
   },
