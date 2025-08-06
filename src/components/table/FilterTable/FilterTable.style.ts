@@ -3,25 +3,6 @@ import Box from '@mui/material/Box';
 import { styled, type CSSProperties, type Theme } from '@mui/material/styles';
 import type { Column } from '@tanstack/react-table';
 
-interface TableWrapperProps {
-  isFullScreen?: boolean;
-}
-
-export const TableWrapper = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isFullScreen',
-})<TableWrapperProps>(({ theme, isFullScreen }) => ({
-  ...(isFullScreen && {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: theme.palette.background.paper,
-    zIndex: 1300,
-    overflow: 'auto',
-  }),
-}));
-
 export const getColumnPinningStyles = <T>(
   theme: Theme,
   column: Column<T, unknown>
@@ -53,6 +34,25 @@ export const getColumnPinningStyles = <T>(
   };
 };
 
+interface TableWrapperProps {
+  isFullScreen?: boolean;
+}
+
+export const TableWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isFullScreen',
+})<TableWrapperProps>(({ theme, isFullScreen }) => ({
+  ...(isFullScreen && {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: theme.palette.background.paper,
+    zIndex: 1300,
+    overflow: 'auto',
+  }),
+}));
+
 // Toolbar Components
 export const ToolbarTitle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -81,10 +81,3 @@ export const ResizeBox = styled(Box, {
         : 'transparent',
   })
 );
-
-export const HeaderIconButton = styled('div')({
-  visibility: 'hidden',
-  '&.visible': {
-    visibility: 'visible',
-  },
-});

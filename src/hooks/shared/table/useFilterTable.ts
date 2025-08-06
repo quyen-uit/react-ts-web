@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   getCoreRowModel,
@@ -15,8 +15,6 @@ import {
   type ColumnPinningState,
 } from '@tanstack/react-table';
 
-import { showConfirmAlert } from '@/components/alert';
-
 interface UseFilterTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
@@ -25,7 +23,7 @@ interface UseFilterTableProps<T> {
   allowResize?: boolean;
 }
 
-const useFilterTable = <T>({
+export const useFilterTable = <T>({
   data,
   columns,
   setData,
@@ -44,46 +42,31 @@ const useFilterTable = <T>({
   });
   const [columnOrder, setColumnOrder] = useState<string[]>([]);
   const [editedRow, setEditedRow] = useState<number | null>(null);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [originalRowData, setOriginalRowData] = useState<T | null>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (editedRow !== null && !isAlertOpen) {
-        const tableRow = document.querySelector(
-          `[data-row-index="${editedRow}"]`
+  const meta = useMemo(
+    () => ({
+      updateFilter: (columnId: string, value: unknown) => {
+        setColumnFilters((prev) =>
+          prev.filter((f) => f.id !== columnId).concat({ id: columnId, value })
         );
-        if (tableRow && !tableRow.contains(event.target as Node)) {
-          setIsAlertOpen(true);
-          showConfirmAlert({
-            title: 'Exit Edit Mode?',
-            text: 'Are you sure you want to exit without saving?',
-            onConfirm: () => {
-              if (editedRow !== null && originalRowData) {
-                setData((prev) =>
-                  prev.map((row, index) =>
-                    index === editedRow ? originalRowData : row
-                  )
-                );
-              }
-              setEditedRow(null);
-              setOriginalRowData(null);
-              setIsAlertOpen(false);
-            },
-
-            onCancel: () => {
-              setIsAlertOpen(false);
-            },
-          });
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [editedRow, isAlertOpen, originalRowData, setData]);
+      },
+      updateData: (rowIndex: number, columnId: string, value: unknown) => {
+        setData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
+              };
+            }
+            return row;
+          })
+        );
+      },
+    }),
+    [setData]
+  );
 
   const table = useReactTable({
     data,
@@ -115,26 +98,7 @@ const useFilterTable = <T>({
     columnResizeMode: 'onChange',
     enableRowSelection: allowRowSelection,
     enableColumnResizing: allowResize,
-    meta: {
-      updateFilter: (columnId: string, value: unknown) => {
-        setColumnFilters((prev) =>
-          prev.filter((f) => f.id !== columnId).concat({ id: columnId, value })
-        );
-      },
-      updateData: (rowIndex: number, columnId: string, value: unknown) => {
-        setData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex],
-                [columnId]: value,
-              };
-            }
-            return row;
-          })
-        );
-      },
-    },
+    meta,
   });
 
   useEffect(() => {
@@ -149,8 +113,7 @@ const useFilterTable = <T>({
     setEditedRow,
     columnOrder,
     columnSizing,
+    originalRowData,
     setOriginalRowData,
   };
 };
-
-export default useFilterTable;

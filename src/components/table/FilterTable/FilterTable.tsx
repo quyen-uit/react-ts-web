@@ -1,10 +1,7 @@
-// 'use no memo';
-import { useMemo, useState, type ReactElement } from 'react';
+'use no memo';
+import { useMemo, type ReactElement } from 'react';
 
-import { Edit, Delete } from '@mui/icons-material';
 import {
-  Box,
-  Checkbox,
   IconButton,
   Table as MuiTable,
   TableContainer,
@@ -13,7 +10,7 @@ import {
 } from '@mui/material';
 import { type ColumnDef, type Row } from '@tanstack/react-table';
 
-import { useFilterTable } from '@/hooks';
+import { useFilterTable, useTableColumns, useTableUIState } from '@/hooks';
 
 import { TableWrapper } from './FilterTable.style';
 import { TableBody } from './TableBody';
@@ -57,97 +54,22 @@ const FilterTable = <T extends { id: string | number }>({
   extraActions,
   actionNumber = 0,
 }: TableProps<T>) => {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [isFilter, setisFilter] = useState(true);
-  const [density, setDensity] = useState(1);
+  const {
+    isFullScreen,
+    toggleFullScreen,
+    isFilter,
+    toggleFilter,
+    density,
+    handleDensityChange,
+  } = useTableUIState();
 
-  // Column size calculation
-  const columnSizes: Record<string, { minSize: number; size: number }> = {
-    date: { minSize: 192, size: 360 },
-    time: { minSize: 150, size: 280 },
-    datetime: { minSize: 240, size: 440 },
-    boolean: { minSize: 100, size: 150 },
-    text: { minSize: 100, size: 200 },
-  };
-
-  const columnsWithDefaults = useMemo<ColumnDef<T>[]>(
-    () =>
-      columns.map((col: ColumnDef<T>) => {
-        const type = col.meta?.type || 'text';
-        const { minSize, size } = columnSizes[type] ?? columnSizes.text;
-        return {
-          minSize,
-          size,
-          maxSize: 500,
-          ...col,
-        };
-      }),
-    [columns]
-  );
-
-  // Memoize columns with row selection
-  const columnsWithRowSelection = useMemo<ColumnDef<T>[]>(() => {
-    const getActionSize = () => {
-      let size = 0;
-      if (onEdit) size += 56;
-      if (onDelete) size += 56;
-      if (renderRowActions) size += 40 * actionNumber;
-      return size;
-    };
-
-    const selectColumn: ColumnDef<T> = {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          indeterminate={
-            table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableResizing: false,
-      size: 58,
-    };
-
-    const actionColumn: ColumnDef<T> = {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }: { row: Row<T> }) => (
-        <Box>
-          {onEdit && (
-            <IconButton onClick={() => onEdit(row.original)}>
-              <Edit />
-            </IconButton>
-          )}
-          {onDelete && (
-            <IconButton onClick={() => onDelete([String(row.original.id)])}>
-              <Delete />
-            </IconButton>
-          )}
-          {renderRowActions && renderRowActions(row)}
-        </Box>
-      ),
-      enableSorting: false,
-      enableResizing: false,
-      size: getActionSize(),
-    };
-
-    const result: ColumnDef<T>[] = [selectColumn, ...columnsWithDefaults];
-
-    if (onEdit || onDelete || renderRowActions) {
-      result.push(actionColumn);
-    }
-
-    return result;
-  }, [columnsWithDefaults, onEdit, onDelete, renderRowActions, actionNumber]);
+  const tableColumns = useTableColumns({
+    columns,
+    onEdit,
+    onDelete,
+    renderRowActions,
+    actionNumber,
+  });
 
   const {
     table,
@@ -156,28 +78,16 @@ const FilterTable = <T extends { id: string | number }>({
     editedRow,
     setEditedRow,
     columnSizing,
+    originalRowData,
     setOriginalRowData,
   } = useFilterTable({
     data,
-    columns: columnsWithRowSelection,
+    columns: tableColumns,
     setData,
     allowRowSelection,
     allowResize,
   });
 
-  const toggleFullScreen = () => {
-    setIsFullScreen((prev) => !prev);
-  };
-
-  const toggleFilter = () => {
-    setisFilter((prev) => !prev);
-  };
-
-  const handleDensityChange = (newDensity: number) => {
-    setDensity(newDensity);
-  };
-
-  // Memoize column size variables to prevent unnecessary re-renders
   const columnSizeVars = useMemo(() => {
     if (columnSizing) {
       const headers = table.getFlatHeaders();
@@ -245,7 +155,9 @@ const FilterTable = <T extends { id: string | number }>({
               editedRow={editedRow}
               setEditedRow={setEditedRow}
               onEdit={onEdit}
+              originalRowData={originalRowData}
               setOriginalRowData={setOriginalRowData}
+              setData={setData}
             />
           </MuiTable>
         </TableContainer>

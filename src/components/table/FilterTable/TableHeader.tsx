@@ -67,8 +67,6 @@ export const TableHeader = <TData extends object>({
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  fontWeight: 'bold',
                 }}
               >
                 {allowSorting && header.column.getCanSort() ? (
