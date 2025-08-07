@@ -1,8 +1,9 @@
 import { useMemo, type ReactElement } from 'react';
 
-import { Edit, Delete } from '@mui/icons-material';
+import { Delete, Edit, Save } from '@mui/icons-material';
 import { Box, Checkbox, IconButton } from '@mui/material';
 import { type ColumnDef, type Row } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 
 import { COLUMN_SIZES } from '@/shared/constants/table.constants';
 
@@ -11,7 +12,9 @@ interface UseTableColumnsProps<T extends { id: string | number }> {
   onEdit?: (row: T) => void;
   onDelete?: (ids: string[]) => void;
   renderRowActions?: (row: Row<T>) => ReactElement<typeof IconButton>[];
-  actionNumber?: number;
+  rowActionNumber?: number;
+  editedRow?: number | null;
+  setEditedRow?: (index: number | null) => void;
 }
 
 export const useTableColumns = <T extends { id: string | number }>({
@@ -19,8 +22,11 @@ export const useTableColumns = <T extends { id: string | number }>({
   onEdit,
   onDelete,
   renderRowActions,
-  actionNumber = 0,
+  rowActionNumber = 0,
+  editedRow,
+  setEditedRow,
 }: UseTableColumnsProps<T>): ColumnDef<T>[] => {
+  const { t } = useTranslation();
   const columnsWithDefaults = useMemo<ColumnDef<T>[]>(() => {
     return columns.map((col: ColumnDef<T>) => {
       const type = col.meta?.type || 'text';
@@ -36,10 +42,9 @@ export const useTableColumns = <T extends { id: string | number }>({
 
   const columnsWithRowSelection = useMemo<ColumnDef<T>[]>(() => {
     const getActionSize = () => {
-      let size = 0;
-      if (onEdit) size += 56;
-      if (onDelete) size += 56;
-      if (renderRowActions) size += 40 * actionNumber;
+      let size = onEdit ? 56 : 0;
+      size += onDelete ? 56 : 0;
+      size += rowActionNumber * 40;
       return size;
     };
 
@@ -54,12 +59,31 @@ export const useTableColumns = <T extends { id: string | number }>({
           onChange={table.getToggleAllRowsSelectedHandler()}
         />
       ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      cell: ({ row, cell }) => {
+        const isEditing =
+          cell.getContext().table.options.meta?.isEditing &&
+          editedRow === row.index;
+        return isEditing ? (
+          <IconButton
+            onClick={() => {
+              onEdit?.(row.original);
+              setEditedRow?.(null);
+            }}
+          >
+            <Save />
+          </IconButton>
+        ) : (
+          <Checkbox
+            checked={row.getIsSelected()}
+            disabled={editedRow !== null}
+            onChange={() => {
+              if (editedRow === null) {
+                row.getToggleSelectedHandler()?.(!row.getIsSelected());
+              }
+            }}
+          />
+        );
+      },
       enableSorting: false,
       enableResizing: false,
       size: 58,
@@ -67,7 +91,7 @@ export const useTableColumns = <T extends { id: string | number }>({
 
     const actionColumn: ColumnDef<T> = {
       id: 'actions',
-      header: 'Actions',
+      header: t('table_columns.actions'),
       cell: ({ row }: { row: Row<T> }) => (
         <Box>
           {onEdit && (
@@ -95,7 +119,14 @@ export const useTableColumns = <T extends { id: string | number }>({
     }
 
     return result;
-  }, [columnsWithDefaults, onEdit, onDelete, renderRowActions, actionNumber]);
+  }, [
+    columnsWithDefaults,
+    onEdit,
+    onDelete,
+    renderRowActions,
+    rowActionNumber,
+    t,
+  ]);
 
   return columnsWithRowSelection;
 };

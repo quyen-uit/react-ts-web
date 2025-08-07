@@ -13,11 +13,13 @@ import {
   Typography,
   Container,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useLoginMutation } from '@/services/api/authApi';
 
 const Login = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -48,7 +50,7 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {t('login_page.sign_in')}
         </Typography>
         <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -56,7 +58,7 @@ const Login = () => {
             required
             fullWidth
             id="username"
-            label="Username"
+            label={t('login_page.username')}
             name="username"
             autoComplete="username"
             // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -69,7 +71,7 @@ const Login = () => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t('login_page.password')}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -78,7 +80,7 @@ const Login = () => {
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label={t('login_page.remember_me')}
           />
           <Button
             type="submit"
@@ -86,7 +88,7 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            {t('login_page.sign_in')}
           </Button>
           <Box
             sx={{
@@ -96,10 +98,10 @@ const Login = () => {
             }}
           >
             <Link href="#" variant="body2">
-              Forgot password?
+              {t('login_page.forgot_password')}
             </Link>
             <Link href="#" variant="body2">
-              {"Don't have an account? Sign Up"}
+              {t('login_page.dont_have_account')}
             </Link>
           </Box>
         </Box>

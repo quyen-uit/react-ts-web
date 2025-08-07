@@ -1,4 +1,5 @@
 'use no memo';
+import { Table as MuiTable } from '@mui/material';
 import Box from '@mui/material/Box';
 import { styled, type CSSProperties, type Theme } from '@mui/material/styles';
 import type { Column } from '@tanstack/react-table';
@@ -53,6 +54,21 @@ export const TableWrapper = styled(Box, {
   }),
 }));
 
+export const StyledTable = styled(MuiTable, {
+  shouldForwardProp: (prop) => prop !== 'density',
+})<{ density: number }>(({ density }) => ({
+  tableLayout: 'fixed',
+  '& .MuiTableCell-sizeSmall': {
+    '&:first-of-type': {
+      pl: 1,
+    },
+  },
+  '& td.MuiTableCell-sizeSmall': {
+    py: density,
+    px: 2,
+  },
+}));
+
 // Toolbar Components
 export const ToolbarTitle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -61,6 +77,7 @@ export const ToolbarTitle = styled('div')(({ theme }) => ({
   flex: '1 1 100%',
 }));
 
+// Header Components
 export const ResizeBox = styled(Box, {
   shouldForwardProp: (prop) =>
     prop !== 'isResizing' && prop !== 'isHoverHeader',

@@ -1,4 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
+import { t } from 'i18next';
 
 import EditableCell from '@/components/table/EditableCell/EditableCell';
 
@@ -81,7 +82,7 @@ export const data: Permission[] = [
 export const columns: ColumnDef<Permission>[] = [
   {
     accessorKey: 'age',
-    header: 'Age',
+    header: t('permissions_data.age'),
     meta: {
       type: 'boolean',
     },
@@ -89,25 +90,25 @@ export const columns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'city',
-    header: 'City',
+    header: t('permissions_data.city'),
     meta: {
       type: 'option',
-      placeholder: 'Filter by City',
+      placeholder: t('permissions_data.filter_by_city'),
     },
     cell: EditableCell,
   },
   {
     accessorKey: 'state',
-    header: 'State',
+    header: t('permissions_data.state'),
     meta: {
       type: 'multiple',
-      placeholder: 'Filter by State',
+      placeholder: t('permissions_data.filter_by_state'),
     },
     cell: EditableCell,
   },
   {
     accessorKey: 'startDate',
-    header: 'Start DateStart DateStart DateStart DateStart DateStart Date',
+    header: t('permissions_data.start_date'),
     meta: {
       type: 'date',
     },
@@ -115,7 +116,7 @@ export const columns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'startTime',
-    header: 'Start Time',
+    header: t('permissions_data.start_time'),
     meta: {
       type: 'time',
     },
@@ -123,7 +124,7 @@ export const columns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created At',
+    header: t('permissions_data.created_at'),
     meta: {
       type: 'datetime',
     },
@@ -131,7 +132,7 @@ export const columns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'notes',
-    header: 'Notes',
+    header: t('permissions_data.notes'),
     meta: {
       type: 'text',
       colSpan: 2,
@@ -140,16 +141,16 @@ export const columns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'tags',
-    header: 'Tags',
+    header: t('permissions_data.tags'),
     cell: ({ row }) => row.original.tags.join(', '),
     meta: {
       type: 'multiple',
-      placeholder: 'Filter by Tags',
+      placeholder: t('permissions_data.filter_by_tags'),
     },
   },
   {
     accessorKey: 'sample',
-    header: 'Sample',
+    header: t('permissions_data.sample'),
     meta: {
       type: 'text',
       colSpan: 2,

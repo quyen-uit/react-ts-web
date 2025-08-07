@@ -2,6 +2,7 @@ import React from 'react';
 
 import { type ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 import { FilterTable } from '@/components/table';
 import EditableCell from '@/components/table/EditableCell/EditableCell';
@@ -14,11 +15,12 @@ interface User {
 }
 
 const Users: React.FC = () => {
+  const { t } = useTranslation();
   const columns = React.useMemo<ColumnDef<User, any>[]>(
     () => [
       {
         accessorKey: 'id',
-        header: 'ID',
+        header: t('users_page.table.id'),
         meta: {
           type: 'number',
         },
@@ -26,7 +28,7 @@ const Users: React.FC = () => {
       },
       {
         accessorKey: 'name',
-        header: 'Name',
+        header: t('users_page.table.name'),
         meta: {
           type: 'text',
         },
@@ -34,7 +36,7 @@ const Users: React.FC = () => {
       },
       {
         accessorKey: 'email',
-        header: 'Email',
+        header: t('users_page.table.email'),
         meta: {
           type: 'text',
         },
@@ -42,7 +44,7 @@ const Users: React.FC = () => {
       },
       {
         accessorKey: 'createdAt',
-        header: 'Created At',
+        header: t('users_page.table.created_at'),
         cell: (info) => dayjs(info.getValue()).format('YYYY-MM-DD'),
         meta: {
           type: 'date',
@@ -75,12 +77,12 @@ const Users: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Users</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('users_page.title')}</h1>
       <FilterTable
         columns={columns}
         data={data}
         setData={setData}
-        title="Users"
+        title={t('users_page.title')}
       />
     </div>
   );

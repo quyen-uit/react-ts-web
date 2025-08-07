@@ -1,3 +1,3 @@
-export * from './shared/table/useFilterTable';
-export * from './shared/table/useTableColumns';
-export * from './shared/table/useTableUIState';
+export * from './table/useFilterTable';
+export * from './table/useTableColumns';
+export * from './table/useTableUIState';

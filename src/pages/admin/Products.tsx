@@ -62,11 +62,15 @@ const Products = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('product.loading')}</div>;
   }
 
   if (error) {
-    return <div>Error: {JSON.stringify(error)}</div>;
+    return (
+      <div>
+        {t('product.error')} {JSON.stringify(error)}
+      </div>
+    );
   }
 
   return (
@@ -125,7 +129,7 @@ const Products = () => {
             <TableRow>
               <TableCell>{t('product.table.name')}</TableCell>
               <TableCell>{t('product.table.price')}</TableCell>
-              <TableCell>{t('product.table.category')}</TableCell>
+              <TableCell>{t('product.form.category')}</TableCell>
               <TableCell>{t('product.table.actions')}</TableCell>
             </TableRow>
           </TableHead>

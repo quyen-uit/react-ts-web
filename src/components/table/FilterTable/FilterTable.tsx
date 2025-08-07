@@ -1,9 +1,7 @@
-'use no memo';
-import { useMemo, type ReactElement } from 'react';
+import { useMemo, useState, type ReactElement } from 'react';
 
 import {
   IconButton,
-  Table as MuiTable,
   TableContainer,
   TablePagination,
   Paper,
@@ -12,7 +10,7 @@ import { type ColumnDef, type Row } from '@tanstack/react-table';
 
 import { useFilterTable, useTableColumns, useTableUIState } from '@/hooks';
 
-import { TableWrapper } from './FilterTable.style';
+import { StyledTable, TableWrapper } from './FilterTable.style';
 import { TableBody } from './TableBody';
 import { TableHeader } from './TableHeader';
 import { TableToolbar, type ExtraAction } from './TableToolbar';
@@ -26,7 +24,7 @@ interface TableProps<T extends { id: string | number }> {
   onDelete?: (ids: string[]) => void;
   onEdit?: (row: T) => void;
   renderRowActions?: (row: Row<T>) => ReactElement<typeof IconButton>[];
-  actionNumber?: number;
+  rowActionNumber?: number;
   allowPinning?: boolean;
   allowFiltering?: boolean;
   allowFullscreen?: boolean;
@@ -45,14 +43,14 @@ const FilterTable = <T extends { id: string | number }>({
   onEdit,
   renderRowActions,
   title,
-  allowPinning = true,
+  allowPinning = false,
   allowFiltering = true,
-  allowFullscreen = true,
+  allowFullscreen = false,
   allowSorting = true,
   allowRowSelection = true,
   allowResize = true,
   extraActions,
-  actionNumber = 0,
+  rowActionNumber = 0,
 }: TableProps<T>) => {
   const {
     isFullScreen,
@@ -61,23 +59,23 @@ const FilterTable = <T extends { id: string | number }>({
     toggleFilter,
     density,
     handleDensityChange,
-  } = useTableUIState();
+  } = useTableUIState({ allowFiltering });
+  const [editedRow, setEditedRow] = useState<number | null>(null);
 
   const tableColumns = useTableColumns({
     columns,
     onEdit,
     onDelete,
     renderRowActions,
-    actionNumber,
+    rowActionNumber,
+    editedRow,
+    setEditedRow,
   });
 
   const {
     table,
     globalFilter,
     setGlobalFilter,
-    editedRow,
-    setEditedRow,
-    columnSizing,
     originalRowData,
     setOriginalRowData,
   } = useFilterTable({
@@ -86,20 +84,21 @@ const FilterTable = <T extends { id: string | number }>({
     setData,
     allowRowSelection,
     allowResize,
+    editedRow,
   });
 
   const columnSizeVars = useMemo(() => {
-    if (columnSizing) {
-      const headers = table.getFlatHeaders();
-      const colSizes: { [key: string]: number } = {};
-      for (let i = 0; i < headers.length; i++) {
-        const header = headers[i]!;
-        colSizes[`--header-${header.id}-size`] = header.getSize();
-        colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
-      }
-      return colSizes;
+    const headers = table.getFlatHeaders();
+    const colSizes: { [key: string]: number } = {};
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]!;
+      colSizes[`--header-${header.id}-size`] = header.getSize();
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
     }
-  }, [columnSizing, table]);
+
+    return colSizes;
+    // eslint-disable-next-line react-hooks/react-compiler, react-hooks/exhaustive-deps
+  }, [table.getState().columnSizing]);
 
   return (
     <TableWrapper isFullScreen={isFullScreen}>
@@ -128,26 +127,11 @@ const FilterTable = <T extends { id: string | number }>({
         }}
       >
         <TableContainer sx={{ ...columnSizeVars }}>
-          <MuiTable
-            size={'small'}
-            sx={{
-              tableLayout: 'fixed',
-              '& .MuiTableCell-sizeSmall': {
-                '&:first-of-type': {
-                  pl: 1,
-                },
-              },
-              '& td.MuiTableCell-sizeSmall': {
-                py: density,
-                px: 2,
-              },
-            }}
-          >
+          <StyledTable size={'small'} density={density}>
             <TableHeader
               table={table}
               allowSorting={allowSorting}
               allowPinning={allowPinning}
-              allowFiltering={allowFiltering}
               isFilter={isFilter}
             />
             <TableBody
@@ -159,7 +143,7 @@ const FilterTable = <T extends { id: string | number }>({
               setOriginalRowData={setOriginalRowData}
               setData={setData}
             />
-          </MuiTable>
+          </StyledTable>
         </TableContainer>
       </Paper>
       <TablePagination

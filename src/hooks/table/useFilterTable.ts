@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import {
   getCoreRowModel,
@@ -21,14 +21,17 @@ interface UseFilterTableProps<T> {
   setData: React.Dispatch<React.SetStateAction<T[]>>;
   allowRowSelection?: boolean;
   allowResize?: boolean;
+  editedRow?: number | null;
+  setEditedRow?: (index: number | null) => void;
 }
 
 export const useFilterTable = <T>({
   data,
   columns,
   setData,
-  allowRowSelection = true,
-  allowResize = true,
+  allowRowSelection = false,
+  allowResize = false,
+  editedRow,
 }: UseFilterTableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -40,12 +43,12 @@ export const useFilterTable = <T>({
     left: ['select'],
     right: ['actions'],
   });
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
-  const [editedRow, setEditedRow] = useState<number | null>(null);
+  // const [columnOrder, setColumnOrder] = useState<string[]>([]);
   const [originalRowData, setOriginalRowData] = useState<T | null>(null);
 
   const meta = useMemo(
     () => ({
+      isEditing: editedRow !== null,
       updateFilter: (columnId: string, value: unknown) => {
         setColumnFilters((prev) =>
           prev.filter((f) => f.id !== columnId).concat({ id: columnId, value })
@@ -65,7 +68,7 @@ export const useFilterTable = <T>({
         );
       },
     }),
-    [setData]
+    [setData, editedRow]
   );
 
   const table = useReactTable({
@@ -79,9 +82,9 @@ export const useFilterTable = <T>({
       columnVisibility,
       columnSizing,
       columnPinning,
-      columnOrder,
+      // columnOrder,
     },
-    onColumnOrderChange: setColumnOrder,
+    // onColumnOrderChange: setColumnOrder,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnSizingChange: setColumnSizing,
@@ -101,18 +104,14 @@ export const useFilterTable = <T>({
     meta,
   });
 
-  useEffect(() => {
-    setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
-  }, [table]);
+  // useEffect(() => {
+  //   setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
+  // }, [table]);
 
   return {
     table,
     globalFilter,
     setGlobalFilter,
-    editedRow,
-    setEditedRow,
-    columnOrder,
-    columnSizing,
     originalRowData,
     setOriginalRowData,
   };

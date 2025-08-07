@@ -73,6 +73,20 @@ const theme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      styleOverrides: {
+        noWrap(styles) {
+          return {
+            whiteSpace: 'initial !important',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: String(styles.ownerState['data-lines'] || '1'),
+            WebkitBoxOrient: 'vertical',
+          };
+        },
+      },
+    },
   },
 });
 

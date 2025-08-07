@@ -2,29 +2,30 @@
 import { useState } from 'react';
 
 import {
-  ViewColumn as ViewColumnIcon,
-  FilterList as FilterListIcon,
   Add as AddIcon,
   Delete as DeleteIcon,
+  DensityLarge as DensityLargeIcon,
+  DensityMedium as DensityMediumIcon,
+  DensitySmall as DensitySmallIcon,
+  FilterList as FilterListIcon,
   Fullscreen as FullscreenIcon,
   FullscreenExit as FullscreenExitIcon,
-  DensitySmall as DensitySmallIcon,
-  DensityMedium as DensityMediumIcon,
-  DensityLarge as DensityLargeIcon,
+  ViewColumn as ViewColumnIcon,
 } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import {
-  Toolbar,
-  Typography,
-  TextField,
-  Tooltip,
+  Checkbox,
+  Divider,
   IconButton,
   Menu,
   MenuItem,
-  Checkbox,
-  Divider,
+  TextField,
+  Toolbar,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import type { Table } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 
 import { ToolbarTitle } from './FilterTable.style';
 
@@ -68,6 +69,7 @@ export const TableToolbar = <T,>({
   density,
   onDensityChange,
 }: TableToolbarProps<T>) => {
+  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -100,9 +102,9 @@ export const TableToolbar = <T,>({
         value={globalFilter ?? ''}
         onChange={(e) => setGlobalFilter(e.target.value)}
         variant="standard"
-        placeholder="Search"
+        placeholder={t('table_toolbar.search_placeholder')}
       />
-      <Tooltip title="Toggle Column Visibility">
+      <Tooltip title={t('table_toolbar.toggle_column_visibility')}>
         <IconButton onClick={handleMenuOpen} color="primary">
           <ViewColumnIcon />
         </IconButton>
@@ -117,7 +119,7 @@ export const TableToolbar = <T,>({
             checked={table.getIsAllColumnsVisible()}
             onChange={table.getToggleAllColumnsVisibilityHandler()}
           />
-          Toggle All
+          {t('table_toolbar.toggle_all')}
         </MenuItem>
         <Divider />
         {table.getAllLeafColumns().map((column) => (
@@ -130,7 +132,7 @@ export const TableToolbar = <T,>({
           </MenuItem>
         ))}
       </Menu>
-      <Tooltip title="Toggle Density">
+      <Tooltip title={t('table_toolbar.toggle_density')}>
         <IconButton onClick={handleDensityToggle} color="primary">
           {density === 0 && <DensitySmallIcon fontSize="small" />}
           {density === 1 && <DensityMediumIcon fontSize="small" />}
@@ -138,28 +140,28 @@ export const TableToolbar = <T,>({
         </IconButton>
       </Tooltip>
       {allowFullscreen && (
-        <Tooltip title="Toggle Fullscreen">
+        <Tooltip title={t('table_toolbar.toggle_fullscreen')}>
           <IconButton onClick={toggleFullScreen} color="primary">
             {isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
           </IconButton>
         </Tooltip>
       )}
       {allowFiltering && (
-        <Tooltip title="Filter" color="primary">
+        <Tooltip title={t('table_toolbar.filter')} color="primary">
           <IconButton onClick={toggleFilter}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
       {onAdd && (
-        <Tooltip title="Add">
+        <Tooltip title={t('table_toolbar.add')}>
           <IconButton onClick={onAdd}>
             <AddIcon />
           </IconButton>
         </Tooltip>
       )}
       {onDelete && (
-        <Tooltip title="Remove Selected">
+        <Tooltip title={t('table_toolbar.remove_selected')}>
           <IconButton
             onClick={() => {
               const selectedIds = table

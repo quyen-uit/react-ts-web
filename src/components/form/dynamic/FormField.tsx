@@ -1,6 +1,5 @@
 import { Checkbox, FormControlLabel, TextField } from '@mui/material';
-import type { ColumnDef } from '@tanstack/react-table';
-import type { Control, FieldErrors } from 'react-hook-form';
+import type { Control, FieldErrors, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
 import ClearableTextField from '@/components/input/ClearableTextField/ClearableTextField';
@@ -9,28 +8,28 @@ import CustomDateTimePicker from '@/components/input/CustomDateTimePicker/Custom
 import CustomTimePicker from '@/components/input/CustomTimePicker/CustomTimePicker';
 import { MultipleSelect } from '@/components/input/MultipleSelect/MultipleSelect';
 import { SingleSelect } from '@/components/input/SingleSelect/SingleSelect';
+import type { FormFieldConfig } from '@/types/form.d';
 
 interface FormFieldProps<T extends Record<string, any>> {
-  column: ColumnDef<T>;
+  field: FormFieldConfig<T>;
   control: Control<T>;
   errors: FieldErrors<T>;
 }
 
 const FormField = <T extends Record<string, any>>({
-  column,
+  field,
   control,
   errors,
 }: FormFieldProps<T>) => {
-  const { accessorKey, header, meta } = column as any;
-  const error = errors[accessorKey];
+  const error = errors[field.name];
 
-  const renderInput = (field: any) => {
-    switch (meta?.type) {
+  const renderInput = (controllerField: any) => {
+    switch (field.type) {
       case 'text':
         return (
           <ClearableTextField
-            {...field}
-            label={header}
+            {...controllerField}
+            label={field.label}
             error={!!error}
             helperText={error?.message as string}
           />
@@ -38,37 +37,41 @@ const FormField = <T extends Record<string, any>>({
       case 'boolean':
         return (
           <FormControlLabel
-            control={<Checkbox {...field} checked={field.value} />}
-            label={header}
+            control={
+              <Checkbox {...controllerField} checked={controllerField.value} />
+            }
+            label={field.label}
           />
         );
       case 'option':
         return (
           <SingleSelect
-            {...field}
-            label={header}
-            options={meta.options || []}
+            {...controllerField}
+            label={field.label}
+            options={field.options || []}
           />
         );
       case 'multiple':
         return (
           <MultipleSelect
-            {...field}
-            label={header}
-            options={meta.options || []}
+            {...controllerField}
+            label={field.label}
+            options={field.options || []}
           />
         );
       case 'date':
-        return <CustomDatePicker {...field} label={header} />;
+        return <CustomDatePicker {...controllerField} label={field.label} />;
       case 'time':
-        return <CustomTimePicker {...field} label={header} />;
+        return <CustomTimePicker {...controllerField} label={field.label} />;
       case 'datetime':
-        return <CustomDateTimePicker {...field} label={header} />;
+        return (
+          <CustomDateTimePicker {...controllerField} label={field.label} />
+        );
       default:
         return (
           <TextField
-            {...field}
-            label={header}
+            {...controllerField}
+            label={field.label}
             error={!!error}
             helperText={error?.message as string}
           />
@@ -78,9 +81,9 @@ const FormField = <T extends Record<string, any>>({
 
   return (
     <Controller
-      name={accessorKey}
+      name={field.name as Path<T>}
       control={control}
-      render={({ field }) => renderInput(field)}
+      render={({ field: controllerField }) => renderInput(controllerField)}
     />
   );
 };

@@ -1,30 +1,28 @@
-import type { ColumnDef } from '@tanstack/react-table';
 import type { Control, FieldErrors } from 'react-hook-form';
+
+import type { FormFieldConfig } from '@/types/form.d';
 
 import FormField from './FormField';
 
 interface DynamicFormProps<T extends Record<string, any>> {
-  columns: ColumnDef<T>[];
+  formFields: FormFieldConfig<T>[];
   control: Control<T>;
   errors: FieldErrors<T>;
 }
 
 const DynamicForm = <T extends Record<string, any>>({
-  columns,
+  formFields,
   control,
   errors,
 }: DynamicFormProps<T>) => {
   return (
     <div className="grid grid-cols-2 gap-4">
-      {columns.map((column) => {
-        const accessorKey = (column as { accessorKey: keyof T })?.accessorKey;
-        if (!accessorKey) return null;
-
-        const colSpan = column.meta?.colSpan || 1;
+      {formFields.map((field) => {
+        const colSpan = field.colSpan || 1;
 
         return (
-          <div key={accessorKey as string} className={`col-span-${colSpan}`}>
-            <FormField column={column} control={control} errors={errors} />
+          <div key={field.name as string} className={`col-span-${colSpan}`}>
+            <FormField field={field} control={control} errors={errors} />
           </div>
         );
       })}

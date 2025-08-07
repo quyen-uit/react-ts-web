@@ -34,8 +34,8 @@ const Permissions: React.FC = () => {
 
   const handleDeleteConfirmation = (ids: string[]) => {
     showConfirmAlert({
-      title: 'Confirm Deletion',
-      text: 'Are you sure you want to delete this permission?',
+      title: t('permission.confirm_deletion_title'),
+      text: t('permission.confirm_deletion_message'),
       onConfirm: () => handleDelete(ids),
     });
   };
@@ -66,8 +66,8 @@ const Permissions: React.FC = () => {
         onAdd={handleAdd}
         onDelete={handleDeleteConfirmation}
         onEdit={handleEdit}
-        title={t('Permission')}
-        actionNumber={1}
+        title={t('permission.title')}
+        rowActionNumber={1}
         renderRowActions={(row: Row<Permission>) => [
           <IconButton key={row.id} onClick={() => console.log(row.original)}>
             <Visibility />
@@ -75,14 +75,14 @@ const Permissions: React.FC = () => {
         ]}
         extraActions={[
           {
-            tooltip: 'Sync',
+            tooltip: t('permission.sync'),
             element: (
               <Button
                 variant="contained"
                 startIcon={<Sync />}
                 onClick={() => console.log('Sync')}
               >
-                Sync
+                {t('permission.sync')}
               </Button>
             ),
           },

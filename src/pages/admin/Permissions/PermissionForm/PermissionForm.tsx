@@ -11,10 +11,12 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import type { ColumnDef } from '@tanstack/react-table';
 import { useForm } from 'react-hook-form';
 
 import { DynamicForm } from '@/components/form';
 import { generateZodSchema } from '@/shared/utils/schema.utils';
+import type { FormFieldConfig, FormFieldType } from '@/types/form.d';
 
 import { columns, type Permission } from '../../permissions.data';
 
@@ -33,6 +35,20 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const formFields: FormFieldConfig<Permission>[] = columns.map((column) => {
+    const typedColumn = column as ColumnDef<Permission> & {
+      accessorKey?: keyof Permission;
+      meta?: { colSpan?: number; type?: FormFieldType };
+    };
+    return {
+      name: typedColumn.accessorKey as keyof Permission,
+      label: typedColumn.header as string,
+      type: typedColumn.meta?.type || 'text', // Default to 'text' if type is not specified
+      colSpan: typedColumn.meta?.colSpan || 1,
+    };
+  });
+
   const schema = generateZodSchema(columns);
 
   const {
@@ -93,7 +109,11 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
       </DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 1 }}>
-          <DynamicForm columns={columns} control={control} errors={errors} />
+          <DynamicForm
+            formFields={formFields}
+            control={control}
+            errors={errors}
+          />
         </Box>
       </DialogContent>
       <DialogActions>

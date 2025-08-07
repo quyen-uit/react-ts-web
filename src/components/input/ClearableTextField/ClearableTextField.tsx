@@ -3,11 +3,13 @@ import type { ChangeEvent } from 'react';
 
 import { InputAdornment, TextField } from '@mui/material';
 import type { TextFieldProps } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { ClearIconButton } from '@/components/icon';
 
 const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
   (props, ref) => {
+    const { t } = useTranslation();
     const { value: initialValue, onChange, ...rest } = props;
     const [value, setValue] = useState(initialValue || '');
     const [clearable, setClearable] = useState(false);
@@ -53,6 +55,7 @@ const ClearableTextField = forwardRef<HTMLDivElement, TextFieldProps>(
         onMouseOut={handleUnclearable}
         onMouseOver={handleClearable}
         onKeyUp={handleClearable}
+        placeholder={t('clearable_text_field.placeholder')}
         sx={{
           '& .MuiInputBase-input': {
             // Targets the input element

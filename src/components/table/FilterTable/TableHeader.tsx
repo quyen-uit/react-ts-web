@@ -10,8 +10,9 @@ import {
   TableRow,
   TableSortLabel,
   IconButton,
-  useTheme,
   Typography,
+  Tooltip,
+  type Theme,
 } from '@mui/material';
 import { flexRender, type Header, type Table } from '@tanstack/react-table';
 
@@ -22,7 +23,6 @@ interface TableHeaderProps<TData extends object> {
   table: Table<TData>;
   allowSorting?: boolean;
   allowPinning?: boolean;
-  allowFiltering?: boolean;
   isFilter: boolean;
 }
 
@@ -30,10 +30,8 @@ export const TableHeader = <TData extends object>({
   table,
   allowSorting,
   allowPinning,
-  allowFiltering,
   isFilter,
 }: TableHeaderProps<TData>) => {
-  const theme = useTheme();
   const [hoveredColumnId, setHoveredColumnId] = useState<string | null>(null);
   const handleAutoResize = (header: Header<TData, unknown>) => {
     const columnId = header.column.id;
@@ -50,18 +48,18 @@ export const TableHeader = <TData extends object>({
       {table.getHeaderGroups().map((headerGroup) => (
         <TableRow
           key={headerGroup.id}
-          sx={{ verticalAlign: allowFiltering ? 'center' : 'top' }}
+          sx={{ verticalAlign: !isFilter ? 'center' : 'top' }}
         >
           {headerGroup.headers.map((header) => (
             <TableCell
               key={header.id}
               onMouseEnter={() => setHoveredColumnId(header.id)}
               onMouseLeave={() => setHoveredColumnId(null)}
-              sx={{
+              sx={(theme: Theme) => ({
                 ...getColumnPinningStyles(theme, header.column),
                 width: `calc(var(--header-${header?.id}-size) * 1px)`,
                 py: 1.5,
-              }}
+              })}
             >
               <Box
                 sx={{
@@ -69,37 +67,44 @@ export const TableHeader = <TData extends object>({
                   alignItems: 'center',
                 }}
               >
-                {allowSorting && header.column.getCanSort() ? (
-                  <TableSortLabel
-                    active={header.column.getIsSorted() !== false}
-                    direction={
-                      header.column.getIsSorted() === 'asc' ? 'asc' : 'desc'
-                    }
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    <Typography
-                      noWrap={true}
-                      variant="subtitle2"
-                      fontWeight="bold"
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        width: `calc(var(--header-${header?.id}-size) * 1px - 80px )`,
-                      }}
-                    >
-                      {flexRender(
+                <TableSortLabel
+                  active={header.column.getIsSorted() !== false}
+                  disabled={!(allowSorting && header.column.getCanSort())}
+                  direction={
+                    header.column.getIsSorted() === 'asc' ? 'asc' : 'desc'
+                  }
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {header.column.columnDef.id !== 'select' ? (
+                    <Tooltip
+                      title={flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
-                    </Typography>
-                  </TableSortLabel>
-                ) : (
-                  flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )
-                )}
+                      arrow
+                      placement="top-start"
+                    >
+                      <Typography
+                        noWrap={true}
+                        variant="subtitle2"
+                        fontWeight={'bold'}
+                        sx={{
+                          width: `calc(var(--header-${header?.id}-size) * 1px - 80px )`,
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </Typography>
+                    </Tooltip>
+                  ) : (
+                    flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )
+                  )}
+                </TableSortLabel>
                 {allowPinning && header.column.id !== 'select' && (
                   <IconButton
                     onClick={() =>
@@ -125,10 +130,8 @@ export const TableHeader = <TData extends object>({
                   </IconButton>
                 )}
               </Box>
-              {allowFiltering && isFilter && header.column.getCanFilter() ? (
-                <div>
-                  <Filter column={header.column} table={table} />
-                </div>
+              {isFilter && header.column.getCanFilter() ? (
+                <Filter column={header.column} table={table} />
               ) : null}
 
               {header.column.getCanResize() && (

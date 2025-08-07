@@ -11,14 +11,12 @@ declare module '@tanstack/react-table' {
       | 'text'
       | 'multiple'
       | 'boolean';
-    colSpan?: number;
     placeholder?: string;
     options?: {
       value: unknown;
       label: string;
     }[];
   }
-
   interface TableMeta<> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
     updateFilter: (columnId: string, value: unknown) => void;

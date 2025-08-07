@@ -13,8 +13,13 @@
       "title": "Biểu mẫu sản phẩm",
       "name": "Tên",
       "price": "Giá",
-      "submit": "Gửi"
-    }
+      "submit": "Gửi",
+      "add": "Thêm sản phẩm",
+      "category": "Danh mục"
+    },
+    "loading": "Đang tải...",
+    "error": "Lỗi: ",
+    "search": "Tìm kiếm sản phẩm"
   },
   "unauthorized": {
     "title": "Không được phép",
@@ -25,5 +30,71 @@
   "profile": "Hồ sơ",
   "settings": "Cài đặt",
   "toggle_theme": "Chuyển đổi chủ đề",
-  "language": "Ngôn ngữ"
+  "language": "Ngôn ngữ",
+  "permission": {
+    "title": "Quyền",
+    "confirm_deletion_title": "Xác nhận xóa",
+    "confirm_deletion_message": "Bạn có chắc chắn muốn xóa quyền này không?",
+    "sync": "Đồng bộ"
+  },
+  "sidebar": {
+    "dashboard": "Bảng điều khiển",
+    "master_data": "Dữ liệu chính",
+    "products": "Sản phẩm",
+    "users": "Người dùng",
+    "permissions": "Quyền",
+    "test": "Kiểm tra",
+    "login": "Đăng nhập"
+  },
+  "settings_page": {
+    "title": "Trang cài đặt"
+  },
+  "users_page": {
+    "title": "Người dùng",
+    "table": {
+      "id": "ID",
+      "name": "Tên",
+      "email": "Email",
+      "created_at": "Ngày tạo"
+    }
+  },
+  "login_page": {
+    "sign_in": "Đăng nhập",
+    "username": "Tên người dùng",
+    "password": "Mật khẩu",
+    "remember_me": "Ghi nhớ tôi",
+    "forgot_password": "Quên mật khẩu?",
+    "dont_have_account": "Chưa có tài khoản? Đăng ký"
+  },
+  "permissions_data": {
+    "age": "Tuổi",
+    "city": "Thành phố",
+    "filter_by_city": "Lọc theo thành phố",
+    "state": "Tiểu bang",
+    "filter_by_state": "Lọc theo tiểu bang",
+    "start_date": "Ngày bắt đầu",
+    "start_time": "Thời gian bắt đầu",
+    "created_at": "Ngày tạo",
+    "notes": "Ghi chú",
+    "tags": "Thẻ",
+    "filter_by_tags": "Lọc theo thẻ",
+    "sample": "Mẫu"
+  },
+  "table_toolbar": {
+    "search_placeholder": "Tìm kiếm",
+    "toggle_column_visibility": "Chuyển đổi hiển thị cột",
+    "toggle_all": "Chuyển đổi tất cả",
+    "toggle_density": "Chuyển đổi mật độ",
+    "toggle_fullscreen": "Chuyển đổi toàn màn hình",
+    "filter": "Lọc",
+    "add": "Thêm",
+    "remove_selected": "Xóa đã chọn"
+  },
+  "table_columns": {
+    "actions": "Hành động",
+    "select_all": "Chọn tất cả"
+  },
+  "clearable_text_field": {
+    "placeholder": "Nhập văn bản"
+  }
 }
