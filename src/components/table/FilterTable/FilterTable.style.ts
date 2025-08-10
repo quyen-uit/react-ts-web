@@ -1,5 +1,4 @@
-'use no memo';
-import { Table as MuiTable } from '@mui/material';
+import { darken, TableCell, TableRow } from '@mui/material';
 import Box from '@mui/material/Box';
 import { styled, type CSSProperties, type Theme } from '@mui/material/styles';
 import type { Column } from '@tanstack/react-table';
@@ -9,30 +8,32 @@ export const getColumnPinningStyles = <T>(
   column: Column<T, unknown>
 ): CSSProperties => {
   const isPinned = column.getIsPinned();
-  if (isPinned === 'right')
+  if (isPinned === 'right') {
     // only actions pin to right
     return {
       boxShadow: '4px 0 4px -4px gray inset',
       right: 0,
-      opacity: 1,
+      opacity: 0.95,
       position: 'sticky',
       zIndex: 1,
-      backgroundColor: theme.palette.background.paper,
     };
+  } else {
+    const isLastLeftPinnedColumn =
+      isPinned === 'left' && column.getIsLastColumn('left');
 
-  const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left');
-
-  return {
-    boxShadow: isLastLeftPinnedColumn
-      ? '-4px 0 4px -4px gray inset'
-      : undefined,
-    left: isPinned === 'left' ? column.getStart('left') : undefined,
-    opacity: isPinned ? 0.95 : 1,
-    position: isPinned ? 'sticky' : 'relative',
-    zIndex: isPinned ? 1 : 0,
-    backgroundColor: isPinned ? theme.palette.background.paper : undefined,
-  };
+    return {
+      boxShadow: isLastLeftPinnedColumn
+        ? '-4px 0 4px -4px gray inset'
+        : undefined,
+      left: isPinned === 'left' ? column.getStart('left') : undefined,
+      opacity: isPinned ? 0.95 : 1,
+      position: isPinned ? 'sticky' : 'relative',
+      zIndex: isPinned ? 1 : 0,
+      backgroundColor: isPinned
+        ? theme.palette.background.paper + ' !important'
+        : undefined,
+    };
+  }
 };
 
 interface TableWrapperProps {
@@ -54,26 +55,11 @@ export const TableWrapper = styled(Box, {
   }),
 }));
 
-export const StyledTable = styled(MuiTable, {
-  shouldForwardProp: (prop) => prop !== 'density',
-})<{ density: number }>(({ density }) => ({
-  tableLayout: 'fixed',
-  '& .MuiTableCell-sizeSmall': {
-    '&:first-of-type': {
-      pl: 1,
-    },
-  },
-  '& td.MuiTableCell-sizeSmall': {
-    py: density,
-    px: 2,
-  },
-}));
-
 // Toolbar Components
-export const ToolbarTitle = styled('div')(({ theme }) => ({
+export const ToolbarTitle = styled('div')(() => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(1),
+  gap: 8,
   flex: '1 1 100%',
 }));
 
@@ -98,3 +84,36 @@ export const ResizeBox = styled(Box, {
         : 'transparent',
   })
 );
+
+// Body Components
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  cursor: 'pointer',
+  display: 'flex',
+  '&:hover  td.MuiTableCell-root': {
+    backgroundColor: darken(theme.palette.background.paper, 0.05),
+  },
+}));
+
+interface StyledTableCellProps {
+  column: Column<any, unknown>;
+}
+
+export const StyledTableCell = styled(TableCell, {
+  shouldForwardProp: (prop) => prop !== 'column',
+})<StyledTableCellProps>(({ theme, column }) => ({
+  width: `calc(var(--col-${column.id}-size) * 1px)`,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  backgroundColor: 'inherit',
+  '&:first-of-type': {
+    paddingLeft: 8,
+    backgroundColor: theme.palette.background.paper,
+  },
+  '&:last-child': {
+    backgroundColor: theme.palette.background.paper,
+  },
+  flex: column.id === 'end' ? '1 1 auto' : undefined,
+  ...getColumnPinningStyles(theme, column),
+}));

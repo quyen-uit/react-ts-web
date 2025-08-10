@@ -3,9 +3,8 @@ import { useMemo, type ReactElement } from 'react';
 import { Delete, Edit, Save } from '@mui/icons-material';
 import { Box, Checkbox, IconButton } from '@mui/material';
 import { type ColumnDef, type Row } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next';
 
-import { COLUMN_SIZES } from '@/shared/constants/table.constants';
+import { COLUMN_SIZES } from './table.constants';
 
 interface UseTableColumnsProps<T extends { id: string | number }> {
   columns: ColumnDef<T>[];
@@ -26,7 +25,6 @@ export const useTableColumns = <T extends { id: string | number }>({
   editedRow,
   setEditedRow,
 }: UseTableColumnsProps<T>): ColumnDef<T>[] => {
-  const { t } = useTranslation();
   const columnsWithDefaults = useMemo<ColumnDef<T>[]>(() => {
     return columns.map((col: ColumnDef<T>) => {
       const type = col.meta?.type || 'text';
@@ -42,8 +40,8 @@ export const useTableColumns = <T extends { id: string | number }>({
 
   const columnsWithRowSelection = useMemo<ColumnDef<T>[]>(() => {
     const getActionSize = () => {
-      let size = onEdit ? 56 : 0;
-      size += onDelete ? 56 : 0;
+      let size = onEdit ? 58 : 0;
+      size += onDelete ? 58 : 0;
       size += rowActionNumber * 40;
       return size;
     };
@@ -86,12 +84,14 @@ export const useTableColumns = <T extends { id: string | number }>({
       },
       enableSorting: false,
       enableResizing: false,
+      enableHiding: false,
       size: 58,
     };
 
     const actionColumn: ColumnDef<T> = {
       id: 'actions',
-      header: t('table_columns.actions'),
+      header: '',
+      // header: t('table_columns.actions'),
       cell: ({ row }: { row: Row<T> }) => (
         <Box>
           {onEdit && (
@@ -110,9 +110,23 @@ export const useTableColumns = <T extends { id: string | number }>({
       enableSorting: false,
       enableResizing: false,
       size: getActionSize(),
+      minSize: 70,
     };
 
-    const result: ColumnDef<T>[] = [selectColumn, ...columnsWithDefaults];
+    const endColumn: ColumnDef<T> = {
+      id: 'end',
+      enableSorting: false,
+      enableResizing: false,
+      enablePinning: false,
+      size: 0,
+      enableHiding: false,
+    };
+
+    const result: ColumnDef<T>[] = [
+      selectColumn,
+      ...columnsWithDefaults,
+      endColumn,
+    ];
 
     if (onEdit || onDelete || renderRowActions) {
       result.push(actionColumn);
@@ -125,7 +139,8 @@ export const useTableColumns = <T extends { id: string | number }>({
     onDelete,
     renderRowActions,
     rowActionNumber,
-    t,
+    editedRow,
+    setEditedRow,
   ]);
 
   return columnsWithRowSelection;

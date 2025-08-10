@@ -5,13 +5,17 @@ declare module '@tanstack/react-table' {
     type?:
       | 'number'
       | 'date'
+      | 'daterange'
       | 'time'
+      | 'timerange'
       | 'datetime'
+      | 'datetimerange'
       | 'option'
       | 'text'
       | 'multiple'
       | 'boolean';
     placeholder?: string;
+    colSpan?: number;
     options?: {
       value: unknown;
       label: string;

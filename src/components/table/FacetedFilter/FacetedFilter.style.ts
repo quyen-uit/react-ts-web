@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 export const SelectWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
+  width: '100%',
   gap: 8,
   '& .MuiSelect-select': {
     display: 'flex',

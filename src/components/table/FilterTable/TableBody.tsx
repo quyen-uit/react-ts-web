@@ -1,17 +1,12 @@
 'use no memo';
 import { useEffect, useState } from 'react';
 
-import {
-  TableBody as MuiTableBody,
-  TableCell,
-  TableRow,
-  useTheme,
-} from '@mui/material';
+import { TableBody as MuiTableBody, Typography, useTheme } from '@mui/material';
 import { flexRender, type Table } from '@tanstack/react-table';
 
 import { showConfirmAlert } from '@/components/alert';
 
-import { getColumnPinningStyles } from './FilterTable.style';
+import { StyledTableCell, StyledTableRow } from './FilterTable.style';
 
 interface TableBodyProps<T> {
   table: Table<T>;
@@ -81,36 +76,29 @@ const TableBodyComponent = <T,>({
   return (
     <MuiTableBody>
       {table.getRowModel().rows.map((row, index) => (
-        <TableRow
+        <StyledTableRow
           key={row.id}
           data-row-index={index}
           onDoubleClick={() => {
             setOriginalRowData(row.original);
             setEditedRow(index);
           }}
-          sx={{
-            cursor: 'pointer',
-            '&:hover': {
-              backgroundColor: (theme) => theme.palette.action.hover,
-            },
-          }}
         >
           {row.getVisibleCells().map((cell) => (
-            <TableCell
-              key={cell.id}
-              sx={{
-                ...getColumnPinningStyles(theme, cell.column),
-              }}
-            >
-              {editedRow === index
-                ? flexRender(cell.column.columnDef.cell, {
+            <StyledTableCell key={cell.id} column={cell.column}>
+              {editedRow === index ? (
+                <Typography noWrap data-lines={2}>
+                  {flexRender(cell.column.columnDef.cell, {
                     ...cell.getContext(),
                     isEditing: true,
-                  })
-                : flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </TableCell>
+                  })}
+                </Typography>
+              ) : (
+                flexRender(cell.column.columnDef.cell, cell.getContext())
+              )}
+            </StyledTableCell>
           ))}
-        </TableRow>
+        </StyledTableRow>
       ))}
     </MuiTableBody>
   );

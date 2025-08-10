@@ -7,20 +7,18 @@ import {
   type Theme,
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import type { DatePickerSlotProps } from '@mui/x-date-pickers/DatePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   TimePicker,
+  type TimePickerSlotProps,
   type TimePickerSlots,
 } from '@mui/x-date-pickers/TimePicker';
 import dayjs, { type Dayjs } from 'dayjs';
 import 'dayjs/locale/vi';
 import 'dayjs/locale/en';
 import { useTranslation } from 'react-i18next';
-
-// Using a simplified interface with `any` for slotProps to bypass a persistent TypeScript error.
 interface CustomTimePickerProps {
   value: Dayjs | string | null;
   onChange: (newValue: Dayjs | null) => void;
@@ -32,11 +30,12 @@ interface CustomTimePickerProps {
   maxTime?: Dayjs;
   format?: string;
   sx?: SxProps<Theme>;
-  ampm?: boolean;
+  disableFuture?: boolean;
+  disablePast?: boolean;
   slots?: TimePickerSlots;
-  slotProps?: DatePickerSlotProps<true>;
+  slotProps?: TimePickerSlotProps<true>;
   shouldDisableTime?: (
-    timeValue: Dayjs,
+    time: Dayjs,
     clockType: 'hours' | 'minutes' | 'seconds'
   ) => boolean;
 }
@@ -46,7 +45,6 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   onChange,
   onAccept,
   variant,
-  ampm = false,
   slots,
   ...rest
 }) => {
@@ -54,8 +52,8 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
 
   useEffect(() => {
     if (propValue) {
-      const date = dayjs(propValue);
-      setValue(date.isValid() ? date : null);
+      const time = dayjs(propValue);
+      setValue(time.isValid() ? time : null);
     } else {
       setValue(null);
     }
@@ -88,7 +86,6 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
     value,
     onChange: handleChange,
     onAccept: handleAccept,
-    ampm,
     slots: {
       ...slots,
       toolbar: () => null,

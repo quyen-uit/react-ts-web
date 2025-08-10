@@ -8,6 +8,8 @@ import type {
 
 import { MultipleSelect } from '@/components/input';
 
+import { SelectWrapper } from './FacetedFilter.style';
+
 export interface SingleSelectFilterProps<TData extends object, TValue> {
   column: Column<TData, TValue>;
   table: Table<TData>;
@@ -29,11 +31,13 @@ export function MultipleSelectFilter<TData extends object, TValue>({
   }));
 
   return (
-    <MultipleSelect
-      selectedValues={selectedValues}
-      onChange={(values) => updateFilter(column.id, values)}
-      options={options}
-      placeholder={placeholder}
-    />
+    <SelectWrapper>
+      <MultipleSelect
+        selectedValues={selectedValues}
+        onChange={(values) => updateFilter(column.id, values)}
+        options={options}
+        placeholder={placeholder}
+      />
+    </SelectWrapper>
   );
 }

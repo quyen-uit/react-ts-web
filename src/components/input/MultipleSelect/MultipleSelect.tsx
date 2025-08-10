@@ -4,7 +4,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { Checkbox, Chip, MenuItem, Select, Typography } from '@mui/material';
 
 import { ClearIconButton } from '../../icon';
-import { SelectWrapper } from '../../table/FacetedFilter/FacetedFilter.style';
 
 interface Option {
   value: string;
@@ -37,63 +36,61 @@ export const MultipleSelect: React.FC<MultipleSelectProps> = ({
   };
 
   return (
-    <SelectWrapper>
-      <Select
-        multiple
-        value={Array.isArray(selectedValues) ? selectedValues : []}
-        onChange={(e) => onChange(e.target.value as string[])}
-        displayEmpty
-        variant={variant}
-        sx={{ color, width }}
-        endAdornment={
-          <ClearIconButton
-            visible={!!selectedValues.length}
-            onClick={() => onChange([])}
-            marginRight={2.5}
-          />
+    <Select
+      multiple
+      value={Array.isArray(selectedValues) ? selectedValues : []}
+      onChange={(e) => onChange(e.target.value as string[])}
+      displayEmpty
+      variant={variant}
+      sx={{ color, width }}
+      endAdornment={
+        <ClearIconButton
+          visible={!!selectedValues.length}
+          onClick={() => onChange([])}
+          marginRight={2.5}
+        />
+      }
+      renderValue={(selected) => {
+        const values = selected as string[];
+        if (!values || values.length === 0) {
+          return <Typography color={color}>{placeholder}</Typography>;
         }
-        renderValue={(selected) => {
-          const values = selected as string[];
-          if (!values || values.length === 0) {
-            return <Typography color={color}>{placeholder}</Typography>;
-          }
-          return (
-            <>
-              {values.map((value) => (
-                <Chip
-                  key={value}
-                  label={value}
-                  size="small"
-                  onMouseDown={(e) => e.stopPropagation()} //  Prevent Select opening
-                  onDelete={(e) => {
-                    e.stopPropagation(); //   Important
-                    e.preventDefault();
-                    handleRemoveChip(value);
-                  }}
-                  deleteIcon={<CancelIcon />}
-                />
-              ))}
-            </>
-          );
-        }}
-      >
-        {options &&
-          options.map((option) => (
-            <MenuItem
-              key={option.value}
-              value={option.value}
-              sx={(theme) => ({ fontSize: theme.typography.fontSize })}
-            >
-              <Checkbox
-                checked={
-                  Array.isArray(selectedValues) &&
-                  selectedValues.includes(option.value)
-                }
+        return (
+          <>
+            {values.map((value) => (
+              <Chip
+                key={value}
+                label={value}
+                size="small"
+                onMouseDown={(e) => e.stopPropagation()} //  Prevent Select opening
+                onDelete={(e) => {
+                  e.stopPropagation(); //   Important
+                  e.preventDefault();
+                  handleRemoveChip(value);
+                }}
+                deleteIcon={<CancelIcon />}
               />
-              {option.label} {option.count && `(${option.count})`}
-            </MenuItem>
-          ))}
-      </Select>
-    </SelectWrapper>
+            ))}
+          </>
+        );
+      }}
+    >
+      {options &&
+        options.map((option) => (
+          <MenuItem
+            key={option.value}
+            value={option.value}
+            sx={(theme) => ({ fontSize: theme.typography.fontSize })}
+          >
+            <Checkbox
+              checked={
+                Array.isArray(selectedValues) &&
+                selectedValues.includes(option.value)
+              }
+            />
+            {option.label} {option.count && `(${option.count})`}
+          </MenuItem>
+        ))}
+    </Select>
   );
 };

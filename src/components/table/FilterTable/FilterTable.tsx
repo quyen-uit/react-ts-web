@@ -5,12 +5,18 @@ import {
   TableContainer,
   TablePagination,
   Paper,
+  Table,
 } from '@mui/material';
-import { type ColumnDef, type Row } from '@tanstack/react-table';
+import {
+  type ColumnDef,
+  type Row,
+  type ColumnFiltersState,
+  type SortingState,
+} from '@tanstack/react-table';
 
 import { useFilterTable, useTableColumns, useTableUIState } from '@/hooks';
 
-import { StyledTable, TableWrapper } from './FilterTable.style';
+import { TableWrapper } from './FilterTable.style';
 import { TableBody } from './TableBody';
 import { TableHeader } from './TableHeader';
 import { TableToolbar, type ExtraAction } from './TableToolbar';
@@ -23,6 +29,7 @@ interface TableProps<T extends { id: string | number }> {
   onAdd?: () => void;
   onDelete?: (ids: string[]) => void;
   onEdit?: (row: T) => void;
+  onSearch?: (filters: ColumnFiltersState, sorting: SortingState) => void;
   renderRowActions?: (row: Row<T>) => ReactElement<typeof IconButton>[];
   rowActionNumber?: number;
   allowPinning?: boolean;
@@ -41,11 +48,12 @@ const FilterTable = <T extends { id: string | number }>({
   onAdd,
   onDelete,
   onEdit,
+  onSearch,
   renderRowActions,
   title,
-  allowPinning = false,
+  allowPinning = true,
   allowFiltering = true,
-  allowFullscreen = false,
+  allowFullscreen = true,
   allowSorting = true,
   allowRowSelection = true,
   allowResize = true,
@@ -78,6 +86,7 @@ const FilterTable = <T extends { id: string | number }>({
     setGlobalFilter,
     originalRowData,
     setOriginalRowData,
+    handleSearch,
   } = useFilterTable({
     data,
     columns: tableColumns,
@@ -85,6 +94,7 @@ const FilterTable = <T extends { id: string | number }>({
     allowRowSelection,
     allowResize,
     editedRow,
+    onSearch,
   });
 
   const columnSizeVars = useMemo(() => {
@@ -98,7 +108,7 @@ const FilterTable = <T extends { id: string | number }>({
 
     return colSizes;
     // eslint-disable-next-line react-hooks/react-compiler, react-hooks/exhaustive-deps
-  }, [table.getState().columnSizing]);
+  }, [table.getState().columnSizing, table.getState().columnVisibility]);
 
   return (
     <TableWrapper isFullScreen={isFullScreen}>
@@ -118,6 +128,7 @@ const FilterTable = <T extends { id: string | number }>({
         extraActions={extraActions}
         density={density}
         onDensityChange={handleDensityChange}
+        onSearch={handleSearch}
       />
 
       <Paper
@@ -127,7 +138,7 @@ const FilterTable = <T extends { id: string | number }>({
         }}
       >
         <TableContainer sx={{ ...columnSizeVars }}>
-          <StyledTable size={'small'} density={density}>
+          <Table size={'small'}>
             <TableHeader
               table={table}
               allowSorting={allowSorting}
@@ -143,13 +154,13 @@ const FilterTable = <T extends { id: string | number }>({
               setOriginalRowData={setOriginalRowData}
               setData={setData}
             />
-          </StyledTable>
+          </Table>
         </TableContainer>
       </Paper>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={table.getFilteredRowModel().rows.length}
+        count={table.getCoreRowModel().rows.length}
         rowsPerPage={table.getState().pagination.pageSize}
         page={table.getState().pagination.pageIndex}
         onPageChange={(_, page) => table.setPageIndex(page)}

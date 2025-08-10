@@ -118,7 +118,7 @@ export const columns: ColumnDef<Permission>[] = [
     accessorKey: 'startTime',
     header: t('permissions_data.start_time'),
     meta: {
-      type: 'time',
+      type: 'timerange',
     },
     cell: EditableCell,
   },
@@ -126,7 +126,7 @@ export const columns: ColumnDef<Permission>[] = [
     accessorKey: 'createdAt',
     header: t('permissions_data.created_at'),
     meta: {
-      type: 'datetime',
+      type: 'datetimerange',
     },
     cell: EditableCell,
   },

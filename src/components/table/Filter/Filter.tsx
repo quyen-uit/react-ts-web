@@ -2,6 +2,7 @@
 import React from 'react';
 
 import type { Column, Table } from '@tanstack/react-table';
+import dayjs from 'dayjs';
 
 import {
   datePickerSlotProps,
@@ -13,8 +14,11 @@ import {
 } from './Filter.styles';
 import {
   CustomDatePicker,
+  CustomDateRangePicker,
   CustomDateTimePicker,
+  CustomDateTimeRangePicker,
   CustomTimePicker,
+  CustomTimeRangePicker,
   TernaryCheckbox,
 } from '../../input';
 import { MultipleSelectFilter } from '../FacetedFilter/MultipleSelectFilter';
@@ -33,14 +37,57 @@ function Filter<TData extends object, TValue>({
   const { type } = column.columnDef.meta || {};
   const { updateFilter } = table.options.meta || {};
 
-  const [from, setFrom] = React.useState<string | null>(
-    (columnFilterValue as [string, string])?.[0] ?? null
-  );
-  const [to, setTo] = React.useState<string | null>(
-    (columnFilterValue as [string, string])?.[1] ?? null
+  const [from, to] = React.useMemo(
+    () => (columnFilterValue as [string, string]) || [],
+    [columnFilterValue]
   );
 
   switch (type) {
+    case 'daterange':
+      return (
+        <CustomDateRangePicker
+          value={{
+            startDate: from ? dayjs(from) : null,
+            endDate: to ? dayjs(to) : null,
+          }}
+          onChange={(range) => {
+            const newFrom = range.startDate?.toISOString() ?? null;
+            const newTo = range.endDate?.toISOString() ?? null;
+            updateFilter?.(column.id, [newFrom, newTo]);
+          }}
+          slotProps={datePickerSlotProps}
+        />
+      );
+    case 'timerange':
+      return (
+        <CustomTimeRangePicker
+          value={{
+            startTime: from ? dayjs(from) : null,
+            endTime: to ? dayjs(to) : null,
+          }}
+          onChange={(range) => {
+            const newFrom = range.startTime?.toISOString() ?? null;
+            const newTo = range.endTime?.toISOString() ?? null;
+            updateFilter?.(column.id, [newFrom, newTo]);
+          }}
+          slotProps={timePickerSlotProps}
+        />
+      );
+    case 'datetimerange':
+      return (
+        <CustomDateTimeRangePicker
+          value={{
+            startDateTime: from ? dayjs(from) : null,
+            endDateTime: to ? dayjs(to) : null,
+          }}
+          onChange={(range) => {
+            const newFrom = range.startDateTime?.toISOString() ?? null;
+            const newTo = range.endDateTime?.toISOString() ?? null;
+            updateFilter?.(column.id, [newFrom, newTo]);
+          }}
+          slotProps={dateTimePickerSlotProps}
+        />
+      );
     case 'number':
       return (
         <FilterContainer>
@@ -73,66 +120,30 @@ function Filter<TData extends object, TValue>({
       );
     case 'date':
       return (
-        <FilterContainer>
-          <CustomDatePicker
-            value={from}
-            onChange={(value) => setFrom(value?.toISOString() ?? null)}
-            onAccept={(value) =>
-              updateFilter?.(column.id, [value?.toISOString(), to])
-            }
-            slotProps={datePickerSlotProps}
-          />
-          <CustomDatePicker
-            value={to}
-            onChange={(value) => setTo(value?.toISOString() ?? null)}
-            onAccept={(value) =>
-              updateFilter?.(column.id, [from, value?.toISOString()])
-            }
-            slotProps={datePickerSlotProps}
-          />
-        </FilterContainer>
+        <CustomDatePicker
+          value={from ? dayjs(from) : null}
+          onChange={() => {}}
+          onAccept={(value) => updateFilter?.(column.id, value?.toISOString())}
+          slotProps={datePickerSlotProps}
+        />
       );
     case 'time':
       return (
-        <FilterContainer>
-          <CustomTimePicker
-            value={from}
-            onChange={(value) => setFrom(value?.toISOString() ?? null)}
-            onAccept={(value) =>
-              updateFilter?.(column.id, [value?.toISOString(), to])
-            }
-            slotProps={timePickerSlotProps}
-          />
-          <CustomTimePicker
-            value={to}
-            onChange={(value) => setTo(value?.toISOString() ?? null)}
-            onAccept={(value) =>
-              updateFilter?.(column.id, [from, value?.toISOString()])
-            }
-            slotProps={timePickerSlotProps}
-          />
-        </FilterContainer>
+        <CustomTimePicker
+          value={from ? dayjs(from) : null}
+          onChange={() => {}}
+          onAccept={(value) => updateFilter?.(column.id, value?.toISOString())}
+          slotProps={timePickerSlotProps}
+        />
       );
     case 'datetime':
       return (
-        <FilterContainer>
-          <CustomDateTimePicker
-            value={from}
-            onChange={(value) => setFrom(value?.toISOString() ?? null)}
-            onAccept={(value) =>
-              updateFilter?.(column.id, [value?.toISOString(), to])
-            }
-            slotProps={dateTimePickerSlotProps}
-          />
-          <CustomDateTimePicker
-            value={to}
-            onChange={(value) => setTo(value?.toISOString() ?? null)}
-            onAccept={(value) =>
-              updateFilter?.(column.id, [from, value?.toISOString()])
-            }
-            slotProps={dateTimePickerSlotProps}
-          />
-        </FilterContainer>
+        <CustomDateTimePicker
+          value={from ? dayjs(from) : null}
+          onChange={() => {}}
+          onAccept={(value) => updateFilter?.(column.id, value?.toISOString())}
+          slotProps={dateTimePickerSlotProps}
+        />
       );
     case 'option':
       return <SingleSelectFilter column={column} table={table} />;

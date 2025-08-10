@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { PushPin as PushPinIcon } from '@mui/icons-material';
 import {
   Box,
-  TableCell,
   TableHead,
   TableRow,
   TableSortLabel,
@@ -16,7 +15,7 @@ import {
 } from '@mui/material';
 import { flexRender, type Header, type Table } from '@tanstack/react-table';
 
-import { ResizeBox, getColumnPinningStyles } from './FilterTable.style';
+import { ResizeBox, StyledTableCell } from './FilterTable.style';
 import Filter from '../Filter/Filter';
 
 interface TableHeaderProps<TData extends object> {
@@ -46,20 +45,13 @@ export const TableHeader = <TData extends object>({
   return (
     <TableHead>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow
-          key={headerGroup.id}
-          sx={{ verticalAlign: !isFilter ? 'center' : 'top' }}
-        >
+        <TableRow key={headerGroup.id} sx={{ display: 'flex' }}>
           {headerGroup.headers.map((header) => (
-            <TableCell
+            <StyledTableCell
               key={header.id}
               onMouseEnter={() => setHoveredColumnId(header.id)}
               onMouseLeave={() => setHoveredColumnId(null)}
-              sx={(theme: Theme) => ({
-                ...getColumnPinningStyles(theme, header.column),
-                width: `calc(var(--header-${header?.id}-size) * 1px)`,
-                py: 1.5,
-              })}
+              column={header.column}
             >
               <Box
                 sx={{
@@ -69,7 +61,11 @@ export const TableHeader = <TData extends object>({
               >
                 <TableSortLabel
                   active={header.column.getIsSorted() !== false}
-                  disabled={!(allowSorting && header.column.getCanSort())}
+                  disabled={
+                    !(allowSorting && header.column.getCanSort()) &&
+                    header.column.id !== 'select'
+                  }
+                  hideSortIcon={header.column.id === 'select'}
                   direction={
                     header.column.getIsSorted() === 'asc' ? 'asc' : 'desc'
                   }
@@ -105,30 +101,32 @@ export const TableHeader = <TData extends object>({
                     )
                   )}
                 </TableSortLabel>
-                {allowPinning && header.column.id !== 'select' && (
-                  <IconButton
-                    onClick={() =>
-                      header.column.pin(
-                        header.column.getIsPinned() ? false : 'left'
-                      )
-                    }
-                    sx={{
-                      visibility:
-                        hoveredColumnId === header.column.id &&
-                        header.column.getIsPinned() != 'right'
-                          ? 'visible'
-                          : 'hidden',
-                    }}
-                    size="small"
-                  >
-                    <PushPinIcon
-                      fontSize="inherit"
-                      color={
-                        header.column.getIsPinned() ? 'primary' : 'disabled'
+                {allowPinning &&
+                  header.column.getCanPin() &&
+                  !['select', 'actions'].includes(header.column.id) && (
+                    <IconButton
+                      onClick={() =>
+                        header.column.pin(
+                          header.column.getIsPinned() ? false : 'left'
+                        )
                       }
-                    />
-                  </IconButton>
-                )}
+                      sx={{
+                        visibility:
+                          hoveredColumnId === header.column.id &&
+                          header.column.getIsPinned() != 'right'
+                            ? 'visible'
+                            : 'hidden',
+                      }}
+                      size="small"
+                    >
+                      <PushPinIcon
+                        fontSize="inherit"
+                        color={
+                          header.column.getIsPinned() ? 'primary' : 'disabled'
+                        }
+                      />
+                    </IconButton>
+                  )}
               </Box>
               {isFilter && header.column.getCanFilter() ? (
                 <Filter column={header.column} table={table} />
@@ -146,7 +144,7 @@ export const TableHeader = <TData extends object>({
                   }
                 />
               )}
-            </TableCell>
+            </StyledTableCell>
           ))}
         </TableRow>
       ))}

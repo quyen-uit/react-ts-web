@@ -2,9 +2,6 @@ import { useMemo, useState } from 'react';
 
 import {
   getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
@@ -23,6 +20,7 @@ interface UseFilterTableProps<T> {
   allowResize?: boolean;
   editedRow?: number | null;
   setEditedRow?: (index: number | null) => void;
+  onSearch?: (filters: ColumnFiltersState, sorting: SortingState) => void;
 }
 
 export const useFilterTable = <T>({
@@ -32,6 +30,7 @@ export const useFilterTable = <T>({
   allowRowSelection = false,
   allowResize = false,
   editedRow,
+  onSearch,
 }: UseFilterTableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -94,10 +93,7 @@ export const useFilterTable = <T>({
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
     columnResizeMode: 'onChange',
     enableRowSelection: allowRowSelection,
     enableColumnResizing: allowResize,
@@ -108,11 +104,18 @@ export const useFilterTable = <T>({
   //   setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
   // }, [table]);
 
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(columnFilters, sorting);
+    }
+  };
+
   return {
     table,
     globalFilter,
     setGlobalFilter,
     originalRowData,
     setOriginalRowData,
+    handleSearch,
   };
 };

@@ -24,7 +24,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import type { Table } from '@tanstack/react-table';
+import type { Column, Table } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 
 import { ToolbarTitle } from './FilterTable.style';
@@ -41,6 +41,7 @@ interface TableToolbarProps<T> {
   setGlobalFilter: (value: string) => void;
   onAdd?: () => void;
   onDelete?: (ids: string[]) => void;
+  onSearch?: () => void;
   allowFullscreen?: boolean;
   isFullScreen: boolean;
   toggleFullScreen: () => void;
@@ -59,6 +60,7 @@ export const TableToolbar = <T,>({
   setGlobalFilter,
   onAdd,
   onDelete,
+  onSearch,
   allowFullscreen,
   isFullScreen,
   toggleFullScreen,
@@ -80,6 +82,35 @@ export const TableToolbar = <T,>({
     setAnchorEl(null);
   };
 
+  const toggleableColumns = table
+    .getAllLeafColumns()
+    .filter((col) => !['end', 'select'].includes(col.id));
+
+  const handleToggleAll = () => {
+    const allVisible = toggleableColumns.every((col) => col.getIsVisible());
+    if (allVisible) {
+      const newVisibility = Object.fromEntries(
+        toggleableColumns.map((col, i) => [col.id, i === 0])
+      );
+      table.setColumnVisibility(newVisibility);
+    } else {
+      const newVisibility = Object.fromEntries(
+        toggleableColumns.map((col) => [col.id, true])
+      );
+      table.setColumnVisibility(newVisibility);
+    }
+  };
+
+  const handleToggleOne = (column: Column<T, unknown>) => {
+    const visibleCount = toggleableColumns.filter((c) =>
+      c.getIsVisible()
+    ).length;
+    if (column.getIsVisible() && visibleCount <= 1) {
+      return;
+    }
+    column.toggleVisibility();
+  };
+
   const handleDensityToggle = () => {
     const nextIndex = (density + 1) % 3;
     onDensityChange(nextIndex);
@@ -92,7 +123,7 @@ export const TableToolbar = <T,>({
           {title}
         </Typography>
         {isFilter && (
-          <IconButton aria-label="search">
+          <IconButton aria-label="search" onClick={onSearch}>
             <SearchIcon color="primary" />
           </IconButton>
         )}
@@ -116,21 +147,27 @@ export const TableToolbar = <T,>({
       >
         <MenuItem>
           <Checkbox
-            checked={table.getIsAllColumnsVisible()}
-            onChange={table.getToggleAllColumnsVisibilityHandler()}
+            checked={toggleableColumns.every((col) => col.getIsVisible())}
+            onChange={handleToggleAll}
           />
           {t('table_toolbar.toggle_all')}
         </MenuItem>
         <Divider />
-        {table.getAllLeafColumns().map((column) => (
-          <MenuItem key={column.id}>
-            <Checkbox
-              checked={column.getIsVisible()}
-              onChange={column.getToggleVisibilityHandler()}
-            />
-            {column.id}
-          </MenuItem>
-        ))}
+        {toggleableColumns.map((column) => {
+          const visibleCount = toggleableColumns.filter((c) =>
+            c.getIsVisible()
+          ).length;
+          return (
+            <MenuItem key={column.id}>
+              <Checkbox
+                checked={column.getIsVisible()}
+                onChange={() => handleToggleOne(column)}
+                disabled={column.getIsVisible() && visibleCount === 1}
+              />
+              {column.id}
+            </MenuItem>
+          );
+        })}
       </Menu>
       <Tooltip title={t('table_toolbar.toggle_density')}>
         <IconButton onClick={handleDensityToggle} color="primary">

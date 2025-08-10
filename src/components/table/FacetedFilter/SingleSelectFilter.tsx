@@ -8,6 +8,8 @@ import type {
 
 import { SingleSelect } from '@/components/input';
 
+import { SelectWrapper } from './FacetedFilter.style';
+
 export interface SingleSelectFilterProps<TData extends object, TValue> {
   column: Column<TData, TValue>;
   table: Table<TData>;
@@ -29,11 +31,13 @@ export function SingleSelectFilter<TData extends object, TValue>({
   }));
 
   return (
-    <SingleSelect
-      value={(filterValue as string) ?? ''}
-      onChange={(value) => updateFilter(column.id, value)}
-      options={options}
-      placeholder={placeholder}
-    />
+    <SelectWrapper>
+      <SingleSelect
+        value={(filterValue as string) ?? ''}
+        onChange={(value) => updateFilter(column.id, value)}
+        options={options}
+        placeholder={placeholder}
+      />
+    </SelectWrapper>
   );
 }
