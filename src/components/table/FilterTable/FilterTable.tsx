@@ -153,6 +153,7 @@ const FilterTable = <T extends { id: string | number }>({
               originalRowData={originalRowData}
               setOriginalRowData={setOriginalRowData}
               setData={setData}
+              density={density}
             />
           </Table>
         </TableContainer>

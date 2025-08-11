@@ -1,4 +1,3 @@
-'use no memo';
 import React from 'react';
 
 import type { Column, Table } from '@tanstack/react-table';
@@ -21,8 +20,10 @@ import {
   CustomTimeRangePicker,
   TernaryCheckbox,
 } from '../../input';
-import { MultipleSelectFilter } from '../FacetedFilter/MultipleSelectFilter';
-import { SingleSelectFilter } from '../FacetedFilter/SingleSelectFilter';
+import { MultiAutocompleteFilter } from '../AutocompleteFilter/MultiAutocompleteFilter';
+import { SingleAutocompleteFilter } from '../AutocompleteFilter/SingleAutocompleteFilter';
+import { MultipleSelectFilter } from '../SelectFilter/MultipleSelectFilter';
+import { SingleSelectFilter } from '../SelectFilter/SingleSelectFilter';
 
 export interface FilterProps<TData extends object, TValue> {
   column: Column<TData, TValue>;
@@ -37,8 +38,12 @@ function Filter<TData extends object, TValue>({
   const { type } = column.columnDef.meta || {};
   const { updateFilter } = table.options.meta || {};
 
-  const [from, to] = React.useMemo(
-    () => (columnFilterValue as [string, string]) || [],
+  const { from, to } = React.useMemo(
+    () =>
+      (columnFilterValue as { from: string; to: string }) || {
+        from: '',
+        to: '',
+      },
     [columnFilterValue]
   );
 
@@ -53,7 +58,7 @@ function Filter<TData extends object, TValue>({
           onChange={(range) => {
             const newFrom = range.startDate?.toISOString() ?? null;
             const newTo = range.endDate?.toISOString() ?? null;
-            updateFilter?.(column.id, [newFrom, newTo]);
+            updateFilter?.(column.id, { from: newFrom, to: newTo });
           }}
           slotProps={datePickerSlotProps}
         />
@@ -68,7 +73,7 @@ function Filter<TData extends object, TValue>({
           onChange={(range) => {
             const newFrom = range.startTime?.toISOString() ?? null;
             const newTo = range.endTime?.toISOString() ?? null;
-            updateFilter?.(column.id, [newFrom, newTo]);
+            updateFilter?.(column.id, { from: newFrom, to: newTo });
           }}
           slotProps={timePickerSlotProps}
         />
@@ -83,7 +88,7 @@ function Filter<TData extends object, TValue>({
           onChange={(range) => {
             const newFrom = range.startDateTime?.toISOString() ?? null;
             const newTo = range.endDateTime?.toISOString() ?? null;
-            updateFilter?.(column.id, [newFrom, newTo]);
+            updateFilter?.(column.id, { from: newFrom, to: newTo });
           }}
           slotProps={dateTimePickerSlotProps}
         />
@@ -93,25 +98,24 @@ function Filter<TData extends object, TValue>({
         <FilterContainer>
           <NumberTextField
             type="number"
-            value={(columnFilterValue as [number, number])?.[0] ?? ''}
-            onChange={(value) =>
-              updateFilter?.(column.id, [
-                value,
-                (columnFilterValue as [number, number])?.[1],
-              ])
+            value={(columnFilterValue as { from: number })?.from ?? ''}
+            onChange={(e) =>
+              updateFilter?.(column.id, {
+                from: (e.target as HTMLInputElement).valueAsNumber || null,
+                to: (columnFilterValue as { to: number })?.to,
+              })
             }
             placeholder="From"
             variant="standard"
           />
-          -
           <NumberTextField
             type="number"
-            value={(columnFilterValue as [number, number])?.[1] ?? ''}
+            value={(columnFilterValue as { to: number })?.to ?? ''}
             onChange={(e) =>
-              updateFilter?.(column.id, [
-                (columnFilterValue as [number, number])?.[0],
-                e.target.value,
-              ])
+              updateFilter?.(column.id, {
+                from: (columnFilterValue as { from: number })?.from,
+                to: (e.target as HTMLInputElement).valueAsNumber || null,
+              })
             }
             placeholder="To"
             variant="standard"
@@ -149,12 +153,18 @@ function Filter<TData extends object, TValue>({
       return <SingleSelectFilter column={column} table={table} />;
     case 'multiple':
       return <MultipleSelectFilter column={column} table={table} />;
+    case 'autocomplete':
+      return <SingleAutocompleteFilter column={column} table={table} />;
+    case 'multiauto':
+      return <MultiAutocompleteFilter column={column} table={table} />;
     case 'boolean':
       return (
         <TernaryCheckbox
           sx={{ ml: -1, mb: -1.5 }}
           color="default"
-          onValueChange={(value) => updateFilter?.(column.id, value)}
+          onValueChange={(value) =>
+            updateFilter?.(column.id, value ? String(value) : null)
+          }
         />
       );
     case 'text':

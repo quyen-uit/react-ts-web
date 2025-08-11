@@ -84,7 +84,7 @@ export const TableToolbar = <T,>({
 
   const toggleableColumns = table
     .getAllLeafColumns()
-    .filter((col) => !['end', 'select'].includes(col.id));
+    .filter((col) => !['end', 'select', 'actions'].includes(col.id));
 
   const handleToggleAll = () => {
     const allVisible = toggleableColumns.every((col) => col.getIsVisible());

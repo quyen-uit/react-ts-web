@@ -1,5 +1,4 @@
 'use no memo';
-
 import { useState } from 'react';
 
 import { PushPin as PushPinIcon } from '@mui/icons-material';
@@ -11,7 +10,6 @@ import {
   IconButton,
   Typography,
   Tooltip,
-  type Theme,
 } from '@mui/material';
 import { flexRender, type Header, type Table } from '@tanstack/react-table';
 
@@ -52,6 +50,7 @@ export const TableHeader = <TData extends object>({
               onMouseEnter={() => setHoveredColumnId(header.id)}
               onMouseLeave={() => setHoveredColumnId(null)}
               column={header.column}
+              isFilter={isFilter}
             >
               <Box
                 sx={{

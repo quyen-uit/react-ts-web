@@ -49,12 +49,12 @@ export const dateTimePickerSlotProps = {
 
 export const FilterContainer = styled(Box)(() => ({
   display: 'flex',
-  gap: 4,
+  gap: 8,
   flexWrap: 'wrap',
-
+  width: '100%',
   '& .MuiFormControl-root': {
     flex: 1,
-    minWidth: 120,
+    minWidth: 60,
   },
 }));
 

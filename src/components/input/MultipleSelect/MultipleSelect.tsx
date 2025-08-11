@@ -3,13 +3,9 @@ import React from 'react';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Checkbox, Chip, MenuItem, Select, Typography } from '@mui/material';
 
-import { ClearIconButton } from '../../icon';
+import type { Option } from '@/types/common';
 
-interface Option {
-  value: string;
-  label: string;
-  count?: number;
-}
+import { ClearIconButton } from '../../icon';
 
 interface MultipleSelectProps {
   selectedValues: string[];

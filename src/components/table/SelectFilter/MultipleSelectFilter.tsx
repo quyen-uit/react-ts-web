@@ -8,7 +8,7 @@ import type {
 
 import { MultipleSelect } from '@/components/input';
 
-import { SelectWrapper } from './FacetedFilter.style';
+import { SelectWrapper } from './SelectFilter.style';
 
 export interface SingleSelectFilterProps<TData extends object, TValue> {
   column: Column<TData, TValue>;
@@ -18,24 +18,20 @@ export function MultipleSelectFilter<TData extends object, TValue>({
   column,
   table,
 }: SingleSelectFilterProps<TData, TValue>) {
-  const facetedValues = column.getFacetedUniqueValues();
   const { updateFilter } = table.options.meta as TableMeta<TData>;
-  const { placeholder } = column.columnDef.meta as ColumnMeta<TData, TValue>;
+  const { placeholder, options } = column.columnDef.meta as ColumnMeta<
+    TData,
+    TValue
+  >;
 
   const selectedValues = (column.getFilterValue() as string[]) ?? [];
-
-  const options = Array.from(facetedValues.keys()).map((value) => ({
-    value,
-    label: value,
-    count: facetedValues.get(value),
-  }));
 
   return (
     <SelectWrapper>
       <MultipleSelect
         selectedValues={selectedValues}
         onChange={(values) => updateFilter(column.id, values)}
-        options={options}
+        options={options || []}
         placeholder={placeholder}
       />
     </SelectWrapper>

@@ -29,9 +29,7 @@ export const getColumnPinningStyles = <T>(
       opacity: isPinned ? 0.95 : 1,
       position: isPinned ? 'sticky' : 'relative',
       zIndex: isPinned ? 1 : 0,
-      backgroundColor: isPinned
-        ? theme.palette.background.paper + ' !important'
-        : undefined,
+      backgroundColor: isPinned ? theme.palette.background.paper : undefined,
     };
   }
 };
@@ -95,25 +93,35 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 interface StyledTableCellProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   column: Column<any, unknown>;
+  isFilter?: boolean;
+  density?: number;
 }
 
 export const StyledTableCell = styled(TableCell, {
-  shouldForwardProp: (prop) => prop !== 'column',
-})<StyledTableCellProps>(({ theme, column }) => ({
+  shouldForwardProp: (prop) =>
+    prop !== 'column' && prop !== 'isFilter' && prop !== 'density',
+})<StyledTableCellProps>(({ theme, column, isFilter, density = 0 }) => ({
   width: `calc(var(--col-${column.id}-size) * 1px)`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
   backgroundColor: 'inherit',
+  flex: column.id === 'end' ? '1 1 auto' : undefined,
+  'th&': {
+    justifyContent: isFilter ? 'flex-start' : 'center',
+  },
+  'td&': {
+    paddingTop: `${density * 8 + 2}px`,
+    paddingBottom: `${density * 8}px`,
+  },
   '&:first-of-type': {
     paddingLeft: 8,
-    backgroundColor: theme.palette.background.paper,
   },
   '&:last-child': {
     backgroundColor: theme.palette.background.paper,
   },
-  flex: column.id === 'end' ? '1 1 auto' : undefined,
   ...getColumnPinningStyles(theme, column),
 }));

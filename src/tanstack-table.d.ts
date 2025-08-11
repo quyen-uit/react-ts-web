@@ -1,4 +1,5 @@
 import '@tanstack/react-table';
+import type { Option } from './types/common';
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<> {
@@ -13,13 +14,12 @@ declare module '@tanstack/react-table' {
       | 'option'
       | 'text'
       | 'multiple'
-      | 'boolean';
+      | 'boolean'
+      | 'autocomplete'
+      | 'multiauto';
     placeholder?: string;
     colSpan?: number;
-    options?: {
-      value: unknown;
-      label: string;
-    }[];
+    options?: Option[];
   }
   interface TableMeta<> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;

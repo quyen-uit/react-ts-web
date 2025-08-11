@@ -1,7 +1,7 @@
 'use no memo';
 import { useEffect, useState } from 'react';
 
-import { TableBody as MuiTableBody, Typography, useTheme } from '@mui/material';
+import { TableBody as MuiTableBody, Typography } from '@mui/material';
 import { flexRender, type Table } from '@tanstack/react-table';
 
 import { showConfirmAlert } from '@/components/alert';
@@ -10,6 +10,7 @@ import { StyledTableCell, StyledTableRow } from './FilterTable.style';
 
 interface TableBodyProps<T> {
   table: Table<T>;
+  density: number;
   editedRow: number | null;
   setEditedRow: (index: number | null) => void;
   originalRowData: T | null;
@@ -25,8 +26,8 @@ const TableBodyComponent = <T,>({
   originalRowData,
   setOriginalRowData,
   setData,
+  density,
 }: TableBodyProps<T>) => {
-  const theme = useTheme();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   useEffect(() => {
@@ -85,7 +86,11 @@ const TableBodyComponent = <T,>({
           }}
         >
           {row.getVisibleCells().map((cell) => (
-            <StyledTableCell key={cell.id} column={cell.column}>
+            <StyledTableCell
+              key={cell.id}
+              column={cell.column}
+              density={density}
+            >
               {editedRow === index ? (
                 <Typography noWrap data-lines={2}>
                   {flexRender(cell.column.columnDef.cell, {

@@ -8,7 +8,7 @@ import type {
 
 import { SingleSelect } from '@/components/input';
 
-import { SelectWrapper } from './FacetedFilter.style';
+import { SelectWrapper } from './SelectFilter.style';
 
 export interface SingleSelectFilterProps<TData extends object, TValue> {
   column: Column<TData, TValue>;
