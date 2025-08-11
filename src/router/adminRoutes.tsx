@@ -12,6 +12,7 @@ const UsersPage = lazy(() => import('@/pages/admin/Users/UsersPage'));
 const Settings = lazy(() => import('@/pages/admin/Settings'));
 const Permissions = lazy(() => import('@/pages/admin/Permissions'));
 const Products = lazy(() => import('@/pages/admin/Products'));
+const PosPage = lazy(() => import('@/pages/admin/Pos/PosPage'));
 
 const AdminRoutes: RouteObject[] = [
   {
@@ -26,6 +27,14 @@ const AdminRoutes: RouteObject[] = [
             element: (
               <Suspense>
                 <Dashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'pos',
+            element: (
+              <Suspense>
+                <PosPage />
               </Suspense>
             ),
           },
