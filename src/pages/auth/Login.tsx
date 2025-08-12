@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { useLoginMutation } from '@/services/api/authApi';
+import { useLoginMutation } from '@/services/authApi';
 
 const Login = () => {
   const { t } = useTranslation();
