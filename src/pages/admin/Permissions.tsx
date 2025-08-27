@@ -11,32 +11,16 @@ import { t } from 'i18next';
 
 import { showConfirmAlert } from '@/components/alert';
 import { FilterTable } from '@/components/table';
-import {
-  useGetPermissionsQuery,
-  useCreatePermissionMutation,
-} from '@/services/admin/permissionApi';
-import type {
-  Permission,
-  CreatePermissionRequest,
-  PermissionFilter,
-} from '@/types/admin/permission.d';
 
 import PermissionForm from './Permissions/PermissionForm/PermissionForm';
-import { columns } from './permissions.data';
+import { columns, data as initialData } from './permissions.data';
+import type { Permission } from './permissions.data';
 
 const Permissions: React.FC = () => {
+  const [data, setData] = useState<Permission[]>(initialData);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedPermission, setSelectedPermission] =
     useState<Permission | null>(null);
-  const [searchParams, setSearchParams] = useState({
-    pageNumber: 0,
-    pageSize: 10,
-  });
-
-  const { data, isLoading } = useGetPermissionsQuery(searchParams, {
-    refetchOnMountOrArgChange: true,
-  });
-  const [createPermission] = useCreatePermissionMutation();
 
   const handleAdd = () => {
     setSelectedPermission(null);
@@ -49,8 +33,7 @@ const Permissions: React.FC = () => {
   };
 
   const handleDelete = (ids: string[]) => {
-    console.log('Deleting permissions with IDs:', ids);
-    // TODO: Implement delete mutation
+    setData((prev) => prev.filter((row) => !ids.includes(String(row.id))));
   };
 
   const handleDeleteConfirmation = (ids: string[]) => {
@@ -61,36 +44,39 @@ const Permissions: React.FC = () => {
     });
   };
 
-  const handleFormSubmit = async (permission: Permission) => {
+  const handleFormSubmit = (permission: Permission) => {
     if (selectedPermission) {
-      // TODO: Implement update mutation
+      setData((prev) =>
+        prev.map((p) => (p.id === permission.id ? permission : p))
+      );
     } else {
-      await createPermission(permission as CreatePermissionRequest);
+      setData((prev) => [
+        ...prev,
+        {
+          ...permission,
+          id: data.length + 1,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
     }
-    setIsFormOpen(false);
   };
 
   const handleSearch = (filters: ColumnFiltersState, sorting: SortingState) => {
-    const filter = filters.reduce((acc: PermissionFilter, { id, value }) => {
-      acc[id as keyof PermissionFilter] = value as string;
-      return acc;
-    }, {});
-    const sort = sorting
-      .map((s) => `${s.id},${s.desc ? 'desc' : 'asc'}`)
-      .join(',');
-    setSearchParams((prev) => ({ ...prev, filter, sort }));
+    console.log('Searching with filters:', filters);
+    console.log('Searching with sorting:', sorting);
+    // TODO: Implement API call here
   };
 
   return (
     <Box>
-      <FilterTable<Permission>
-        data={data?.data?.data || []}
+      <FilterTable
+        data={data}
         columns={columns}
+        setData={setData}
         onAdd={handleAdd}
         onDelete={handleDeleteConfirmation}
         onEdit={handleEdit}
         onSearch={handleSearch}
-        setData={() => {}}
         title={t('permission.title')}
         rowActionNumber={1}
         renderRowActions={(row: Row<Permission>) => [
