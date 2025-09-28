@@ -16,7 +16,8 @@ interface TableBodyProps<T> {
   originalRowData: T | null;
   setOriginalRowData: (data: T | null) => void;
   onEdit?: (row: T) => void;
-  setData: React.Dispatch<React.SetStateAction<T[]>>;
+  setData?: React.Dispatch<React.SetStateAction<T[]>>;
+  loading?: boolean;
 }
 
 const TableBodyComponent = <T,>({
@@ -27,6 +28,7 @@ const TableBodyComponent = <T,>({
   setOriginalRowData,
   setData,
   density,
+  loading,
 }: TableBodyProps<T>) => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -42,7 +44,7 @@ const TableBodyComponent = <T,>({
             title: 'Exit Edit Mode?',
             text: 'Are you sure you want to exit without saving?',
             onConfirm: () => {
-              if (editedRow !== null && originalRowData) {
+              if (editedRow !== null && originalRowData && setData) {
                 setData((prev) =>
                   prev.map((row, index) =>
                     index === editedRow ? originalRowData : row
@@ -73,6 +75,29 @@ const TableBodyComponent = <T,>({
     setEditedRow,
     setOriginalRowData,
   ]);
+
+  if (loading) {
+    return (
+      <MuiTableBody>
+        <StyledTableRow>
+          <StyledTableCell
+            colSpan={1000}
+            style={{ textAlign: 'center' }}
+            column={
+              {
+                getIsPinned: () => false,
+                getIsLastColumn: () => false,
+                getStart: () => 0,
+                id: 'loading',
+              } as any
+            }
+          >
+            <Typography>Loading...</Typography>
+          </StyledTableCell>
+        </StyledTableRow>
+      </MuiTableBody>
+    );
+  }
 
   return (
     <MuiTableBody>

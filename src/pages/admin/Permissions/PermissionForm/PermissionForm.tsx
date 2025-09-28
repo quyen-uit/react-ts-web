@@ -11,19 +11,20 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import type { ColumnDef } from '@tanstack/react-table';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { DynamicForm } from '@/components/form';
-import { generateZodSchema } from '@/shared/utils/schema.utils';
-import type { FormFieldConfig, FormFieldType } from '@/types/form.d';
-
-import { columns, type Permission } from '../../permissions.data';
+import type {
+  Permission,
+  CreatePermissionRequest,
+} from '@/types/admin/permission.d';
+import type { FormFieldConfig } from '@/types/form.d';
 
 interface PermissionFormProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Permission) => void;
+  onSubmit: (data: CreatePermissionRequest) => void;
   permission?: Permission | null;
 }
 
@@ -36,39 +37,32 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const formFields: FormFieldConfig<Permission>[] = columns.map((column) => {
-    const typedColumn = column as ColumnDef<Permission> & {
-      accessorKey?: keyof Permission;
-      meta?: { colSpan?: number; type?: FormFieldType };
-    };
-    return {
-      name: typedColumn.accessorKey as keyof Permission,
-      label: typedColumn.header as string,
-      type: typedColumn.meta?.type || 'text', // Default to 'text' if type is not specified
-      colSpan: typedColumn.meta?.colSpan || 1,
-    };
-  });
+  const formFields: FormFieldConfig<CreatePermissionRequest>[] = [
+    { name: 'name', label: 'Name', type: 'text' },
+    { name: 'description', label: 'Description', type: 'text' },
+    { name: 'module', label: 'Module', type: 'text' },
+    { name: 'action', label: 'Action', type: 'text' },
+  ];
 
-  const schema = generateZodSchema(columns);
+  const schema = z.object({
+    name: z.string().min(1, 'Name is required'),
+    description: z.string().min(1, 'Description is required'),
+    module: z.string().min(1, 'Module is required'),
+    action: z.string().min(1, 'Action is required'),
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<Permission>({
-    resolver: zodResolver(schema as any),
+  } = useForm<CreatePermissionRequest>({
+    resolver: zodResolver(schema),
     defaultValues: permission || {
-      id: 0,
-      age: 0,
-      city: '',
-      state: '',
-      startDate: '',
-      startTime: '',
-      createdAt: '',
-      notes: '',
-      tags: [],
-      sample: '',
+      name: '',
+      description: '',
+      module: '',
+      action: '',
     },
   });
 
@@ -77,21 +71,15 @@ const PermissionForm: React.FC<PermissionFormProps> = ({
       reset(permission);
     } else {
       reset({
-        id: 0,
-        age: 0,
-        city: '',
-        state: '',
-        startDate: '',
-        startTime: '',
-        createdAt: '',
-        notes: '',
-        tags: [],
-        sample: '',
+        name: '',
+        description: '',
+        module: '',
+        action: '',
       });
     }
   }, [permission, reset]);
 
-  const handleFormSubmit = (data: Permission) => {
+  const handleFormSubmit = (data: CreatePermissionRequest) => {
     onSubmit(data);
     onClose();
   };

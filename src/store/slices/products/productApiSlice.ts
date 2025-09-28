@@ -2,9 +2,9 @@ import { apiSlice } from '@/services/baseApi';
 import type {
   Product,
   ProductFormData,
-  PaginatedResponse,
   ProductQueryParams,
-} from '@/types/api';
+} from '@/types/admin/product.d';
+import type { PaginatedResponse } from '@/types/api';
 
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,7 +16,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.data.map(({ id }) => ({
+              ...result.data.data.map(({ id }: { id: string }) => ({
                 type: 'Product' as const,
                 id,
               })),

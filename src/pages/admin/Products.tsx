@@ -20,13 +20,7 @@ import {
   useAddProductMutation,
   useDeleteProductMutation,
 } from '@/store/slices/products/productApiSlice';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-}
+import type { Product } from '@/types/admin/product.d';
 
 const Products = () => {
   const { t } = useTranslation();

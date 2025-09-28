@@ -17,8 +17,8 @@ export const useProducts = ({ searchTerm = '' }: UseProductsProps = {}) => {
     search: debouncedSearchTerm,
   });
 
-  const products = productsData?.data || [];
-  const totalCount = productsData?.totalCount || 0;
+  const products = productsData?.data.data || [];
+  const totalCount = productsData?.data.pageCount || 0;
 
   return {
     products,

@@ -15,7 +15,7 @@ import {
 interface UseFilterTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
-  setData: React.Dispatch<React.SetStateAction<T[]>>;
+  setData?: React.Dispatch<React.SetStateAction<T[]>>;
   allowRowSelection?: boolean;
   allowResize?: boolean;
   editedRow?: number | null;
@@ -54,17 +54,19 @@ export const useFilterTable = <T>({
         );
       },
       updateData: (rowIndex: number, columnId: string, value: unknown) => {
-        setData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex],
-                [columnId]: value,
-              };
-            }
-            return row;
-          })
-        );
+        if (setData) {
+          setData((old) =>
+            old.map((row, index) => {
+              if (index === rowIndex) {
+                return {
+                  ...old[rowIndex],
+                  [columnId]: value,
+                };
+              }
+              return row;
+            })
+          );
+        }
       },
     }),
     [setData, editedRow]

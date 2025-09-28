@@ -25,7 +25,8 @@ interface TableProps<T extends { id: string | number }> {
   columns: ColumnDef<T>[];
   data: T[];
   title: string;
-  setData: React.Dispatch<React.SetStateAction<T[]>>;
+  loading?: boolean;
+  setData?: React.Dispatch<React.SetStateAction<T[]>>;
   onAdd?: () => void;
   onDelete?: (ids: string[]) => void;
   onEdit?: (row: T) => void;
@@ -59,6 +60,7 @@ const FilterTable = <T extends { id: string | number }>({
   allowResize = true,
   extraActions,
   rowActionNumber = 0,
+  loading,
 }: TableProps<T>) => {
   const {
     isFullScreen,
@@ -147,6 +149,7 @@ const FilterTable = <T extends { id: string | number }>({
             />
             <TableBody
               table={table}
+              loading={loading}
               editedRow={editedRow}
               setEditedRow={setEditedRow}
               onEdit={onEdit}

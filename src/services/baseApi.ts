@@ -59,6 +59,6 @@ const customFetchBase: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: customFetchBase,
-  tagTypes: ['Product', 'User'],
+  tagTypes: ['Product', 'User', 'Permission'],
   endpoints: (_builder) => ({}),
 });

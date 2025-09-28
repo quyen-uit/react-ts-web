@@ -4,6 +4,7 @@ import { Visibility, Sync } from '@mui/icons-material';
 import { Box, IconButton, Button } from '@mui/material';
 import {
   type Row,
+  type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
 } from '@tanstack/react-table';
@@ -11,16 +12,46 @@ import { t } from 'i18next';
 
 import { showConfirmAlert } from '@/components/alert';
 import { FilterTable } from '@/components/table';
+import {
+  useGetPermissionsQuery,
+  useCreatePermissionMutation,
+} from '@/services/admin/permissionApi';
+import type {
+  Permission,
+  CreatePermissionRequest,
+} from '@/types/admin/permission.d';
 
 import PermissionForm from './Permissions/PermissionForm/PermissionForm';
-import { columns, data as initialData } from './permissions.data';
-import type { Permission } from './permissions.data';
 
 const Permissions: React.FC = () => {
-  const [data, setData] = useState<Permission[]>(initialData);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedPermission, setSelectedPermission] =
     useState<Permission | null>(null);
+
+  const { data, isLoading } = useGetPermissionsQuery({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+  const [createPermission] = useCreatePermissionMutation();
+
+  const columns: ColumnDef<Permission>[] = [
+    {
+      accessorKey: 'name',
+      header: t('permission.name'),
+    },
+    {
+      accessorKey: 'description',
+      header: t('permission.description'),
+    },
+    {
+      accessorKey: 'module',
+      header: t('permission.module'),
+    },
+    {
+      accessorKey: 'action',
+      header: t('permission.action'),
+    },
+  ];
 
   const handleAdd = () => {
     setSelectedPermission(null);
@@ -33,7 +64,8 @@ const Permissions: React.FC = () => {
   };
 
   const handleDelete = (ids: string[]) => {
-    setData((prev) => prev.filter((row) => !ids.includes(String(row.id))));
+    // TODO: Implement delete mutation
+    console.log('Deleting ids:', ids);
   };
 
   const handleDeleteConfirmation = (ids: string[]) => {
@@ -44,21 +76,13 @@ const Permissions: React.FC = () => {
     });
   };
 
-  const handleFormSubmit = (permission: Permission) => {
+  const handleFormSubmit = async (permission: CreatePermissionRequest) => {
     if (selectedPermission) {
-      setData((prev) =>
-        prev.map((p) => (p.id === permission.id ? permission : p))
-      );
+      // TODO: Implement update mutation
     } else {
-      setData((prev) => [
-        ...prev,
-        {
-          ...permission,
-          id: data.length + 1,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
+      await createPermission(permission).unwrap();
     }
+    setIsFormOpen(false);
   };
 
   const handleSearch = (filters: ColumnFiltersState, sorting: SortingState) => {
@@ -69,16 +93,16 @@ const Permissions: React.FC = () => {
 
   return (
     <Box>
-      <FilterTable
-        data={data}
+      <FilterTable<Permission>
+        data={data?.data.data || []}
         columns={columns}
-        setData={setData}
         onAdd={handleAdd}
         onDelete={handleDeleteConfirmation}
         onEdit={handleEdit}
         onSearch={handleSearch}
         title={t('permission.title')}
         rowActionNumber={1}
+        loading={isLoading}
         renderRowActions={(row: Row<Permission>) => [
           <IconButton key={row.id} onClick={() => console.log(row.original)}>
             <Visibility />
